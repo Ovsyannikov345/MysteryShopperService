@@ -139,6 +139,10 @@ const Report = sequelize.define(
             type: DataTypes.SMALLINT,
             allowNull: false,
         },
+        graded: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+        },
     },
     { timestamps: false }
 );
