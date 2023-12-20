@@ -1,4 +1,5 @@
 const { User, Order, UserReview } = require("../database/models");
+const bcrypt = require("bcrypt");
 
 class UserController {
     async getAll(req, res) {
@@ -39,6 +40,12 @@ class UserController {
     async create(req, res) {
         try {
             const user = { ...req.body };
+
+            if ((await User.findOne({ where: { email: user.email } })) !== null) {
+                return res.status(400).json({ error: "Email is taken" });
+            }
+
+            user.password = bcrypt.hash(password, 10);
 
             const createdUser = await User.create(user);
 
