@@ -211,13 +211,13 @@ Report.belongsTo(Order);
 
 User.hasMany(CompanyReview);
 CompanyReview.belongsTo(User);
-Company.hasMany(CompanyReview);
-CompanyReview.belongsTo(Company);
+Order.hasMany(CompanyReview);
+CompanyReview.belongsTo(Order);
 
-User.hasMany(UserReview);
-UserReview.belongsTo(User);
 Company.hasMany(UserReview);
 UserReview.belongsTo(Company);
+Report.hasOne(UserReview);
+UserReview.belongsTo(Report);
 
 User.hasMany(SupportRequest);
 Company.hasMany(SupportRequest);

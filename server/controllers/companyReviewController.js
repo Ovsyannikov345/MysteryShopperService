@@ -4,6 +4,10 @@ class CompanyReviewController {
     async create(req, res) {
         const review = { ...req.body };
 
+        if (!req.userId || review.UserId !== req.userId) {
+            return res.sendStatus(403);
+        }
+
         try {
             const createdReview = CompanyReview.create(review);
 

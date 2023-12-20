@@ -1,10 +1,12 @@
 const { Company, ContactPerson, Order, CompanyReview } = require("../database/models");
+const bcrypt = require("bcrypt");
 
 class CompanyController {
     async getAll(req, res) {
         try {
             const companies = await Company.findAll({
-                include: [{ model: ContactPerson }, { model: Order }, { model: CompanyReview }],
+                attributes: { exclude: ["password"] },
+                include: [{ model: ContactPerson }, { model: Order, include: [{ model: CompanyReview }] }],
             });
 
             return res.json(companies);
@@ -23,6 +25,7 @@ class CompanyController {
         try {
             const company = await Company.findOne({
                 where: { id: id },
+                attributes: { exclude: ["password"] },
                 include: [{ model: ContactPerson }, { model: Order }, { model: CompanyReview }],
             });
 
@@ -33,9 +36,15 @@ class CompanyController {
     }
 
     async create(req, res) {
-        const company = { ...req.body };
-
         try {
+            const company = { ...req.body };
+
+            if ((await Company.findOne({ where: { email: company.email } })) !== null) {
+                return res.status(400).json({ error: "Email is taken" });
+            }
+
+            company.password = await bcrypt.hash(company.password, 10);
+
             const createdCompany = await Company.create(company);
 
             return res.status(201).json(createdCompany);
@@ -55,6 +64,10 @@ class CompanyController {
 
         if ((await Company.findOne({ where: { id: id } })) == null) {
             return res.sendStatus(404);
+        }
+
+        if (id !== req.companyId) {
+            return res.sendStatus(403);
         }
 
         try {

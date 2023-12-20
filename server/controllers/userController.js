@@ -1,11 +1,12 @@
-const { User, Order, UserReview } = require("../database/models");
+const { User, Order, Report, UserReview } = require("../database/models");
 const bcrypt = require("bcrypt");
 
 class UserController {
     async getAll(req, res) {
         try {
             const users = await User.findAll({
-                include: [{ model: Order }, { model: UserReview }],
+                attributes: { exclude: ["password"] },
+                include: [{ model: Order }, { model: Report, include: [{ model: UserReview }] }],
             });
 
             return res.json(users);
@@ -24,6 +25,7 @@ class UserController {
         try {
             const user = await User.findOne({
                 where: { id: id },
+                attributes: { exclude: ["password"] },
                 include: [{ model: Order }, { model: UserReview }],
             });
 
@@ -45,7 +47,7 @@ class UserController {
                 return res.status(400).json({ error: "Email is taken" });
             }
 
-            user.password = bcrypt.hash(password, 10);
+            user.password = await bcrypt.hash(user.password, 10);
 
             const createdUser = await User.create(user);
 
@@ -66,6 +68,10 @@ class UserController {
 
         if ((await User.findOne({ where: { id: id } })) == null) {
             return res.sendStatus(404);
+        }
+
+        if (req.userId !== id) {
+            return res.sendStatus(403);
         }
 
         try {
