@@ -25,7 +25,7 @@ class AuthController {
                     expiresIn: "1h",
                 });
 
-                res.status(200).json({ token });
+                res.status(200).json({ token: token, role: "user" });
             } else {
                 const passwordMatch = await bcrypt.compare(password, company.password);
 
@@ -37,10 +37,27 @@ class AuthController {
                     expiresIn: "1h",
                 });
 
-                res.status(200).json({ token });
+                res.status(200).json({ token: token, role: "company" });
             }
         } catch (error) {
             res.status(500).json({ error: "Login failed" });
+        }
+    }
+
+    async checkEmail(req, res) {
+        try {
+            const { email } = { ...req.body };
+
+            const user = await User.findOne({ where: { email: email } });
+            const company = await Company.findOne({ where: { email: email } });
+
+            if (!user && !company) {
+                return res.status(200).json({ available: true });
+            }
+
+            return res.status(200).json({ available: false });
+        } catch (error) {
+            res.status(500).json({ error: "Email check failed" });
         }
     }
 }

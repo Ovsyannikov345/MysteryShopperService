@@ -37,7 +37,13 @@ class CompanyController {
 
     async create(req, res) {
         try {
-            const company = { ...req.body };
+            const company = {
+                name: req.body.name,
+                email: req.body.email,
+                password: req.body.password,
+            };
+
+            const contactPerson = { ...req.body.contactPersonInfo };
 
             if ((await Company.findOne({ where: { email: company.email } })) !== null) {
                 return res.status(400).json({ error: "Email is taken" });
@@ -45,7 +51,15 @@ class CompanyController {
 
             company.password = await bcrypt.hash(company.password, 10);
 
-            const createdCompany = await Company.create(company);
+            const createdCompany = await Company.create(
+                {
+                    ...company,
+                },
+            );
+
+            const createdContactPerson = await ContactPerson.create(contactPerson);
+
+            createdContactPerson.setCompany(createdCompany.id);
 
             return res.status(201).json(createdCompany);
         } catch (err) {

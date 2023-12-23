@@ -1,4 +1,6 @@
-export const userRoutes = [
+import CompanyProfilePage from "../pages/CompanyProfilePage";
+
+export const companyRoutes = [
     {
         path: "/my-orders",
         Component: "My orders page",
@@ -16,7 +18,7 @@ export const userRoutes = [
         Component: "Order Creation Page",
     },
     {
-        path: "/profile",
-        Component: "Company profile",
+        path: "/company",
+        Component: CompanyProfilePage,
     },
 ];
