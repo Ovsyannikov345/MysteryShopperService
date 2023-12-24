@@ -7,6 +7,7 @@ const router = new Router();
 
 router.get("/users", userController.getAll);
 router.get("/companies", companyController.getAll);
+router.get("/company", companyController.getProfile);
 
 router.post("/orders", orderController.create);
 

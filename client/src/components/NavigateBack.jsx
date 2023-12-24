@@ -7,7 +7,7 @@ const NavigateBack = ({ to, label }) => {
     const navigate = useNavigate();
 
     return (
-        <Grid container item height={"60px"} alignItems={"center"} gap={"15px"}>
+        <Grid container item height={"60px"} alignItems={"center"} gap={"15px"} flexWrap={"nowrap"}>
             <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => navigate(to)}>
                 <ArrowBackIcon sx={{ fontSize: 50 }} />
             </IconButton>

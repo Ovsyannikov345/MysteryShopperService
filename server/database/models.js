@@ -38,7 +38,7 @@ const User = sequelize.define(
             allowNull: false,
         },
     },
-    { timestamps: false }
+    { updatedAt: false }
 );
 
 const Company = sequelize.define(
@@ -57,7 +57,7 @@ const Company = sequelize.define(
             allowNull: false,
         },
     },
-    { timestamps: false }
+    { updatedAt: false }
 );
 
 const ContactPerson = sequelize.define(

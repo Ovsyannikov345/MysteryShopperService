@@ -26,7 +26,23 @@ class CompanyController {
             const company = await Company.findOne({
                 where: { id: id },
                 attributes: { exclude: ["password"] },
-                include: [{ model: ContactPerson }, { model: Order }, { model: CompanyReview }],
+                include: [{ model: ContactPerson }, { model: Order, include: [{ model: CompanyReview }] }],
+            });
+
+            return res.json(company);
+        } catch (err) {
+            return res.sendStatus(500);
+        }
+    }
+
+    async getProfile(req, res) {
+        const id = req.companyId;
+
+        try {
+            const company = await Company.findOne({
+                where: { id: id },
+                attributes: { exclude: ["password"] },
+                include: [{ model: ContactPerson }, { model: Order, include: [{ model: CompanyReview }] }],
             });
 
             return res.json(company);
@@ -51,11 +67,9 @@ class CompanyController {
 
             company.password = await bcrypt.hash(company.password, 10);
 
-            const createdCompany = await Company.create(
-                {
-                    ...company,
-                },
-            );
+            const createdCompany = await Company.create({
+                ...company,
+            });
 
             const createdContactPerson = await ContactPerson.create(contactPerson);
 
