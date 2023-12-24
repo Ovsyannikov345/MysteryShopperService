@@ -12,6 +12,14 @@ const CreateOrderPage = () => {
     const [errorMessage, setErrorMessage] = useState("");
 
     const create = async (orderData) => {
+        if (orderData.completionTime === "") {
+            orderData.completionTime = null;
+        }
+
+        if (orderData.price === "") {
+            orderData.price = null;
+        }
+
         const response = await createOrder(orderData);
 
         if (!response) {
