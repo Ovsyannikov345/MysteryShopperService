@@ -59,7 +59,7 @@ class CompanyController {
 
             const createdContactPerson = await ContactPerson.create(contactPerson);
 
-            createdContactPerson.setCompany(createdCompany.id);
+            await createdContactPerson.setCompany(createdCompany.id);
 
             return res.status(201).json(createdCompany);
         } catch (err) {

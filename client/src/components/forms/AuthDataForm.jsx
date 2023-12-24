@@ -2,7 +2,7 @@ import { Grid, TextField, Typography, Button, FormControlLabel, Checkbox } from 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
-import validateRegistration from "../../utils/validateRegistration";
+import validateRegistrationData from "../../utils/validateRegistrationData";
 import { useTheme } from "@emotion/react";
 import { checkEmail } from "../../api/authApi";
 
@@ -15,7 +15,7 @@ const AuthDataForm = ({ nextStepHandler, errorHandler }) => {
             password: "",
             passwordRepeat: "",
         },
-        validate: validateRegistration,
+        validate: validateRegistrationData,
         onSubmit: (values) => {
             checkEmail(formik.values.email).then((response) => {
                 if (!response) {

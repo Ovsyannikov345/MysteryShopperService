@@ -1,6 +1,7 @@
 import React from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { useTheme } from "@emotion/react";
+import Logo from "./Logo";
 
 const PublicHeader = () => {
     const theme = useTheme();
@@ -14,20 +15,7 @@ const PublicHeader = () => {
             pl={"42px"}
             alignItems={"center"}
         >
-            <Grid
-                container
-                item
-                width={"325px"}
-                height={"86px"}
-                bgcolor={"white"}
-                borderRadius={"20px"}
-                alignItems={"center"}
-                justifyContent={"center"}
-            >
-                <Typography fontSize={36} fontWeight={700}>
-                    Mystery Shopper
-                </Typography>
-            </Grid>
+            <Logo />
         </Grid>
     );
 };

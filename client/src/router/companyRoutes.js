@@ -1,4 +1,5 @@
-import CompanyProfilePage from "../pages/CompanyProfilePage";
+import CreateOrderPage from "../pages/Company/CreateOrderPage";
+import CompanyProfilePage from "../pages/Company/CompanyProfilePage";
 
 export const companyRoutes = [
     {
@@ -15,7 +16,7 @@ export const companyRoutes = [
     },
     {
         path: "/orders/create",
-        Component: "Order Creation Page",
+        Component: CreateOrderPage,
     },
     {
         path: "/company",
