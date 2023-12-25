@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar } from "@mui/material";
+import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar, Rating, Stack } from "@mui/material";
 import CompanyHeader from "./../../components/headers/CompanyHeader";
 import NavigateBack from "../../components/NavigateBack";
 import EditIcon from "@mui/icons-material/EditOutlined";
@@ -8,6 +8,8 @@ import moment from "moment";
 import ProfileCards from "../../components/ProfileCards";
 import { useTheme } from "@emotion/react";
 import { getProfile } from "../../api/companyApi";
+import { useNavigate } from "react-router-dom";
+import CompanyReview from "../../components/CompanyReview";
 
 const CompanyProfilePage = () => {
     const theme = useTheme();
@@ -28,6 +30,12 @@ const CompanyProfilePage = () => {
                 return;
             }
 
+            if (response.status === 401) {
+                localStorage.removeItem("jwt");
+                localStorage.removeItem("role");
+                window.location.reload();
+            }
+
             if (response.status >= 300) {
                 displayError("Ошибка при загрузке профиля. Код: " + response.status);
                 console.log(response);
@@ -42,6 +50,10 @@ const CompanyProfilePage = () => {
 
     const rating = useMemo(() => {
         try {
+            if (companyData.Orders.length === 0) {
+                return "-";
+            }
+
             let totalGrade = 0;
             let count = 0;
 
@@ -75,7 +87,7 @@ const CompanyProfilePage = () => {
         <Grid
             container
             width={"100%"}
-            height={"100vh"}
+            minHeight={"100vh"}
             flexDirection={"column"}
             justifyContent={"flex-start"}
             alignItems={"center"}
@@ -107,9 +119,9 @@ const CompanyProfilePage = () => {
                         </IconButton>
                     )}
                 </Grid>
-                <Grid container item pl={"150px"} mt={"40px"}>
+                <Grid container item pl={"150px"} mt={"40px"} pb={"46px"}>
                     <Grid container item gap={"50px"}>
-                        <Avatar src="" sx={{ width: 130, height: 130 }} />
+                        <Avatar src="" variant="square" sx={{ width: 130, height: 130 }} />
                         <Grid flexDirection={"column"} gap={"10px"}>
                             <Typography variant="h2" height={"36px"}>
                                 {companyData.name}
@@ -185,6 +197,36 @@ const CompanyProfilePage = () => {
                                     }}
                                 />
                             </Grid>
+                        </Grid>
+                    ) : (
+                        <></>
+                    )}
+                    {companyData.Orders !== undefined ? (
+                        <Grid container item mt={"50px"} flexDirection={"column"}>
+                            {companyData.Orders.length > 0 ? (
+                                <>
+                                    <Typography
+                                        variant="h2"
+                                        height={"69px"}
+                                        display={"flex"}
+                                        alignItems={"center"}
+                                    >
+                                        Отзывы
+                                    </Typography>
+
+                                    <Grid container item maxWidth={"700px"} flexDirection={"column"} gap={"25px"}>
+                                        {companyData.Orders.map((order) =>
+                                            order.CompanyReviews.map((review) => (
+                                                <CompanyReview key={review.id} companyReview={review} />
+                                            ))
+                                        )}
+                                    </Grid>
+                                </>
+                            ) : (
+                                <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
+                                    Отзывов пока нет
+                                </Typography>
+                            )}
                         </Grid>
                     ) : (
                         <></>

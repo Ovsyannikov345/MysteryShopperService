@@ -1,4 +1,4 @@
-const { Company, ContactPerson, Order, CompanyReview } = require("../database/models");
+const { Company, ContactPerson, Order, CompanyReview, User } = require("../database/models");
 const bcrypt = require("bcrypt");
 
 class CompanyController {
@@ -6,7 +6,15 @@ class CompanyController {
         try {
             const companies = await Company.findAll({
                 attributes: { exclude: ["password"] },
-                include: [{ model: ContactPerson }, { model: Order, include: [{ model: CompanyReview }] }],
+                include: [
+                    { model: ContactPerson },
+                    {
+                        model: Order,
+                        include: [
+                            { model: CompanyReview, include: [{ model: User, attributes: ["name", "surname"] }] },
+                        ],
+                    },
+                ],
             });
 
             return res.json(companies);
@@ -26,7 +34,15 @@ class CompanyController {
             const company = await Company.findOne({
                 where: { id: id },
                 attributes: { exclude: ["password"] },
-                include: [{ model: ContactPerson }, { model: Order, include: [{ model: CompanyReview }] }],
+                include: [
+                    { model: ContactPerson },
+                    {
+                        model: Order,
+                        include: [
+                            { model: CompanyReview, include: [{ model: User, attributes: ["name", "surname"] }] },
+                        ],
+                    },
+                ],
             });
 
             return res.json(company);
@@ -42,7 +58,15 @@ class CompanyController {
             const company = await Company.findOne({
                 where: { id: id },
                 attributes: { exclude: ["password"] },
-                include: [{ model: ContactPerson }, { model: Order, include: [{ model: CompanyReview }] }],
+                include: [
+                    { model: ContactPerson },
+                    {
+                        model: Order,
+                        include: [
+                            { model: CompanyReview, include: [{ model: User, attributes: ["name", "surname"] }] },
+                        ],
+                    },
+                ],
             });
 
             return res.json(company);
