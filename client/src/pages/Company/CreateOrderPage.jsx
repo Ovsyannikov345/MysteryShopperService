@@ -27,9 +27,14 @@ const CreateOrderPage = () => {
             return;
         }
 
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
         if (response.status >= 300) {
             displayError("Ошибка при создании заказа. Код: " + response.status);
-            console.log(response)
             return;
         }
 
