@@ -11,6 +11,7 @@ router.get("/users/:id/avatar", userController.getAvatar);
 router.get("/companies", companyController.getAll);
 router.get("/company", companyController.getProfile);
 router.get("/companies/:id/avatar", companyController.getAvatar);
+router.put("/companies/:id", companyController.update);
 
 router.post("/orders", orderController.create);
 

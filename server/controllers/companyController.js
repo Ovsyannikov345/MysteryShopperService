@@ -137,24 +137,34 @@ class CompanyController {
     }
 
     async update(req, res) {
-        const { id } = req.params;
-
-        const company = { ...req.body };
-
-        if (isNaN(id) || parseInt(id) !== company.id) {
-            return res.sendStatus(400);
-        }
-
-        if ((await Company.findOne({ where: { id: id } })) == null) {
-            return res.sendStatus(404);
-        }
-
-        if (id !== req.companyId) {
-            return res.sendStatus(403);
-        }
-
         try {
-            await Company.update(company, { where: { id: id } });
+            const { id } = req.params;
+
+            if (id != req.companyId) {
+                return res.sendStatus(403);
+            }
+
+            const companyData = {
+                id: req.body.id,
+                name: req.body.name,
+                email: req.body.email,
+                password: req.body.password,
+            };
+
+            const contactPersonData = { ...req.body.contactPersonInfo };
+            
+            if (isNaN(id) || parseInt(id) != companyData.id) {
+                return res.sendStatus(400);
+            }
+
+            const company = await Company.findOne({ where: { id: id } });
+
+            if (company == null) {
+                return res.sendStatus(404);
+            }
+        
+            await Company.update(companyData, { where: { id: id } });
+            await ContactPerson.update(contactPersonData, {where: {CompanyId: company.id}});
 
             return res.sendStatus(204);
         } catch (err) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar } from "@mui/material";
+import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar, Button } from "@mui/material";
 import CompanyHeader from "./../../components/headers/CompanyHeader";
 import NavigateBack from "../../components/NavigateBack";
 import EditIcon from "@mui/icons-material/EditOutlined";
@@ -8,8 +8,8 @@ import moment from "moment";
 import ProfileCards from "../../components/ProfileCards";
 import { useTheme } from "@emotion/react";
 import { getProfile } from "../../api/companyApi";
-import { useNavigate } from "react-router-dom";
 import CompanyReview from "../../components/CompanyReview";
+import CompanyEditForm from "../../components/forms/CompanyEditForm";
 
 const CompanyProfilePage = () => {
     const theme = useTheme();
@@ -120,7 +120,7 @@ const CompanyProfilePage = () => {
                     )}
                 </Grid>
                 <Grid container item pl={"150px"} mt={"40px"} pb={"46px"}>
-                    <Grid container item gap={"50px"}>
+                    <Grid container item gap={"50px"} alignItems={"center"}>
                         <Avatar
                             src={
                                 companyData.id !== undefined
@@ -132,114 +132,144 @@ const CompanyProfilePage = () => {
                             variant="square"
                             sx={{ width: 130, height: 130 }}
                         />
-                        <Grid flexDirection={"column"} gap={"10px"}>
-                            <Typography variant="h2" height={"36px"}>
-                                {companyData.name}
-                            </Typography>
-                            <Typography variant="h3">{companyData.email}</Typography>
-                        </Grid>
-                    </Grid>
-                    <ProfileCards
-                        registrationDate={
-                            companyData.createdAt !== undefined
-                                ? moment.utc(companyData.createdAt).format("DD-MM-YYYY")
-                                : "-"
-                        }
-                        ordersCount={companyData.Orders !== undefined ? companyData.Orders.length : "-"}
-                        rating={rating}
-                    />
-                    {companyData.ContactPerson !== undefined ? (
-                        <Grid container item mt={"50px"} flexDirection={"column"}>
-                            <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
-                                Контактная информация
-                            </Typography>
-                            <Grid container item flexDirection={"column"} gap={"25px"} maxWidth={"394px"}>
-                                <TextField
-                                    variant="standard"
-                                    label="ФИО контактного лица"
-                                    value={[
-                                        companyData.ContactPerson.surname,
-                                        companyData.ContactPerson.name,
-                                        companyData.ContactPerson.patronymic,
-                                    ].join(" ")}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    sx={{
-                                        "& .MuiInput-underline:before": {
-                                            borderBottomColor: theme.palette.primary.main,
-                                        },
-                                        "& .MuiInput-underline:after": {
-                                            borderBottomColor: theme.palette.primary.main,
-                                        },
-                                    }}
-                                />
-                                <TextField
-                                    variant="standard"
-                                    label="Эл. почта"
-                                    value={companyData.ContactPerson.email}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    sx={{
-                                        "& .MuiInput-underline:before": {
-                                            borderBottomColor: theme.palette.primary.main,
-                                        },
-                                        "& .MuiInput-underline:after": {
-                                            borderBottomColor: theme.palette.primary.main,
-                                        },
-                                    }}
-                                />
-                                <TextField
-                                    variant="standard"
-                                    label="Телефон"
-                                    value={companyData.ContactPerson.phone}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                    sx={{
-                                        "& .MuiInput-underline:before": {
-                                            borderBottomColor: theme.palette.primary.main,
-                                        },
-                                        "& .MuiInput-underline:after": {
-                                            borderBottomColor: theme.palette.primary.main,
-                                        },
-                                    }}
-                                />
+                        {!editMode ? (
+                            <Grid flexDirection={"column"} gap={"10px"}>
+                                <Typography variant="h2" height={"36px"}>
+                                    {companyData.name}
+                                </Typography>
+                                <Typography variant="h3">{companyData.email}</Typography>
                             </Grid>
-                        </Grid>
-                    ) : (
-                        <></>
-                    )}
-                    {companyData.Orders !== undefined ? (
-                        <Grid container item mt={"50px"} flexDirection={"column"}>
-                            {companyData.Orders.length > 0 ? (
-                                <>
+                        ) : (
+                            <Button variant="outlined">ВЫБРАТЬ ФАЙЛ</Button>
+                        )}
+                    </Grid>
+                    {!editMode ? (
+                        <>
+                            <ProfileCards
+                                registrationDate={
+                                    companyData.createdAt !== undefined
+                                        ? moment.utc(companyData.createdAt).format("DD-MM-YYYY")
+                                        : "-"
+                                }
+                                ordersCount={companyData.Orders !== undefined ? companyData.Orders.length : "-"}
+                                rating={rating}
+                            />
+                            {companyData.ContactPerson !== undefined ? (
+                                <Grid container item mt={"50px"} flexDirection={"column"}>
                                     <Typography
                                         variant="h2"
                                         height={"69px"}
                                         display={"flex"}
                                         alignItems={"center"}
                                     >
-                                        Отзывы
+                                        Контактная информация
                                     </Typography>
-
-                                    <Grid container item maxWidth={"700px"} flexDirection={"column"} gap={"25px"}>
-                                        {companyData.Orders.map((order) =>
-                                            order.CompanyReviews.map((review) => (
-                                                <CompanyReview key={review.id} companyReview={review} />
-                                            ))
-                                        )}
+                                    <Grid container item flexDirection={"column"} gap={"25px"} maxWidth={"394px"}>
+                                        <TextField
+                                            variant="standard"
+                                            label="ФИО контактного лица"
+                                            value={[
+                                                companyData.ContactPerson.surname,
+                                                companyData.ContactPerson.name,
+                                                companyData.ContactPerson.patronymic,
+                                            ].join(" ")}
+                                            InputProps={{
+                                                readOnly: true,
+                                            }}
+                                            sx={{
+                                                "& .MuiInput-underline:before": {
+                                                    borderBottomColor: theme.palette.primary.main,
+                                                },
+                                                "& .MuiInput-underline:after": {
+                                                    borderBottomColor: theme.palette.primary.main,
+                                                },
+                                            }}
+                                        />
+                                        <TextField
+                                            variant="standard"
+                                            label="Эл. почта"
+                                            value={companyData.ContactPerson.email}
+                                            InputProps={{
+                                                readOnly: true,
+                                            }}
+                                            sx={{
+                                                "& .MuiInput-underline:before": {
+                                                    borderBottomColor: theme.palette.primary.main,
+                                                },
+                                                "& .MuiInput-underline:after": {
+                                                    borderBottomColor: theme.palette.primary.main,
+                                                },
+                                            }}
+                                        />
+                                        <TextField
+                                            variant="standard"
+                                            label="Телефон"
+                                            value={companyData.ContactPerson.phone}
+                                            InputProps={{
+                                                readOnly: true,
+                                            }}
+                                            sx={{
+                                                "& .MuiInput-underline:before": {
+                                                    borderBottomColor: theme.palette.primary.main,
+                                                },
+                                                "& .MuiInput-underline:after": {
+                                                    borderBottomColor: theme.palette.primary.main,
+                                                },
+                                            }}
+                                        />
                                     </Grid>
-                                </>
+                                </Grid>
                             ) : (
-                                <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
-                                    Отзывов пока нет
-                                </Typography>
+                                <></>
                             )}
-                        </Grid>
+                            {companyData.Orders !== undefined ? (
+                                <Grid container item mt={"50px"} flexDirection={"column"}>
+                                    {companyData.Orders.length > 0 ? (
+                                        <>
+                                            <Typography
+                                                variant="h2"
+                                                height={"69px"}
+                                                display={"flex"}
+                                                alignItems={"center"}
+                                            >
+                                                Отзывы
+                                            </Typography>
+
+                                            <Grid
+                                                container
+                                                item
+                                                maxWidth={"700px"}
+                                                flexDirection={"column"}
+                                                gap={"25px"}
+                                            >
+                                                {companyData.Orders.map((order) =>
+                                                    order.CompanyReviews.map((review) => (
+                                                        <CompanyReview key={review.id} companyReview={review} />
+                                                    ))
+                                                )}
+                                            </Grid>
+                                        </>
+                                    ) : (
+                                        <Typography
+                                            variant="h2"
+                                            height={"69px"}
+                                            display={"flex"}
+                                            alignItems={"center"}
+                                        >
+                                            Отзывов пока нет
+                                        </Typography>
+                                    )}
+                                </Grid>
+                            ) : (
+                                <></>
+                            )}{" "}
+                        </>
                     ) : (
-                        <></>
+                        <CompanyEditForm
+                            companyData={companyData}
+                            cancelHandler={() => setEditMode(false)}
+                            errorHandler={displayError}
+                        />
                     )}
                 </Grid>
             </Grid>
