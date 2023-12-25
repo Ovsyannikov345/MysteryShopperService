@@ -1,5 +1,7 @@
 const { User, Order, Report, UserReview } = require("../database/models");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
+const path = require("path");
 
 class UserController {
     async getAll(req, res) {
@@ -35,6 +37,27 @@ class UserController {
 
             return res.json(user);
         } catch (err) {
+            return res.sendStatus(500);
+        }
+    }
+
+    async getAvatar(req, res) {
+        try {
+            const { id } = req.params;
+
+            if (isNaN(id)) {
+                return res.sendStatus(400);
+            }
+
+            const imagePath = path.join(__dirname, "../", "avatars", "user", id + ".png");
+
+            if (!fs.existsSync(imagePath)) {
+                return res.sendStatus(404);
+            }
+
+            return res.sendFile(imagePath);
+        } catch (err) {
+            console.log(err);
             return res.sendStatus(500);
         }
     }

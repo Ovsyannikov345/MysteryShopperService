@@ -1,5 +1,7 @@
 const { Company, ContactPerson, Order, CompanyReview, User } = require("../database/models");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
+const path = require("path");
 
 class CompanyController {
     async getAll(req, res) {
@@ -11,7 +13,10 @@ class CompanyController {
                     {
                         model: Order,
                         include: [
-                            { model: CompanyReview, include: [{ model: User, attributes: ["name", "surname"] }] },
+                            {
+                                model: CompanyReview,
+                                include: [{ model: User, attributes: ["id", "name", "surname"] }],
+                            },
                         ],
                     },
                 ],
@@ -39,7 +44,10 @@ class CompanyController {
                     {
                         model: Order,
                         include: [
-                            { model: CompanyReview, include: [{ model: User, attributes: ["name", "surname"] }] },
+                            {
+                                model: CompanyReview,
+                                include: [{ model: User, attributes: ["id", "name", "surname"] }],
+                            },
                         ],
                     },
                 ],
@@ -63,13 +71,36 @@ class CompanyController {
                     {
                         model: Order,
                         include: [
-                            { model: CompanyReview, include: [{ model: User, attributes: ["name", "surname"] }] },
+                            {
+                                model: CompanyReview,
+                                include: [{ model: User, attributes: ["id", "name", "surname"] }],
+                            },
                         ],
                     },
                 ],
             });
 
             return res.json(company);
+        } catch (err) {
+            return res.sendStatus(500);
+        }
+    }
+
+    async getAvatar(req, res) {
+        try {
+            const { id } = req.params;
+
+            if (isNaN(id)) {
+                return res.sendStatus(400);
+            }
+
+            const imagePath = path.join(__dirname, "../", "avatars", "company", id + ".png");
+
+            if (!fs.existsSync(imagePath)) {
+                return res.sendStatus(404);
+            }
+
+            return res.sendFile(imagePath);
         } catch (err) {
             return res.sendStatus(500);
         }

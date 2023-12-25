@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar, Rating, Stack } from "@mui/material";
+import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar } from "@mui/material";
 import CompanyHeader from "./../../components/headers/CompanyHeader";
 import NavigateBack from "../../components/NavigateBack";
 import EditIcon from "@mui/icons-material/EditOutlined";
@@ -121,7 +121,17 @@ const CompanyProfilePage = () => {
                 </Grid>
                 <Grid container item pl={"150px"} mt={"40px"} pb={"46px"}>
                     <Grid container item gap={"50px"}>
-                        <Avatar src="" variant="square" sx={{ width: 130, height: 130 }} />
+                        <Avatar
+                            src={
+                                companyData.id !== undefined
+                                    ? `http://localhost:5000/api/companies/${
+                                          companyData.id
+                                      }/avatar?jwt=${localStorage.getItem("jwt")}`
+                                    : ""
+                            }
+                            variant="square"
+                            sx={{ width: 130, height: 130 }}
+                        />
                         <Grid flexDirection={"column"} gap={"10px"}>
                             <Typography variant="h2" height={"36px"}>
                                 {companyData.name}
