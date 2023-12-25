@@ -3,13 +3,25 @@ import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar, Butto
 import CompanyHeader from "./../../components/headers/CompanyHeader";
 import NavigateBack from "../../components/NavigateBack";
 import EditIcon from "@mui/icons-material/EditOutlined";
-
+import { styled } from "@mui/material/styles";
 import moment from "moment";
 import ProfileCards from "../../components/ProfileCards";
 import { useTheme } from "@emotion/react";
-import { getProfile } from "../../api/companyApi";
+import { getProfile, updateAvatar } from "../../api/companyApi";
 import CompanyReview from "../../components/CompanyReview";
 import CompanyEditForm from "../../components/forms/CompanyEditForm";
+
+const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+});
 
 const CompanyProfilePage = () => {
     const theme = useTheme();
@@ -17,6 +29,8 @@ const CompanyProfilePage = () => {
     const [editMode, setEditMode] = useState(false);
 
     const [companyData, setCompanyData] = useState({});
+
+    const [image, setImage] = useState(undefined);
 
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -83,6 +97,24 @@ const CompanyProfilePage = () => {
         setError(false);
     };
 
+    const sendImage = async (e) => {
+        if (image === undefined) {
+            return;
+        }
+
+        console.log(image);
+
+        const response = await updateAvatar(companyData.id, image);
+
+        if (response.status >= 300) {
+            displayError("Ошибка при отправке изображения. Код: " + response.status);
+            console.log(response);
+            return;
+        }
+
+        setImage(undefined);
+    };
+
     return (
         <Grid
             container
@@ -140,7 +172,15 @@ const CompanyProfilePage = () => {
                                 <Typography variant="h3">{companyData.email}</Typography>
                             </Grid>
                         ) : (
-                            <Button variant="outlined">ВЫБРАТЬ ФАЙЛ</Button>
+                            <Button component="label" variant="outlined">
+                                {image !== undefined ? image.name : "ВЫБРАТЬ ФАЙЛ"}
+                                <VisuallyHiddenInput
+                                    type="file"
+                                    name="avatar"
+                                    onChange={(e) => setImage(e.target.files[0])}
+                                    accept="image/png"
+                                />
+                            </Button>
                         )}
                     </Grid>
                     {!editMode ? (
@@ -268,6 +308,11 @@ const CompanyProfilePage = () => {
                         <CompanyEditForm
                             companyData={companyData}
                             cancelHandler={() => setEditMode(false)}
+                            applyCallback={() => {
+                                sendImage();
+                                setEditMode(false);
+                                window.location.reload();
+                            }}
                             errorHandler={displayError}
                         />
                     )}

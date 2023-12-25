@@ -3,12 +3,9 @@ import React from "react";
 import { useFormik } from "formik";
 import InputMask from "react-input-mask";
 import validateCompanyData from "../../utils/validateCompanyData";
-import { useNavigate } from "react-router-dom";
 import { updateCompany } from "../../api/companyApi";
 
-const CompanyEditForm = ({ companyData, cancelHandler, errorHandler }) => {
-    const navigate = useNavigate();
-
+const CompanyEditForm = ({ companyData, cancelHandler, applyCallback, errorHandler }) => {
     const formik = useFormik({
         initialValues: {
             name: companyData.name,
@@ -44,7 +41,7 @@ const CompanyEditForm = ({ companyData, cancelHandler, errorHandler }) => {
                 return;
             }
 
-            navigate("/profile");
+            applyCallback();
         },
     });
 

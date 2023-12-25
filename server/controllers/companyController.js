@@ -152,7 +152,7 @@ class CompanyController {
             };
 
             const contactPersonData = { ...req.body.contactPersonInfo };
-            
+
             if (isNaN(id) || parseInt(id) != companyData.id) {
                 return res.sendStatus(400);
             }
@@ -162,12 +162,43 @@ class CompanyController {
             if (company == null) {
                 return res.sendStatus(404);
             }
-        
+
             await Company.update(companyData, { where: { id: id } });
-            await ContactPerson.update(contactPersonData, {where: {CompanyId: company.id}});
+            await ContactPerson.update(contactPersonData, { where: { CompanyId: company.id } });
 
             return res.sendStatus(204);
         } catch (err) {
+            return res.sendStatus(500);
+        }
+    }
+
+    async updateAvatar(req, res) {
+        try {
+            const { id } = req.params;
+
+            if (isNaN(id)) {
+                return res.sendStatus(400);
+            }
+
+            if (id != req.companyId) {
+                return res.sendStatus(403);
+            }
+
+            const savePath = path.join(__dirname, "../", "avatars", "company", id + ".png");
+
+            const imagePath = path.join(__dirname, "../", "uploads", id + ".png");
+
+            if (!fs.existsSync(imagePath)) {
+                return res.sendStatus(404);
+            }
+
+            fs.rename(imagePath, savePath, (err) => {
+                if (err) throw err;
+            });
+
+            return res.sendStatus(204);
+        } catch (err) {
+            console.log(err);
             return res.sendStatus(500);
         }
     }
