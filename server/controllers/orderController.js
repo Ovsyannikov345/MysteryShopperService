@@ -1,7 +1,17 @@
 const { Order, Report, CompanyReview, Request } = require("../database/models");
 
 class OrderController {
-    async get(req, res) {}
+    async getAll(req, res) {
+        try {
+            const companyId = req.companyId;
+
+            const companyOrders = await Order.findAll({ where: { CompanyId: companyId } });
+
+            return res.json(companyOrders);
+        } catch (err) {
+            return res.sendStatus(500);
+        }
+    }
 
     async create(req, res) {
         try {

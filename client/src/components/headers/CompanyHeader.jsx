@@ -31,7 +31,7 @@ const CompanyHeader = () => {
             <Stack gap={"50px"} direction={"row"} mr={"50px"}>
                 <Typography variant="h1" textAlign={"center"}>
                     <Grid container item height={"100%"} alignItems={"center"}>
-                        <Link to={"/orders/create"} style={{ textDecoration: "none", color: "#000000" }}>
+                        <Link to={"/my-orders"} style={{ textDecoration: "none", color: "#000000" }}>
                             Мои заказы
                         </Link>
                     </Grid>

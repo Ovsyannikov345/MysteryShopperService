@@ -33,6 +33,7 @@ router.get("/companies/:id/avatar", companyController.getAvatar);
 router.post("/companies/:id/avatar", upload.single("image"), companyController.updateAvatar);
 router.put("/companies/:id", companyController.update);
 
+router.get("/company/orders", orderController.getAll);
 router.post("/orders", orderController.create);
 
 module.exports = router;
