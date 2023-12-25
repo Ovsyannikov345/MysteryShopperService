@@ -28,7 +28,7 @@ const CreateOrderPage = () => {
         }
 
         if (response.status >= 300) {
-            displayError("Ошибка при создании пользователя. Код: " + response.status);
+            displayError("Ошибка при создании заказа. Код: " + response.status);
             console.log(response)
             return;
         }
