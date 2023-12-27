@@ -144,7 +144,7 @@ const CompanyProfilePage = () => {
                     justifyContent={"space-between"}
                     flexWrap={"nowrap"}
                 >
-                    <NavigateBack label="Мои заказы" />
+                    <NavigateBack label="Мои заказы" to={"/my-orders"} />
                     {!editMode && (
                         <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setEditMode(true)}>
                             <EditIcon sx={{ fontSize: 50 }}></EditIcon>
