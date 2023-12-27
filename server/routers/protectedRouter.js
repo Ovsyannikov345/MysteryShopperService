@@ -35,5 +35,6 @@ router.put("/companies/:id", companyController.update);
 
 router.get("/company/orders", orderController.getAll);
 router.post("/orders", orderController.create);
+router.delete("/orders/:id", orderController.delete);
 
 module.exports = router;

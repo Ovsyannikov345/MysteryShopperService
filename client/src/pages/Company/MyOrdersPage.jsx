@@ -4,6 +4,7 @@ import CompanyHeader from "../../components/headers/CompanyHeader";
 import SortSelector from "../../components/SortSelector";
 import { getOrders } from "../../api/ordersApi";
 import CompanyOrdersList from "../../components/CompanyOrdersList";
+import { deleteOrder } from "../../api/ordersApi";
 
 const MyOrdersPage = () => {
     const [error, setError] = useState(false);
@@ -66,9 +67,26 @@ const MyOrdersPage = () => {
         setError(false);
     };
 
-    const deleteOrder = async (id) => {
-        console.log("deleting order with id: " + id);
-        // TODO Implement.
+    const removeOrder = async (id) => {
+        const response = await deleteOrder(id);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при удалении заказа. Код: " + response.status);
+            return;
+        }
+
+        setOrders(orders.filter((order) => order.id !== id));
     };
 
     return (
@@ -107,7 +125,7 @@ const MyOrdersPage = () => {
                             />
                         </Grid>
                     </Grid>
-                    <CompanyOrdersList orders={sortedOrders} deleteHandler={deleteOrder} />
+                    <CompanyOrdersList orders={sortedOrders} deleteHandler={removeOrder} />
                 </Grid>
             </Grid>
             <Snackbar open={error} autoHideDuration={6000} onClose={closeSnackbar}>

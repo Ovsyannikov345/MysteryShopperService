@@ -32,4 +32,20 @@ const createOrder = async (orderData) => {
     }
 };
 
-export { getOrders, createOrder };
+const deleteOrder = async (id) => {
+    try {
+        const response = await host.delete(`/api/orders/${id}`);
+
+        return response;
+    } catch (error) {
+        if (error.response) {
+            return error.response;
+        } else if (error.request) {
+            console.log("Server did not respond.");
+        } else {
+            console.log("Error while creating request");
+        }
+    }
+};
+
+export { getOrders, createOrder, deleteOrder };
