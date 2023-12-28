@@ -120,6 +120,10 @@ const Request = sequelize.define(
             type: DataTypes.BOOLEAN,
             allowNull: false,
         },
+        rejected: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        },
     },
     { timestamps: false }
 );

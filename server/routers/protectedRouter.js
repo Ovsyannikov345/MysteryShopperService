@@ -34,6 +34,7 @@ router.post("/companies/:id/avatar", upload.single("image"), companyController.u
 router.put("/companies/:id", companyController.update);
 
 router.get("/company/orders", orderController.getAll);
+router.get("/orders/:id", orderController.getOne);
 router.post("/orders", orderController.create);
 router.delete("/orders/:id", orderController.delete);
 

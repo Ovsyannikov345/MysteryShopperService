@@ -62,6 +62,10 @@ class CompanyController {
     async getProfile(req, res) {
         const id = req.companyId;
 
+        if (!id) {
+            return res.sendStatus(403);
+        }
+
         try {
             const company = await Company.findOne({
                 where: { id: id },

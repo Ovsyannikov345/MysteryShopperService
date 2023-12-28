@@ -71,7 +71,7 @@ const CompanyOrder = ({ order, deleteHandler }) => {
                         display={"flex"}
                         alignItems={"center"}
                     >
-                        {order.price != null ? order.price + " бел. рублей" : "Бессрочно"}
+                        {order.price != null ? order.price + " бел. рублей" : "Бесплатно"}
                     </Typography>
                     <Typography
                         variant="h2"
