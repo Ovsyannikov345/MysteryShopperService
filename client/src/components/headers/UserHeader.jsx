@@ -24,7 +24,7 @@ const UserHeader = () => {
                 <Logo />
                 <Typography variant="h1" textAlign={"center"}>
                     <Grid container item height={"100%"} alignItems={"center"}>
-                        <Link to={"/orders/create"} style={{ textDecoration: "none", color: "#000000" }}>
+                        <Link to={"/orders"} style={{ textDecoration: "none", color: "#000000" }}>
                             Доступные заказы
                         </Link>
                     </Grid>
