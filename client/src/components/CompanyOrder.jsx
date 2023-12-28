@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import DeleteConfirmationModal from "./modals/DeleteConfirmationModal";
+import addNoun from "../utils/fieldsParser";
 
 const CompanyOrder = ({ order, deleteHandler }) => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -62,7 +63,7 @@ const CompanyOrder = ({ order, deleteHandler }) => {
                         display={"flex"}
                         alignItems={"center"}
                     >
-                        {order.completionTime != null ? order.completionTime + " дней" : "Бессрочно"}
+                        {order.completionTime != null ? addNoun(order.completionTime, ["день", "дня", 'дней']) : "Бессрочно"}
                     </Typography>
                     <Typography
                         variant="h2"
@@ -71,7 +72,7 @@ const CompanyOrder = ({ order, deleteHandler }) => {
                         display={"flex"}
                         alignItems={"center"}
                     >
-                        {order.price != null ? order.price + " бел. рублей" : "Бесплатно"}
+                        {order.price != null ? addNoun(order.price, ["бел. рубль", "бел. рубля", "бел. рублей"]) : "Бесплатно"}
                     </Typography>
                     <Typography
                         variant="h2"
