@@ -7,10 +7,11 @@ import UserHeader from "./../../components/headers/UserHeader";
 import NavigateBack from "../../components/NavigateBack";
 import ProfileCards from "../../components/ProfileCards";
 import UserReview from "../../components/UserReview";
-import { getProfile, updateAvatar, updateUser } from "../../api/userApi";
+import { getProfile, getUser, updateAvatar, updateUser } from "../../api/userApi";
 import UserEditForm from "./../../components/forms/UserEditForm";
 import addNoun from "./../../utils/fieldsParser";
 import moment from "moment";
+import { useParams } from "react-router-dom";
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -27,6 +28,9 @@ const VisuallyHiddenInput = styled("input")({
 const UserProfilePage = () => {
     const theme = useTheme();
 
+    const { id } = useParams();
+
+    const [readonly, setReadonly] = useState(false);
     const [editMode, setEditMode] = useState(false);
 
     const [userData, setUserData] = useState({});
@@ -38,7 +42,7 @@ const UserProfilePage = () => {
 
     useEffect(() => {
         const loadData = async () => {
-            const response = await getProfile();
+            const response = id !== undefined ? await getUser(id) : await getProfile();
 
             if (!response) {
                 displayError("Сервис временно недоступен");
@@ -58,10 +62,11 @@ const UserProfilePage = () => {
             }
 
             setUserData(response.data);
+            setReadonly(id !== undefined);
         };
 
         loadData();
-    }, []);
+    }, [id]);
 
     const rating = useMemo(() => {
         try {
@@ -184,8 +189,8 @@ const UserProfilePage = () => {
                     justifyContent={"space-between"}
                     flexWrap={"nowrap"}
                 >
-                    <NavigateBack label="Доступные заказы" to={"/orders"} />
-                    {!editMode && (
+                    <NavigateBack label={id === undefined ? "Доступные заказы" : "Назад"} to={id === undefined ? "/orders" : -1} />
+                    {!readonly && !editMode && (
                         <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setEditMode(true)}>
                             <EditIcon sx={{ fontSize: 50 }}></EditIcon>
                         </IconButton>

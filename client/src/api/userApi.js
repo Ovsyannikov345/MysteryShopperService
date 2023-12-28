@@ -16,6 +16,22 @@ const getProfile = async () => {
     }
 };
 
+const getUser = async (id) => {
+    try {
+        const response = await host.get(`/api/users/${id}`);
+
+        return response;
+    } catch (error) {
+        if (error.response) {
+            return error.response;
+        } else if (error.request) {
+            console.log("Server did not respond.");
+        } else {
+            console.log("Error while creating request");
+        }
+    }
+}
+
 const updateUser = async (id, userData) => {
     try {
         const response = await host.put(`/api/users/${id}`, userData);
@@ -55,4 +71,4 @@ const updateAvatar = async (id, image) => {
     }
 };
 
-export { getProfile, updateUser, updateAvatar };
+export { getProfile, getUser, updateUser, updateAvatar };
