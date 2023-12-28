@@ -1,3 +1,4 @@
+import CompanyProfilePage from "../pages/Company/CompanyProfilePage";
 import UserProfilePage from "../pages/User/UserProfilePage";
 
 export const userRoutes = [
@@ -19,7 +20,7 @@ export const userRoutes = [
     },
     {
         path: "/company/:id",
-        Component: "Company details page",
+        Component: CompanyProfilePage,
     },
     {
         path: "/user",

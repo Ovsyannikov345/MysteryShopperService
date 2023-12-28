@@ -7,10 +7,11 @@ import { styled } from "@mui/material/styles";
 import moment from "moment";
 import ProfileCards from "../../components/ProfileCards";
 import { useTheme } from "@emotion/react";
-import { getProfile, updateAvatar } from "../../api/companyApi";
+import { getCompany, getProfile, updateAvatar } from "../../api/companyApi";
 import { updateCompany } from "../../api/companyApi";
 import CompanyReview from "../../components/CompanyReview";
 import CompanyEditForm from "../../components/forms/CompanyEditForm";
+import { useParams } from "react-router-dom";
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -27,6 +28,9 @@ const VisuallyHiddenInput = styled("input")({
 const CompanyProfilePage = () => {
     const theme = useTheme();
 
+    const { id } = useParams();
+
+    const [readonly, setReadonly] = useState(false);
     const [editMode, setEditMode] = useState(false);
 
     const [companyData, setCompanyData] = useState({});
@@ -38,7 +42,7 @@ const CompanyProfilePage = () => {
 
     useEffect(() => {
         const loadData = async () => {
-            const response = await getProfile();
+            const response = id !== undefined ? await getCompany(id) : await getProfile();
 
             if (!response) {
                 displayError("Сервис временно недоступен");
@@ -58,10 +62,11 @@ const CompanyProfilePage = () => {
             }
 
             setCompanyData(response.data);
+            setReadonly(id !== undefined);
         };
 
         loadData();
-    }, []);
+    }, [id]);
 
     const rating = useMemo(() => {
         try {
@@ -184,8 +189,11 @@ const CompanyProfilePage = () => {
                     justifyContent={"space-between"}
                     flexWrap={"nowrap"}
                 >
-                    <NavigateBack label="Мои заказы" to={"/my-orders"} />
-                    {!editMode && (
+                    <NavigateBack
+                        label={id === undefined ? "Мои заказы" : "Назад"}
+                        to={id === undefined ? "/my-orders" : -1}
+                    />
+                    {!readonly && !editMode && (
                         <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setEditMode(true)}>
                             <EditIcon sx={{ fontSize: 50 }}></EditIcon>
                         </IconButton>

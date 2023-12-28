@@ -33,6 +33,7 @@ router.put("/users/:id", userController.update);
 
 router.get("/companies", companyController.getAll);
 router.get("/company", companyController.getProfile);
+router.get("/companies/:id", companyController.getOne);
 router.get("/companies/:id/avatar", companyController.getAvatar);
 router.post("/companies/:id/avatar", upload.single("image"), companyController.updateAvatar);
 router.put("/companies/:id", companyController.update);
