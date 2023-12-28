@@ -103,24 +103,32 @@ class UserController {
     async update(req, res) {
         const { id } = req.params;
 
-        const user = { ...req.body };
-
-        if (isNaN(id) || parseInt(id) !== user.id) {
-            return res.sendStatus(400);
-        }
-
-        if ((await User.findOne({ where: { id: id } })) == null) {
-            return res.sendStatus(404);
-        }
-
-        if (req.userId !== id) {
+        if (id != req.userId) {
             return res.sendStatus(403);
         }
 
-        try {
-            await User.update(user, { where: { id: id } });
+        const userData = { ...req.body };
 
-            return res.sendStatus(204);
+        if (isNaN(id) || parseInt(id) !== userData.id) {
+            return res.sendStatus(400);
+        }
+
+        const user = await User.findOne({ where: { id: id } });
+
+        if (user == null) {
+            return res.sendStatus(404);
+        }
+
+        try {
+            await User.update(userData, { where: { id: id } });
+
+            const result = await User.findOne({
+                where: { id: id },
+                attributes: { exclude: ["password"] },
+                include: [{ model: Order }, { model: Report, include: [{ model: UserReview }] }],
+            });
+
+            return res.status(200).json(result);
         } catch (err) {
             return res.sendStatus(500);
         }

@@ -58,35 +58,32 @@ const UserProfilePage = () => {
             }
 
             setUserData(response.data);
-            console.log(response.data);
         };
 
         loadData();
     }, []);
 
     const rating = useMemo(() => {
-        // try {
-        //     if (companyData.Orders.length === 0) {
-        //         return "-";
-        //     }
+        try {
+            if (userData.Reports.map((report) => report.UserReviews).length === 0) {
+                return "-";
+            }
 
-        //     let totalGrade = 0;
-        //     let count = 0;
+            let totalGrade = 0;
+            let count = 0;
 
-        //     companyData.Orders.forEach((order) => {
-        //         order.CompanyReviews.forEach((review) => {
-        //             totalGrade += review.grade;
-        //             count++;
-        //         });
-        //     });
+            userData.Reports.forEach((report) => {
+                report.UserReviews.forEach((review) => {
+                    totalGrade += review.grade;
+                    count++;
+                });
+            });
 
-        //     return (totalGrade / count).toFixed(2);
-        // } catch {
-        //     return "-";
-        // }
-
-        return "-";
-    }, []);
+            return (totalGrade / count).toFixed(2);
+        } catch {
+            return "-";
+        }
+    }, [userData.Reports]);
 
     const displayError = (message) => {
         setErrorMessage(message);
@@ -101,65 +98,61 @@ const UserProfilePage = () => {
         setError(false);
     };
 
-    const applyChanges = async (updatedCompanyData) => {
-        console.log("apply");
-        // const response = await updateCompany(companyData.id, updatedCompanyData);
+    const applyChanges = async (updatedUserData) => {
+        const response = await updateUser(userData.id, updatedUserData);
 
-        // if (!response) {
-        //     displayError("Сервис временно недоступен");
-        //     return;
-        // }
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return;
+        }
 
-        // if (response.status === 401) {
-        //     localStorage.removeItem("jwt");
-        //     localStorage.removeItem("role");
-        //     window.location.reload();
-        // }
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
 
-        // if (response.status >= 300) {
-        //     displayError("Ошибка при изменении данных. Код: " + response.status);
-        //     return;
-        // }
+        if (response.status >= 300) {
+            displayError("Ошибка при изменении данных. Код: " + response.status);
+            return;
+        }
 
-        // const imageSuccess = await sendImage();
+        const imageSuccess = await sendImage();
 
-        // if (imageSuccess) {
-        //     setCompanyData(response.data);
-        //     setEditMode(false);
-        //     window.location.reload();
-        // }
+        if (imageSuccess) {
+            setUserData(response.data);
+            setEditMode(false);
+            window.location.reload();
+        }
     };
 
     const sendImage = async () => {
-        console.log("image sent");
+        if (image === undefined) {
+            return true;
+        }
+
+        const response = await updateAvatar(userData.id, image);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return false;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при отправке изображения. Код: " + response.status);
+            console.log(response);
+            return false;
+        }
+
+        setImage(undefined);
+
         return true;
-
-        // if (image === undefined) {
-        //     return true;
-        // }
-
-        // const response = await updateAvatar(companyData.id, image);
-
-        // if (!response) {
-        //     displayError("Сервис временно недоступен");
-        //     return false;
-        // }
-
-        // if (response.status === 401) {
-        //     localStorage.removeItem("jwt");
-        //     localStorage.removeItem("role");
-        //     window.location.reload();
-        // }
-
-        // if (response.status >= 300) {
-        //     displayError("Ошибка при отправке изображения. Код: " + response.status);
-        //     console.log(response);
-        //     return false;
-        // }
-
-        // setImage(undefined);
-
-        // return true;
     };
 
     return (
@@ -199,7 +192,7 @@ const UserProfilePage = () => {
                     )}
                 </Grid>
                 <Grid container item pl={"150px"} mt={"40px"} pb={"46px"}>
-                    <Grid container item gap={"50px"} alignItems={"flex-start"}>
+                    <Grid container item gap={"50px"} alignItems={editMode ? "center" : "flex-start"}>
                         <Avatar
                             src={
                                 userData.id !== undefined
@@ -217,7 +210,11 @@ const UserProfilePage = () => {
                                     {[userData.surname, userData.name, userData.patronymic].join(" ")}
                                 </Typography>
                                 <Typography variant="h3" height={"26px"}>
-                                    {userData.city + ", " + addNoun(userData.age, ["год", "года", "лет"])}
+                                    {(userData.city ?? "") +
+                                        (userData.city != null && userData.age != null ? ", " : "") +
+                                        (userData.age != null
+                                            ? addNoun(userData.age, ["год", "года", "лет"])
+                                            : "")}
                                 </Typography>
                                 <Typography variant="h3" maxWidth={"641px"}>
                                     {userData.description}
@@ -287,7 +284,7 @@ const UserProfilePage = () => {
                             </Grid>
                             {userData.Reports !== undefined ? (
                                 <Grid container item mt={"50px"} flexDirection={"column"}>
-                                    {userData.Reports.map(report => report.UserReviews).length > 0 ? (
+                                    {userData.Reports.map((report) => report.UserReviews).length > 0 ? (
                                         <>
                                             <Typography
                                                 variant="h2"
