@@ -65,7 +65,7 @@ const CompanyProfilePage = () => {
 
     const rating = useMemo(() => {
         try {
-            if (companyData.Orders.length === 0) {
+            if (companyData.Orders.map((order) => order.CompanyReviews).length === 0) {
                 return "-";
             }
 
