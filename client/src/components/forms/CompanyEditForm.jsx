@@ -3,9 +3,8 @@ import React from "react";
 import { useFormik } from "formik";
 import InputMask from "react-input-mask";
 import validateCompanyData from "../../utils/validateCompanyData";
-import { updateCompany } from "../../api/companyApi";
 
-const CompanyEditForm = ({ companyData, cancelHandler, applyCallback, errorHandler }) => {
+const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }) => {
     const formik = useFormik({
         initialValues: {
             name: companyData.name,
@@ -29,19 +28,7 @@ const CompanyEditForm = ({ companyData, cancelHandler, applyCallback, errorHandl
                 },
             };
 
-            const response = await updateCompany(companyData.id, updatedCompanyData);
-
-            if (!response) {
-                errorHandler("Сервис временно недоступен");
-                return;
-            }
-
-            if (response.status >= 300) {
-                errorHandler("Ошибка при изменении данных. Код: " + response.status);
-                return;
-            }
-
-            applyCallback();
+            applyCallback(updatedCompanyData);
         },
     });
 

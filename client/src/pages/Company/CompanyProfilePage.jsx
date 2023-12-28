@@ -8,6 +8,7 @@ import moment from "moment";
 import ProfileCards from "../../components/ProfileCards";
 import { useTheme } from "@emotion/react";
 import { getProfile, updateAvatar } from "../../api/companyApi";
+import { updateCompany } from "../../api/companyApi";
 import CompanyReview from "../../components/CompanyReview";
 import CompanyEditForm from "../../components/forms/CompanyEditForm";
 
@@ -97,22 +98,61 @@ const CompanyProfilePage = () => {
         setError(false);
     };
 
-    const sendImage = async (e) => {
-        if (image === undefined) {
+    const applyChanges = async (updatedCompanyData) => {
+        const response = await updateCompany(companyData.id, updatedCompanyData);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
             return;
         }
 
-        console.log(image);
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при изменении данных. Код: " + response.status);
+            return;
+        }
+
+        const imageSuccess = await sendImage();
+
+        if (imageSuccess) {
+            setCompanyData(response.data);
+            setEditMode(false);
+            window.location.reload();
+        }
+    };
+
+    const sendImage = async () => {
+        if (image === undefined) {
+            return true;
+        }
 
         const response = await updateAvatar(companyData.id, image);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return false;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
 
         if (response.status >= 300) {
             displayError("Ошибка при отправке изображения. Код: " + response.status);
             console.log(response);
-            return;
+            return false;
         }
 
         setImage(undefined);
+
+        return true;
     };
 
     return (
@@ -308,12 +348,7 @@ const CompanyProfilePage = () => {
                         <CompanyEditForm
                             companyData={companyData}
                             cancelHandler={() => setEditMode(false)}
-                            applyCallback={() => {
-                                sendImage();
-                                setEditMode(false);
-                                window.location.reload();
-                            }}
-                            errorHandler={displayError}
+                            applyCallback={applyChanges}
                         />
                     )}
                 </Grid>
