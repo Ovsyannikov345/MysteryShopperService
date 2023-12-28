@@ -1,14 +1,43 @@
-const { Order, Report, CompanyReview, Request, User } = require("../database/models");
+const { Order, Report, CompanyReview, Request, User, Company } = require("../database/models");
 
 class OrderController {
     async getAll(req, res) {
         try {
             const companyId = req.companyId;
+            const userId = req.userId;
 
-            const companyOrders = await Order.findAll({ where: { CompanyId: companyId } });
+            if (companyId) {
+                const companyOrders = await Order.findAll({ where: { CompanyId: companyId } });
 
-            return res.json(companyOrders);
+                return res.json(companyOrders);
+            } else if (userId) {
+                const orders = await Order.findAll({
+                    include: [
+                        {
+                            model: Company,
+                            attributes: ["id", "name"],
+                            include: [
+                                {
+                                    model: Order,
+                                    attributes: ["id"],
+                                    include: [
+                                        {
+                                            model: CompanyReview,
+                                            attributes: ["grade"],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                });
+
+                return res.json(orders);
+            }
+
+            return res.sendStatus(401);
         } catch (err) {
+            console.log(err);
             return res.sendStatus(500);
         }
     }

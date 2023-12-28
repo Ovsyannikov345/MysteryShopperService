@@ -1,10 +1,11 @@
 import CompanyProfilePage from "../pages/Company/CompanyProfilePage";
+import AvailableOrdersPage from "../pages/User/AvailableOrdersPage";
 import UserProfilePage from "../pages/User/UserProfilePage";
 
 export const userRoutes = [
     {
         path: "/orders",
-        Component: "Orders page",
+        Component: AvailableOrdersPage,
     },
     {
         path: "/orders/:id",
