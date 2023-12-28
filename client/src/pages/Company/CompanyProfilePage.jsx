@@ -304,7 +304,7 @@ const CompanyProfilePage = () => {
                             )}
                             {companyData.Orders !== undefined ? (
                                 <Grid container item mt={"50px"} flexDirection={"column"}>
-                                    {companyData.Orders.length > 0 ? (
+                                    {companyData.Orders.map((order) => order.CompanyReviews).length > 0 ? (
                                         <>
                                             <Typography
                                                 variant="h2"
