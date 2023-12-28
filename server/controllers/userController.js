@@ -28,12 +28,32 @@ class UserController {
             const user = await User.findOne({
                 where: { id: id },
                 attributes: { exclude: ["password"] },
-                include: [{ model: Order }, { model: UserReview }],
+                include: [{ model: Order }, { model: Report, include: [{ model: UserReview }] }],
             });
 
             if (user == null) {
                 return res.sendStatus(404);
             }
+
+            return res.json(user);
+        } catch (err) {
+            return res.sendStatus(500);
+        }
+    }
+
+    async getProfile(req, res) {
+        const id = req.userId;
+
+        if (!id) {
+            return res.sendStatus(403);
+        }
+
+        try {
+            const user = await User.findOne({
+                where: { id: id },
+                attributes: { exclude: ["password"] },
+                include: [{ model: Order }, { model: Report, include: [{ model: UserReview }] }],
+            });
 
             return res.json(user);
         } catch (err) {
@@ -106,7 +126,36 @@ class UserController {
         }
     }
 
-    //TODO add order.
+    async updateAvatar(req, res) {
+        try {
+            const { id } = req.params;
+
+            if (isNaN(id)) {
+                return res.sendStatus(400);
+            }
+
+            if (id != req.userId) {
+                return res.sendStatus(403);
+            }
+
+            const savePath = path.join(__dirname, "../", "avatars", "user", id + ".png");
+
+            const imagePath = path.join(__dirname, "../", "uploads", id + ".png");
+
+            if (!fs.existsSync(imagePath)) {
+                return res.sendStatus(404);
+            }
+
+            fs.rename(imagePath, savePath, (err) => {
+                if (err) throw err;
+            });
+
+            return res.sendStatus(204);
+        } catch (err) {
+            console.log(err);
+            return res.sendStatus(500);
+        }
+    }
 }
 
 module.exports = new UserController();
