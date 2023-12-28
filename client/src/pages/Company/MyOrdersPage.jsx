@@ -46,7 +46,7 @@ const MyOrdersPage = () => {
             }
 
             if (response.status >= 300) {
-                displayError("Ошибка при создании заказа. Код: " + response.status);
+                displayError("Ошибка при загрузке заказов. Код: " + response.status);
                 return;
             }
 
