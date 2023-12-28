@@ -38,7 +38,7 @@ const CreateOrderPage = () => {
             return;
         }
 
-        navigate("/");
+        navigate("/my-orders");
     };
 
     const displayError = (message) => {
