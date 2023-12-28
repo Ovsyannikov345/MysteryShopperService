@@ -53,6 +53,10 @@ class CompanyController {
                 ],
             });
 
+            if (company == null) {
+                return res.sendStatus(404);
+            }
+
             return res.json(company);
         } catch (err) {
             return res.sendStatus(500);
