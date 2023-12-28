@@ -72,7 +72,7 @@ class UserController {
             const imagePath = path.join(__dirname, "../", "avatars", "user", id + ".png");
 
             if (!fs.existsSync(imagePath)) {
-                return res.sendStatus(404);
+                return res.sendStatus(204);
             }
 
             return res.sendFile(imagePath);
