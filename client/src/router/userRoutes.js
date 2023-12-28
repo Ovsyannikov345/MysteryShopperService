@@ -1,4 +1,4 @@
-import UserProfilePage from "../pages/UserProfilePage";
+import UserProfilePage from "../pages/User/UserProfilePage";
 
 export const userRoutes = [
     {
