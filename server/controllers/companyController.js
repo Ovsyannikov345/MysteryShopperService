@@ -170,7 +170,24 @@ class CompanyController {
             await Company.update(companyData, { where: { id: id } });
             await ContactPerson.update(contactPersonData, { where: { CompanyId: company.id } });
 
-            return res.sendStatus(204);
+            const result = await Company.findOne({
+                where: { id: id },
+                attributes: { exclude: ["password"] },
+                include: [
+                    { model: ContactPerson },
+                    {
+                        model: Order,
+                        include: [
+                            {
+                                model: CompanyReview,
+                                include: [{ model: User, attributes: ["id", "name", "surname"] }],
+                            },
+                        ],
+                    },
+                ],
+            });
+
+            return res.status(200).json(result);
         } catch (err) {
             return res.sendStatus(500);
         }
