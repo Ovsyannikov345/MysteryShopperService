@@ -9,6 +9,8 @@ import { deleteOrder } from "../../api/ordersApi";
 const MyOrdersPage = () => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [success, setSuccess] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
 
     const [orders, setOrders] = useState([]);
     const [sortOption, setSortOption] = useState("date desc");
@@ -59,12 +61,18 @@ const MyOrdersPage = () => {
         setError(true);
     };
 
+    const displaySuccess = (message) => {
+        setSuccessMessage(message);
+        setSuccess(true);
+    };
+
     const closeSnackbar = (event, reason) => {
         if (reason === "clickaway") {
             return;
         }
 
         setError(false);
+        setSuccess(false);
     };
 
     const removeOrder = async (id) => {
@@ -87,6 +95,7 @@ const MyOrdersPage = () => {
         }
 
         setOrders(orders.filter((order) => order.id !== id));
+        displaySuccess("Заказ успешно удален");
     };
 
     return (
@@ -131,6 +140,11 @@ const MyOrdersPage = () => {
             <Snackbar open={error} autoHideDuration={6000} onClose={closeSnackbar}>
                 <Alert onClose={closeSnackbar} severity="error" sx={{ width: "100%" }}>
                     {errorMessage}
+                </Alert>
+            </Snackbar>
+            <Snackbar open={success} autoHideDuration={6000} onClose={closeSnackbar}>
+                <Alert onClose={closeSnackbar} severity="success" sx={{ width: "100%" }}>
+                    {successMessage}
                 </Alert>
             </Snackbar>
         </Grid>
