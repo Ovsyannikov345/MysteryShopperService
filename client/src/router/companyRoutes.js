@@ -22,6 +22,10 @@ export const companyRoutes = [
         Component: CreateOrderPage,
     },
     {
+        path: "/company/:id",
+        Component: CompanyProfilePage,
+    },
+    {
         path: "/company",
         Component: CompanyProfilePage,
     },

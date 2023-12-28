@@ -23,6 +23,10 @@ export const userRoutes = [
         Component: CompanyProfilePage,
     },
     {
+        path: "/user/:id",
+        Component: UserProfilePage,
+    },
+    {
         path: "/user",
         Component: UserProfilePage,
     },
