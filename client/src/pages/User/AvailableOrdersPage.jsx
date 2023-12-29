@@ -5,6 +5,7 @@ import SortSelector from "../../components/SortSelector";
 import { getOrders } from "../../api/ordersApi";
 import UserOrder from "../../components/UserOrder";
 
+// TODO add filter with local storage.
 const AvailableOrdersPage = () => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -94,7 +95,7 @@ const AvailableOrdersPage = () => {
                 flexGrow={1}
                 bgcolor={"#FFFFFF"}
             >
-                <Grid container item maxWidth={"867px"} mt={"40px"} gap={"5px"}>
+                <Grid container item maxWidth={"867px"} mt={"40px"} gap={"5px"} pb={"40px"}>
                     <Grid container item justifyContent={"space-between"} alignItems={"center"}>
                         <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                             Доступные заказы
