@@ -64,7 +64,31 @@ class OrderController {
 
                 return res.json(order);
             } else if (userId) {
-                // TODO user case.
+                const order = await Order.findOne({
+                    where: { id: id },
+                    include: [
+                        {
+                            model: Company,
+                            attributes: ["id", "name"],
+                            include: [
+                                {
+                                    model: Order,
+                                    attributes: ["id"],
+                                    include: [
+                                        {
+                                            model: CompanyReview,
+                                            attributes: ["grade"],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        { model: Request, where: { UserId: userId }, required: false },
+                        { model: Report, where: { UserId: userId }, required: false },
+                    ],
+                });
+
+                return res.json(order);
             }
 
             return res.sendStatus(403);
