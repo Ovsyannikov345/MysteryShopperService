@@ -9,6 +9,7 @@ import moment from "moment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Request from "../../components/Request";
 import Report from "../../components/Report";
+import addNoun from "../../utils/fieldsParser";
 
 const CompanyOrderDetails = () => {
     const theme = useTheme();
@@ -185,7 +186,7 @@ const CompanyOrderDetails = () => {
                             label="Время на выполнение"
                             value={
                                 order.completionTime !== undefined && order.completionTime != null
-                                    ? order.completionTime + " дней"
+                                    ? addNoun(order.completionTime, ["день", "дня", "дней"])
                                     : "Бессрочно"
                             }
                             InputProps={{
@@ -207,7 +208,7 @@ const CompanyOrderDetails = () => {
                             label="Стоимость"
                             value={
                                 order.price !== undefined && order.price != null
-                                    ? order.price + " бел. рублей"
+                                    ? addNoun(order.price, ["бел. рубль", "бел. рубля", "бел. рублей"])
                                     : "Бесплатно"
                             }
                             InputProps={{
