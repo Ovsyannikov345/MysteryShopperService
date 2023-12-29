@@ -193,7 +193,7 @@ const CompanyProfilePage = () => {
                         label={id === undefined ? "Мои заказы" : "Назад"}
                         to={id === undefined ? "/my-orders" : -1}
                     />
-                    {!readonly && !editMode && (
+                    {!readonly && !editMode && companyData.id !== undefined && (
                         <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setEditMode(true)}>
                             <EditIcon sx={{ fontSize: 50 }}></EditIcon>
                         </IconButton>

@@ -190,7 +190,7 @@ const UserProfilePage = () => {
                     flexWrap={"nowrap"}
                 >
                     <NavigateBack label={id === undefined ? "Доступные заказы" : "Назад"} to={id === undefined ? "/orders" : -1} />
-                    {!readonly && !editMode && (
+                    {!readonly && !editMode && userData.id !== undefined && (
                         <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setEditMode(true)}>
                             <EditIcon sx={{ fontSize: 50 }}></EditIcon>
                         </IconButton>
