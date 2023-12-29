@@ -1,5 +1,6 @@
 import CompanyProfilePage from "../pages/Company/CompanyProfilePage";
 import AvailableOrdersPage from "../pages/User/AvailableOrdersPage";
+import UserOrderDetails from "../pages/User/UserOrderDetails";
 import UserProfilePage from "../pages/User/UserProfilePage";
 
 export const userRoutes = [
@@ -9,7 +10,7 @@ export const userRoutes = [
     },
     {
         path: "/orders/:id",
-        Component: "Order details page",
+        Component: UserOrderDetails,
     },
     {
         path: "/my-orders",
