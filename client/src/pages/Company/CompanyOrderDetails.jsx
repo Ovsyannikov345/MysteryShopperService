@@ -300,7 +300,7 @@ const CompanyOrderDetails = () => {
                                 <Typography fontSize={"20px"}>Заявки на выполнение</Typography>
                             </AccordionSummary>
                             <Stack gap={"15px"}>
-                                {order.Requests && order.Requests.length > 0 ? (
+                                {filteredRequests.length > 0 ? (
                                     filteredRequests.map((request) => (
                                         <Request
                                             key={request.id}
@@ -321,24 +321,13 @@ const CompanyOrderDetails = () => {
                                 <Typography fontSize={"20px"}>Отчеты</Typography>
                             </AccordionSummary>
                             <Stack gap={"15px"}>
-                                <Report
-                                    report={{
-                                        User: {
-                                            name: "Иван",
-                                            surname: "Иванов",
-                                            patronymic: "Иванович",
-                                        },
-                                    }}
-                                />
-                                <Report
-                                    report={{
-                                        User: {
-                                            name: "Сергей",
-                                            surname: "Сергеев",
-                                            patronymic: "Сергеевич",
-                                        },
-                                    }}
-                                />
+                                {order.Reports && order.Reports.length > 0 ? (
+                                    order.Reports.map((report) => <Report key={report.id} report={report} />)
+                                ) : (
+                                    <Typography variant="h2" fontSize={"20px"} ml={"15px"} mb={"15px"}>
+                                        Отчетов пока нет
+                                    </Typography>
+                                )}
                             </Stack>
                         </Accordion>
                     </Grid>
