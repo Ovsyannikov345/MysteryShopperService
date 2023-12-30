@@ -234,4 +234,5 @@ module.exports = {
     SupportRequest,
     UserReview,
     User,
+    UserOrders,
 };

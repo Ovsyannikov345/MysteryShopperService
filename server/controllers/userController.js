@@ -1,4 +1,4 @@
-const { User, Order, Report, UserReview } = require("../database/models");
+const { User, Order, Report, UserReview, Company } = require("../database/models");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
@@ -28,7 +28,23 @@ class UserController {
             const user = await User.findOne({
                 where: { id: id },
                 attributes: { exclude: ["password"] },
-                include: [{ model: Order }, { model: Report, include: [{ model: UserReview }] }],
+                include: [
+                    { model: Order },
+                    {
+                        model: Report,
+                        include: [
+                            {
+                                model: UserReview,
+                                include: [
+                                    {
+                                        model: Company,
+                                        attributes: ["id", "name"],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
             });
 
             if (user == null) {
@@ -52,11 +68,30 @@ class UserController {
             const user = await User.findOne({
                 where: { id: id },
                 attributes: { exclude: ["password"] },
-                include: [{ model: Order }, { model: Report, include: [{ model: UserReview }] }],
+                include: [
+                    {
+                        model: Order,
+                    },
+                    {
+                        model: Report,
+                        include: [
+                            {
+                                model: UserReview,
+                                include: [
+                                    {
+                                        model: Company,
+                                        attributes: ["id", "name"],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
             });
 
             return res.json(user);
         } catch (err) {
+            console.log(err);
             return res.sendStatus(500);
         }
     }

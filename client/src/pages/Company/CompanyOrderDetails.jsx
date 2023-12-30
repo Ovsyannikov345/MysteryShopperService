@@ -133,6 +133,30 @@ const CompanyOrderDetails = () => {
         displaySuccess("Заявка отклонена");
     };
 
+    const reloadOrder = async () => {
+        const response = await getOrder(id);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при загрузке профиля. Код: " + response.status);
+            console.log(response);
+            return;
+        }
+
+        displaySuccess("Отзыв отправлен");
+        setOrder(response.data);
+    };
+
     return (
         <Grid
             container
@@ -322,7 +346,14 @@ const CompanyOrderDetails = () => {
                             </AccordionSummary>
                             <Stack gap={"15px"}>
                                 {order.Reports && order.Reports.length > 0 ? (
-                                    order.Reports.map((report) => <Report key={report.id} report={report} />)
+                                    order.Reports.map((report) => (
+                                        <Report
+                                            key={report.id}
+                                            report={report}
+                                            errorHandler={displayError}
+                                            successHandler={reloadOrder}
+                                        />
+                                    ))
                                 ) : (
                                     <Typography variant="h2" fontSize={"20px"} ml={"15px"} mb={"15px"}>
                                         Отчетов пока нет

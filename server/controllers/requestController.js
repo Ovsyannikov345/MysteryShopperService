@@ -1,4 +1,4 @@
-const { Request } = require("../database/models");
+const { Request, UserOrders } = require("../database/models");
 
 class RequestController {
     async create(req, res) {
@@ -50,8 +50,15 @@ class RequestController {
 
             await Request.update({ accepted: accepted, rejected: !accepted }, { where: { id: requestId } });
 
+            if (accepted) {
+                const request = await Request.findOne({ where: { id: requestId } });
+
+                UserOrders.create({ UserId: request.UserId, OrderId: request.OrderId });
+            }
+
             return res.sendStatus(204);
         } catch (err) {
+            console.log(err);
             return res.sendStatus(500);
         }
     }

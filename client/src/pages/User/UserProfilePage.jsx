@@ -70,7 +70,7 @@ const UserProfilePage = () => {
 
     const rating = useMemo(() => {
         try {
-            if (userData.Reports.map((report) => report.UserReviews).length === 0) {
+            if (userData.Reports.map((report) => report.UserReview).length === 0) {
                 return "-";
             }
 
@@ -78,10 +78,10 @@ const UserProfilePage = () => {
             let count = 0;
 
             userData.Reports.forEach((report) => {
-                report.UserReviews.forEach((review) => {
-                    totalGrade += review.grade;
+                if (report.UserReview != null) {
+                    totalGrade += report.UserReview.grade;
                     count++;
-                });
+                }
             });
 
             return (totalGrade / count).toFixed(2);

@@ -23,6 +23,7 @@ const companyController = require("../controllers/companyController");
 const orderController = require("../controllers/orderController");
 const requestController = require("../controllers/requestController");
 const reportController = require("../controllers/reportController");
+const userReviewController = require("../controllers/userReviewController");
 
 const router = new Router();
 
@@ -48,5 +49,7 @@ router.post("/orders/:id/reports", reportController.create);
 router.delete("/orders/:id", orderController.delete);
 
 router.put("/requests/:id", requestController.update);
+
+router.post("/reviews", userReviewController.create);
 
 module.exports = router;

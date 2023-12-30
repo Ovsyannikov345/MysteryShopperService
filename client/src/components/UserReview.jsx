@@ -13,11 +13,11 @@ const UserReview = ({ userReview }) => {
             gap={"8px"}
             style={{ border: "2px solid #DDC12C", borderRadius: "10px" }}
         >
-            <Button style={{ padding: 0 }} onClick={() => navigate(`/user/${userReview.Company.id}`)}>
+            <Button style={{ padding: 0 }} onClick={() => navigate(`/company/${userReview.Company.id}`)}>
                 <Avatar
                     src={
                         userReview.Company.id !== undefined
-                            ? `http://localhost:5000/api/users/${
+                            ? `http://localhost:5000/api/companies/${
                                   userReview.Company.id
                               }/avatar?jwt=${localStorage.getItem("jwt")}`
                             : ""
