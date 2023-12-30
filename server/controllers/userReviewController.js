@@ -2,7 +2,13 @@ const { UserReview } = require("../database/models");
 
 class UserReviewController {
     async create(req, res) {
-        const review = { ...req.body };
+        if (!req.companyId) {
+            return res.sendStatus(403);
+        }
+
+        const companyId = req.companyId;
+
+        const review = { ...req.body, CompanyId: companyId };
 
         try {
             const createdReview = UserReview.create(review);
