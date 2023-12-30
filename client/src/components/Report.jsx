@@ -1,13 +1,36 @@
 import { Grid, Avatar, Stack, Typography, Rating, Button } from "@mui/material";
-import React from "react";
+import React, { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Report = ({ report }) => {
+const Report = ({ report, finishHandler }) => {
+    const navigate = useNavigate();
+
+    const rating = useMemo(() => {
+        try {
+            let sum = 0;
+            let count = 0;
+
+            report.User.Reports.forEach((report) => {
+                if (report.UserReview != null) {
+                    sum += report.UserReview.grade;
+                    count++;
+                }
+            });
+
+            if (count === 0) {
+                return 0;
+            }
+
+            return sum / count;
+        } catch {
+            return 0;
+        }
+    }, [report.User.Reports]);
+
     const finishReport = async () => {
-        // TODO implement.
-        console.log("finish");
+        finishHandler(report);
     };
 
-    // TODO implement link to user profile and make image a link.
     return (
         <Grid
             container
@@ -17,7 +40,7 @@ const Report = ({ report }) => {
             rowGap={"10px"}
             style={{ border: "2px solid #DDC12C", borderRadius: "10px" }}
         >
-            <Button style={{ padding: "0px" }}>
+            <Button style={{ padding: "0px" }} onClick={() => navigate(`/user/${report.User.id}`)}>
                 <Avatar
                     src={
                         report.User.id !== undefined
@@ -35,10 +58,10 @@ const Report = ({ report }) => {
                     <Typography variant="h3" height={"20px"}>
                         {[report.User.surname, report.User.name, report.User.patronymic].join(" ")}
                     </Typography>
-                    <Rating value={0} readOnly />
+                    <Rating value={rating} readOnly />
                 </Grid>
                 <Grid container item width={"150px"} alignItems={"center"}>
-                    <Button variant="outlined" fullWidth>
+                    <Button variant="outlined" fullWidth onClick={() => navigate(`/user/${report.User.id}`)}>
                         ПРОФИЛЬ
                     </Button>
                 </Grid>
@@ -46,13 +69,10 @@ const Report = ({ report }) => {
             <Grid container item width={"100%"} flexDirection={"column"} gap={"10px"}>
                 <Grid container item width={"100%"} flexDirection={"column"}>
                     <Typography variant="h2" height={"38px"}>
-                        Отличное качество обслуживания
+                        {report.title}
                     </Typography>
-                    <Typography variant="h3">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sollicitudin tincidunt mauris,
-                        id vestibulum nibh porttitor sed.
-                    </Typography>
-                    <Rating value={0} readOnly style={{ marginTop: "5px" }} />
+                    <Typography variant="h3">{report.description}</Typography>
+                    <Rating value={report.grade} readOnly style={{ marginTop: "5px" }} />
                 </Grid>
                 <Grid container item width={"143px"}>
                     <Button fullWidth variant="contained" onClick={finishReport}>
