@@ -10,12 +10,12 @@ const Request = ({ request, acceptHandler, declineHandler }) => {
             let sum = 0;
             let count = 0;
 
-            request.User.Reports.forEach((report) =>
-                report.UserReviews.forEach((review) => {
-                    sum += review.grade;
+            request.User.Reports.forEach((report) => {
+                if (report.UserReview != null) {
+                    sum += report.UserReview.grade;
                     count++;
-                })
-            );
+                }
+            });
 
             if (count === 0) {
                 return 0;
