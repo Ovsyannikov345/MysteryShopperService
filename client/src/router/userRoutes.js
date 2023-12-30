@@ -17,10 +17,6 @@ export const userRoutes = [
         Component: "My orders page",
     },
     {
-        path: "/my-orders/:id",
-        Component: "Order details page",
-    },
-    {
         path: "/company/:id",
         Component: CompanyProfilePage,
     },
