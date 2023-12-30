@@ -21,6 +21,7 @@ const upload = multer({ storage: storage });
 const userController = require("../controllers/userController");
 const companyController = require("../controllers/companyController");
 const orderController = require("../controllers/orderController");
+const requestController = require("../controllers/requestController");
 
 const router = new Router();
 
@@ -41,6 +42,7 @@ router.put("/companies/:id", companyController.update);
 router.get("/company/orders", orderController.getAll);
 router.get("/orders/:id", orderController.getOne);
 router.post("/orders", orderController.create);
+router.post("/orders/:id/requests", requestController.create);
 router.delete("/orders/:id", orderController.delete);
 
 module.exports = router;
