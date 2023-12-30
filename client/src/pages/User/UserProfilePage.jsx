@@ -189,7 +189,10 @@ const UserProfilePage = () => {
                     justifyContent={"space-between"}
                     flexWrap={"nowrap"}
                 >
-                    <NavigateBack label={id === undefined ? "Доступные заказы" : "Назад"} to={id === undefined ? "/orders" : -1} />
+                    <NavigateBack
+                        label={id === undefined ? "Доступные заказы" : "Назад"}
+                        to={id === undefined ? "/orders" : -1}
+                    />
                     {!readonly && !editMode && userData.id !== undefined && (
                         <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setEditMode(true)}>
                             <EditIcon sx={{ fontSize: 50 }}></EditIcon>
@@ -289,7 +292,7 @@ const UserProfilePage = () => {
                             </Grid>
                             {userData.Reports !== undefined ? (
                                 <Grid container item mt={"50px"} flexDirection={"column"}>
-                                    {userData.Reports.map((report) => report.UserReviews).length > 0 ? (
+                                    {userData.Reports.filter((report) => report.UserReview != null).length > 0 ? (
                                         <>
                                             <Typography
                                                 variant="h2"
@@ -307,11 +310,14 @@ const UserProfilePage = () => {
                                                 flexDirection={"column"}
                                                 gap={"25px"}
                                             >
-                                                {userData.Reports.map((report) =>
-                                                    report.UserReviews.map((review) => (
-                                                        <UserReview key={review.id} userReview={review} />
-                                                    ))
-                                                )}
+                                                {userData.Reports.filter(
+                                                    (report) => report.UserReview != null
+                                                ).map((report) => (
+                                                    <UserReview
+                                                        key={report.UserReview.id}
+                                                        userReview={report.UserReview}
+                                                    />
+                                                ))}
                                             </Grid>
                                         </>
                                     ) : (
