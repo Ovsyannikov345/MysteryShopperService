@@ -7,6 +7,7 @@ import NavigateBack from "../../components/NavigateBack";
 import { getOrder } from "../../api/ordersApi";
 import moment from "moment";
 import addNoun from "../../utils/fieldsParser";
+import { createRequest } from "../../api/requestApi";
 
 const UserOrderDetails = () => {
     const theme = useTheme();
@@ -91,9 +92,27 @@ const UserOrderDetails = () => {
     };
 
     const sendRequest = async () => {
-        console.log("request");
-        // TODO implement.
-    }
+        const response = await createRequest(id);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при создании запроса. Код: " + response.status);
+            return;
+        }
+
+        order.Requests.push(response.data);
+        displaySuccess("Заявка успешно отправлена");
+    };
 
     return (
         <Grid
@@ -297,7 +316,12 @@ const UserOrderDetails = () => {
                                 }}
                             />
                             {order.Requests.length === 0 ? (
-                                <Button variant="contained" fullWidth style={{ marginTop: "10px" }} onClick={sendRequest}>
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    style={{ marginTop: "10px" }}
+                                    onClick={sendRequest}
+                                >
                                     ОТПРАВИТЬ ЗАЯВКУ
                                 </Button>
                             ) : !order.Requests[0].accepted ? (
@@ -314,6 +338,11 @@ const UserOrderDetails = () => {
             <Snackbar open={error} autoHideDuration={6000} onClose={closeSnackbar}>
                 <Alert onClose={closeSnackbar} severity="error" sx={{ width: "100%" }}>
                     {errorMessage}
+                </Alert>
+            </Snackbar>
+            <Snackbar open={success} autoHideDuration={6000} onClose={closeSnackbar}>
+                <Alert onClose={closeSnackbar} severity="success" sx={{ width: "100%" }}>
+                    {successMessage}
                 </Alert>
             </Snackbar>
         </Grid>
