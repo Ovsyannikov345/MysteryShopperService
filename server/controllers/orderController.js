@@ -97,6 +97,10 @@ class OrderController {
                                         },
                                     ],
                                 },
+                                {
+                                    model: UserReview,
+                                    attributes: ["id"],
+                                },
                             ],
                         },
                     ],
