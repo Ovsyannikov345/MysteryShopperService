@@ -45,4 +45,6 @@ router.post("/orders", orderController.create);
 router.post("/orders/:id/requests", requestController.create);
 router.delete("/orders/:id", orderController.delete);
 
+router.put("/requests/:id", requestController.update);
+
 module.exports = router;
