@@ -1,17 +1,32 @@
 import { Grid, Avatar, Stack, Typography, Rating, Button } from "@mui/material";
-import React from "react";
+import React, { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Request = ({ request }) => {
-    const acceptRequest = async () => {
-        // TODO implement.
-        console.log("accept");
-    };
+const Request = ({ request, acceptHandler, declineHandler }) => {
+    const navigate = useNavigate();
 
-    const declineRequest = async () => {
-        // TODO implement.
-        console.log("decline");
-    };
-    // TODO implement link to user profile and make image a link.
+    const rating = useMemo(() => {
+        try {
+            let sum = 0;
+            let count = 0;
+
+            request.User.Reports.forEach((report) =>
+                report.UserReviews.forEach((review) => {
+                    sum += review.grade;
+                    count++;
+                })
+            );
+
+            if (count === 0) {
+                return 0;
+            }
+
+            return sum / count;
+        } catch {
+            return 0;
+        }
+    }, [request.User.Reports]);
+
     return (
         <Grid
             container
@@ -21,7 +36,7 @@ const Request = ({ request }) => {
             rowGap={"20px"}
             style={{ border: "2px solid #DDC12C", borderRadius: "10px" }}
         >
-            <Button style={{ padding: "0px" }}>
+            <Button style={{ padding: "0px" }} onClick={() => navigate(`/user/${request.User.id}`)}>
                 <Avatar
                     src={
                         request.User.id !== undefined
@@ -39,22 +54,22 @@ const Request = ({ request }) => {
                     <Typography variant="h3" height={"20px"}>
                         {[request.User.surname, request.User.name, request.User.patronymic].join(" ")}
                     </Typography>
-                    <Rating value={0} readOnly />
+                    <Rating value={rating} precision={0.5} readOnly />
                 </Grid>
                 <Grid container item width={"150px"} alignItems={"center"}>
-                    <Button variant="outlined" fullWidth>
+                    <Button variant="outlined" fullWidth onClick={() => navigate(`/user/${request.User.id}`)}>
                         ПРОФИЛЬ
                     </Button>
                 </Grid>
             </Stack>
             <Grid container item width={"100%"} gap={"20px"}>
                 <Grid container item width={"143px"}>
-                    <Button fullWidth variant="contained" onClick={acceptRequest}>
+                    <Button fullWidth variant="contained" onClick={() => acceptHandler(request.id)}>
                         ПРИНЯТЬ
                     </Button>
                 </Grid>
                 <Grid container item width={"150px"}>
-                    <Button fullWidth variant="outlined" onClick={declineRequest}>
+                    <Button fullWidth variant="outlined" onClick={() => declineHandler(request.id)}>
                         ОТКЛОНИТЬ
                     </Button>
                 </Grid>
