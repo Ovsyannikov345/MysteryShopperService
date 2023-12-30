@@ -10,6 +10,8 @@ import addNoun from "../../utils/fieldsParser";
 import { createRequest } from "../../api/requestApi";
 import ReportForm from "../../components/forms/ReportForm";
 import { createReport } from "../../api/reportApi";
+import CompanyReviewForm from "../../components/forms/CompanyReviewForm";
+import { createCompanyReview } from "../../api/companyReviewApi";
 
 const UserOrderDetails = () => {
     const theme = useTheme();
@@ -137,6 +139,56 @@ const UserOrderDetails = () => {
 
         order.Reports.push(response.data);
         displaySuccess("Отчет успешно отправлен");
+    };
+
+    const sendReview = async (reviewData) => {
+        if (reviewData.text === "" || reviewData.grade === 0) {
+            displayError("Заполните форму");
+            return;
+        }
+
+        reviewData.OrderId = order.id;
+
+        let response = await createCompanyReview(reviewData);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при создании отзыва. Код: " + response.status);
+            return;
+        }
+
+        order.CompanyReviews.push(response.data);
+        displaySuccess("Отзыв отправлен");
+
+        response = await getOrder(id);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при загрузке заказа. Код: " + response.status);
+            return;
+        }
+
+        setOrder(response.data);
     };
 
     return (
@@ -355,9 +407,21 @@ const UserOrderDetails = () => {
                                 </Typography>
                             ) : order.Reports.length === 0 ? (
                                 <ReportForm submitHandler={sendReport} errorHadler={displayError} />
+                            ) : order.CompanyReviews.length === 0 ? (
+                                <>
+                                    <Typography
+                                        variant="h2"
+                                        height={"69px"}
+                                        display={"flex"}
+                                        alignItems={"center"}
+                                    >
+                                        Ваш отчет отправлен
+                                    </Typography>
+                                    <CompanyReviewForm submitHandler={sendReview} />
+                                </>
                             ) : (
                                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
-                                    Ваш отчет отправлен
+                                    Ваш отзыв отправлен
                                 </Typography>
                             )}
                         </Grid>

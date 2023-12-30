@@ -129,6 +129,7 @@ class OrderController {
                         },
                         { model: Request, where: { UserId: userId }, required: false },
                         { model: Report, where: { UserId: userId }, required: false },
+                        { model: CompanyReview, where: { UserId: userId }, required: false },
                     ],
                 });
 

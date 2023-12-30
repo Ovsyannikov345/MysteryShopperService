@@ -1,8 +1,8 @@
 import host from ".";
 
-const createUserReview = async (reviewData) => {
+const createCompanyReview = async (reviewData) => {
     try {
-        const response = await host.post(`/api/user-reviews`, reviewData);
+        const response = await host.post(`/api/company-reviews`, reviewData);
 
         return response;
     } catch (error) {
@@ -16,4 +16,4 @@ const createUserReview = async (reviewData) => {
     }
 };
 
-export { createUserReview };
+export { createCompanyReview };

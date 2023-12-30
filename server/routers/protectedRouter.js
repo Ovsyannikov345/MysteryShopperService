@@ -24,6 +24,7 @@ const orderController = require("../controllers/orderController");
 const requestController = require("../controllers/requestController");
 const reportController = require("../controllers/reportController");
 const userReviewController = require("../controllers/userReviewController");
+const companyReviewController = require("../controllers/companyReviewController");
 
 const router = new Router();
 
@@ -50,6 +51,7 @@ router.delete("/orders/:id", orderController.delete);
 
 router.put("/requests/:id", requestController.update);
 
-router.post("/reviews", userReviewController.create);
+router.post("/user-reviews", userReviewController.create);
+router.post("/company-reviews", companyReviewController.create);
 
 module.exports = router;
