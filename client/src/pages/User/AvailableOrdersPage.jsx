@@ -4,8 +4,9 @@ import UserHeader from "../../components/headers/UserHeader";
 import SortSelector from "../../components/SortSelector";
 import { getOrders } from "../../api/ordersApi";
 import UserOrder from "../../components/UserOrder";
+import moment from "moment";
+import OrderFilter from "../../components/OrdersFilter";
 
-// TODO add filter with local storage.
 const AvailableOrdersPage = () => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -14,6 +15,17 @@ const AvailableOrdersPage = () => {
 
     const [orders, setOrders] = useState([]);
     const [sortOption, setSortOption] = useState("date desc");
+    const [searchQuery, setSearchQuery] = useState({
+        name: "",
+        place: "",
+        minRating: 0,
+        minPrice: null,
+        maxPrice: null,
+        minDays: null,
+        maxDays: null,
+        startDate: null,
+        endDate: null,
+    });
 
     const sortedOrders = useMemo(() => {
         switch (sortOption) {
@@ -29,6 +41,47 @@ const AvailableOrdersPage = () => {
                 return [...orders];
         }
     }, [orders, sortOption]);
+
+    const sortedAndFilteredOrders = useMemo(() => {
+        const startDate = searchQuery.startDate != null ? moment(searchQuery.startDate, "YYYY-MM-DD") : null;
+        const endDate = searchQuery.endDate != null ? moment(searchQuery.endDate, "YYYY-MM-DD") : null;
+
+        const getCompanyRating = (companyData) => {
+            try {
+                if (companyData.Orders.map((order) => order.CompanyReviews).length === 0) {
+                    return 0;
+                }
+
+                let totalGrade = 0;
+                let count = 0;
+
+                companyData.Orders.forEach((order) => {
+                    order.CompanyReviews.forEach((review) => {
+                        totalGrade += review.grade;
+                        count++;
+                    });
+                });
+
+                return (totalGrade / count).toFixed(2);
+            } catch {
+                return 0;
+            }
+        };
+
+        return sortedOrders.filter(
+            (order) =>
+                (order.title.toLowerCase().includes(searchQuery.name.toLowerCase()) ||
+                    order.Company.name.toLowerCase().includes(searchQuery.name.toLowerCase())) &&
+                order.place.toLowerCase().includes(searchQuery.place.toLowerCase()) &&
+                (searchQuery.minRating == null || getCompanyRating(order.Company) >= searchQuery.minRating) &&
+                (searchQuery.minPrice == null || (order.price ?? 0) >= searchQuery.minPrice) &&
+                (searchQuery.maxPrice == null || (order.price ?? 0) <= searchQuery.maxPrice) &&
+                (searchQuery.minDays == null || (order.completionTime ?? 0) >= searchQuery.minDays) &&
+                (searchQuery.maxDays == null || (order.completionTime ?? 0) <= searchQuery.maxDays) &&
+                (startDate == null || moment(order.createdAt, "YYYY-MM-DD").isSameOrAfter(startDate)) &&
+                (endDate == null || moment(order.createdAt, "YYYY-MM-DD").isSameOrBefore(endDate))
+        );
+    }, [searchQuery, sortedOrders]);
 
     useEffect(() => {
         const loadOrders = async () => {
@@ -89,14 +142,15 @@ const AvailableOrdersPage = () => {
             <Grid
                 container
                 item
-                flexDirection={"column"}
-                alignItems={"center"}
+                alignItems={"flex-start"}
                 maxWidth={"1500px"}
+                gap={"70px"}
                 flexGrow={1}
                 bgcolor={"#FFFFFF"}
             >
-                <Grid container item maxWidth={"867px"} mt={"40px"} gap={"5px"} pb={"40px"}>
-                    <Grid container item justifyContent={"space-between"} alignItems={"center"}>
+                <OrderFilter queryHandler={setSearchQuery} successHandler={displaySuccess} />
+                <Grid container item maxWidth={"867px"} mt={"40px"} gap={"10px"} pb={"40px"}>
+                    <Grid container item justifyContent={"space-between"} alignItems={"center"} mb={"-5px"}>
                         <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                             Доступные заказы
                         </Typography>
@@ -111,11 +165,11 @@ const AvailableOrdersPage = () => {
                             />
                         </Grid>
                     </Grid>
-                    {sortedOrders.length > 0 ? (
-                        sortedOrders.map((order) => <UserOrder key={order.id} orderData={order} />)
+                    {sortedAndFilteredOrders.length > 0 ? (
+                        sortedAndFilteredOrders.map((order) => <UserOrder key={order.id} orderData={order} />)
                     ) : (
                         <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
-                            Заказов пока нет
+                            Заказы по запросу не найдены
                         </Typography>
                     )}
                 </Grid>
