@@ -33,6 +33,28 @@ class RequestController {
             return res.sendStatus(500);
         }
     }
+
+    async update(req, res) {
+        try {
+            const requestId = req.params.id;
+
+            if (isNaN(requestId)) {
+                return res.sendStatus(400);
+            }
+
+            if (!req.companyId) {
+                return res.sendStatus(403);
+            }
+
+            const accepted = req.body.accepted;
+
+            await Request.update({ accepted: accepted, rejected: !accepted }, { where: { id: requestId } });
+
+            return res.sendStatus(204);
+        } catch (err) {
+            return res.sendStatus(500);
+        }
+    }
 }
 
 module.exports = new RequestController();
