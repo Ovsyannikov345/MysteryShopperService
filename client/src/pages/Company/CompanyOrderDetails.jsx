@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Grid, Stack, TextField, Typography, Alert, Snackbar, Accordion, AccordionSummary } from "@mui/material";
 import CompanyHeader from "./../../components/headers/CompanyHeader";
 import NavigateBack from "../../components/NavigateBack";
 import { useTheme } from "@emotion/react";
 import { useParams } from "react-router-dom";
 import { getOrder } from "../../api/ordersApi";
+import { acceptRequest, rejectRequest } from "../../api/requestApi";
 import moment from "moment";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Request from "../../components/Request";
@@ -18,8 +19,18 @@ const CompanyOrderDetails = () => {
 
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [success, setSuccess] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
 
     const [order, setOrder] = useState({});
+
+    const filteredRequests = useMemo(() => {
+        if (order.Requests === undefined) {
+            return [];
+        }
+
+        return order.Requests.filter((request) => !request.accepted && !request.rejected);
+    }, [order.Requests]);
 
     useEffect(() => {
         const loadOrderData = async () => {
@@ -54,12 +65,72 @@ const CompanyOrderDetails = () => {
         setError(true);
     };
 
+    const displaySuccess = (message) => {
+        setSuccessMessage(message);
+        setSuccess(true);
+    };
+
     const closeSnackbar = (event, reason) => {
         if (reason === "clickaway") {
             return;
         }
 
         setError(false);
+        setSuccess(false);
+    };
+
+    const acceptRequestHandler = async (id) => {
+        const response = await acceptRequest(id);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при принятии заявки. Код: " + response.status);
+            console.log(response);
+            return;
+        }
+
+        setOrder({
+            ...order,
+            Requests: order.Requests.filter((request) => request.id !== id),
+        });
+        displaySuccess("Заявка принята");
+    };
+
+    const declineRequestHandler = async (id) => {
+        const response = await rejectRequest(id);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при отклонении заявки. Код: " + response.status);
+            console.log(response);
+            return;
+        }
+
+        setOrder({
+            ...order,
+            Requests: order.Requests.filter((request) => request.id !== id),
+        });
+        displaySuccess("Заявка отклонена");
     };
 
     return (
@@ -230,9 +301,14 @@ const CompanyOrderDetails = () => {
                             </AccordionSummary>
                             <Stack gap={"15px"}>
                                 {order.Requests && order.Requests.length > 0 ? (
-                                    order.Requests.filter(
-                                        (request) => !request.accepted && !request.rejected
-                                    ).map((request) => <Request key={request.id} request={request} />)
+                                    filteredRequests.map((request) => (
+                                        <Request
+                                            key={request.id}
+                                            request={request}
+                                            acceptHandler={acceptRequestHandler}
+                                            declineHandler={declineRequestHandler}
+                                        />
+                                    ))
                                 ) : (
                                     <Typography variant="h2" fontSize={"20px"} ml={"15px"} mb={"15px"}>
                                         Заявок пока нет
@@ -271,6 +347,11 @@ const CompanyOrderDetails = () => {
             <Snackbar open={error} autoHideDuration={6000} onClose={closeSnackbar}>
                 <Alert onClose={closeSnackbar} severity="error" sx={{ width: "100%" }}>
                     {errorMessage}
+                </Alert>
+            </Snackbar>
+            <Snackbar open={success} autoHideDuration={6000} onClose={closeSnackbar}>
+                <Alert onClose={closeSnackbar} severity="success" sx={{ width: "100%" }}>
+                    {successMessage}
                 </Alert>
             </Snackbar>
         </Grid>
