@@ -22,6 +22,7 @@ const userController = require("../controllers/userController");
 const companyController = require("../controllers/companyController");
 const orderController = require("../controllers/orderController");
 const requestController = require("../controllers/requestController");
+const reportController = require("../controllers/reportController");
 
 const router = new Router();
 
@@ -43,6 +44,7 @@ router.get("/company/orders", orderController.getAll);
 router.get("/orders/:id", orderController.getOne);
 router.post("/orders", orderController.create);
 router.post("/orders/:id/requests", requestController.create);
+router.post("/orders/:id/reports", reportController.create);
 router.delete("/orders/:id", orderController.delete);
 
 router.put("/requests/:id", requestController.update);
