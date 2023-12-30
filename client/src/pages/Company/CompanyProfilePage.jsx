@@ -11,6 +11,7 @@ import { getCompany, getProfile, updateAvatar } from "../../api/companyApi";
 import { updateCompany } from "../../api/companyApi";
 import CompanyReview from "../../components/CompanyReview";
 import CompanyEditForm from "../../components/forms/CompanyEditForm";
+import UserHeader from "../../components/headers/UserHeader";
 import { useParams } from "react-router-dom";
 
 const VisuallyHiddenInput = styled("input")({
@@ -170,7 +171,7 @@ const CompanyProfilePage = () => {
             alignItems={"center"}
             bgcolor={"#E7E7E7"}
         >
-            <CompanyHeader />
+            {localStorage.getItem("role") === "company" ? <CompanyHeader /> : <UserHeader />}
             <Grid
                 container
                 item

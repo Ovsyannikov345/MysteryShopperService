@@ -4,6 +4,7 @@ import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar, Butto
 import { styled } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import UserHeader from "./../../components/headers/UserHeader";
+import CompanyHeader from "../../components/headers/CompanyHeader";
 import NavigateBack from "../../components/NavigateBack";
 import ProfileCards from "../../components/ProfileCards";
 import UserReview from "../../components/UserReview";
@@ -170,7 +171,7 @@ const UserProfilePage = () => {
             alignItems={"center"}
             bgcolor={"#E7E7E7"}
         >
-            <UserHeader />
+            {localStorage.getItem("role") === "company" ? <CompanyHeader /> : <UserHeader />}
             <Grid
                 container
                 item
