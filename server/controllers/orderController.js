@@ -1,4 +1,4 @@
-const { Order, Report, CompanyReview, Request, User, Company } = require("../database/models");
+const { Order, Report, CompanyReview, Request, User, Company, UserReview } = require("../database/models");
 
 class OrderController {
     async getAll(req, res) {
@@ -57,8 +57,48 @@ class OrderController {
                 const order = await Order.findOne({
                     where: { id: id, CompanyId: companyId },
                     include: [
-                        { model: Request, include: [{ model: User }] },
-                        { model: Report, include: [{ model: User }] },
+                        {
+                            model: Request,
+                            include: [
+                                {
+                                    model: User,
+                                    attributes: ["id", "name", "surname", "patronymic"],
+                                    include: [
+                                        {
+                                            model: Report,
+                                            attributes: ["id"],
+                                            include: [
+                                                {
+                                                    model: UserReview,
+                                                    attributes: ["id", "grade"],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            model: Report,
+                            include: [
+                                {
+                                    model: User,
+                                    attributes: ["id", "name", "surname", "patronymic"],
+                                    include: [
+                                        {
+                                            model: Report,
+                                            attributes: ["id"],
+                                            include: [
+                                                {
+                                                    model: UserReview,
+                                                    attributes: ["id", "grade"],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                     ],
                 });
 
