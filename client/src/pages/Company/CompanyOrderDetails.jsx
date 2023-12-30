@@ -229,24 +229,15 @@ const CompanyOrderDetails = () => {
                                 <Typography fontSize={"20px"}>Заявки на выполнение</Typography>
                             </AccordionSummary>
                             <Stack gap={"15px"}>
-                                <Request
-                                    request={{
-                                        User: {
-                                            name: "Иван",
-                                            surname: "Иванов",
-                                            patronymic: "Иванович",
-                                        },
-                                    }}
-                                />
-                                <Request
-                                    request={{
-                                        User: {
-                                            name: "Сергей",
-                                            surname: "Сергеев",
-                                            patronymic: "Сергеевич",
-                                        },
-                                    }}
-                                />
+                                {order.Requests && order.Requests.length > 0 ? (
+                                    order.Requests.filter(
+                                        (request) => !request.accepted && !request.rejected
+                                    ).map((request) => <Request key={request.id} request={request} />)
+                                ) : (
+                                    <Typography variant="h2" fontSize={"20px"} ml={"15px"} mb={"15px"}>
+                                        Заявок пока нет
+                                    </Typography>
+                                )}
                             </Stack>
                         </Accordion>
                         <Accordion>
