@@ -26,7 +26,7 @@ class RequestController {
                 return res.sendStatus(400);
             }
 
-            const createdRequest = Request.create(request);
+            const createdRequest = await Request.create(request);
 
             return res.json(createdRequest);
         } catch (err) {
