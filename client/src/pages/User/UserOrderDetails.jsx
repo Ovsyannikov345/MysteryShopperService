@@ -8,6 +8,8 @@ import { getOrder } from "../../api/ordersApi";
 import moment from "moment";
 import addNoun from "../../utils/fieldsParser";
 import { createRequest } from "../../api/requestApi";
+import ReportForm from "../../components/forms/ReportForm";
+import { createReport } from "../../api/reportApi";
 
 const UserOrderDetails = () => {
     const theme = useTheme();
@@ -112,6 +114,29 @@ const UserOrderDetails = () => {
 
         order.Requests.push(response.data);
         displaySuccess("Заявка успешно отправлена");
+    };
+
+    const sendReport = async (reportData) => {
+        const response = await createReport(id, reportData);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при создании отчета. Код: " + response.status);
+            return;
+        }
+
+        order.Reports.push(response.data);
+        displaySuccess("Отчет успешно отправлен");
     };
 
     return (
@@ -328,8 +353,12 @@ const UserOrderDetails = () => {
                                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                                     {order.Requests[0].rejected ? "Заявка отклонена" : "Заявка отправлена"}
                                 </Typography>
+                            ) : order.Reports.length === 0 ? (
+                                <ReportForm submitHandler={sendReport} errorHadler={displayError} />
                             ) : (
-                                <></>
+                                <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
+                                    Ваш отчет отправлен
+                                </Typography>
                             )}
                         </Grid>
                     </Grid>
