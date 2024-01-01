@@ -42,7 +42,8 @@ router.get("/companies/:id/avatar", companyController.getAvatar);
 router.post("/companies/:id/avatar", upload.single("image"), companyController.updateAvatar);
 router.put("/companies/:id", companyController.update);
 
-router.get("/company/orders", orderController.getAll);
+router.get("/orders", orderController.getAll);
+router.get("/user/orders", orderController.getUserOrders);
 router.get("/orders/:id", orderController.getOne);
 router.post("/orders", orderController.create);
 router.post("/orders/:id/requests", requestController.create);
