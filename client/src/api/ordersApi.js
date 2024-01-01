@@ -2,7 +2,23 @@ import host from ".";
 
 const getOrders = async () => {
     try {
-        const response = await host.get("/api/company/orders");
+        const response = await host.get("/api/orders");
+
+        return response;
+    } catch (error) {
+        if (error.response) {
+            return error.response;
+        } else if (error.request) {
+            console.log("Server did not respond.");
+        } else {
+            console.log("Error while creating request");
+        }
+    }
+};
+
+const getUserOrders = async () => {
+    try {
+        const response = await host.get("/api/user/orders");
 
         return response;
     } catch (error) {
@@ -64,4 +80,4 @@ const deleteOrder = async (id) => {
     }
 };
 
-export { getOrders, getOrder, createOrder, deleteOrder };
+export { getOrders, getUserOrders, getOrder, createOrder, deleteOrder };
