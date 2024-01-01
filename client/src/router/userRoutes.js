@@ -1,5 +1,6 @@
 import CompanyProfilePage from "../pages/Company/CompanyProfilePage";
 import AvailableOrdersPage from "../pages/User/AvailableOrdersPage";
+import OrdersInProgressPage from "../pages/User/OrdersInProgressPage";
 import UserOrderDetails from "../pages/User/UserOrderDetails";
 import UserProfilePage from "../pages/User/UserProfilePage";
 
@@ -14,7 +15,7 @@ export const userRoutes = [
     },
     {
         path: "/my-orders",
-        Component: "My orders page",
+        Component: OrdersInProgressPage,
     },
     {
         path: "/company/:id",
