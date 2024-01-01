@@ -1,4 +1,13 @@
-const { Order, Report, CompanyReview, Request, User, Company, UserReview } = require("../database/models");
+const {
+    Order,
+    Report,
+    CompanyReview,
+    Request,
+    User,
+    Company,
+    UserReview,
+    UserOrders,
+} = require("../database/models");
 
 class OrderController {
     async getAll(req, res) {
@@ -38,6 +47,53 @@ class OrderController {
             return res.sendStatus(401);
         } catch (err) {
             console.log(err);
+            return res.sendStatus(500);
+        }
+    }
+
+    async getUserOrders(req, res) {
+        const userId = req.userId;
+
+        if (!userId) {
+            return res.sendStatus(401);
+        }
+
+        try {
+            const user = await User.findOne({
+                where: { id: userId },
+                include: [
+                    {
+                        model: Request,
+                        where: { accepted: true },
+                        include: [
+                            {
+                                model: Order,
+                                include: [
+                                    {
+                                        model: Company,
+                                        attributes: ["id", "name"],
+                                        include: [
+                                            {
+                                                model: Order,
+                                                attributes: ["id"],
+                                                include: [
+                                                    {
+                                                        model: CompanyReview,
+                                                        attributes: ["grade"],
+                                                    },
+                                                ],
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            });
+
+            return res.json(user.Requests.map((request) => request.Order));
+        } catch (err) {
             return res.sendStatus(500);
         }
     }
@@ -163,24 +219,39 @@ class OrderController {
             const { id } = req.params;
 
             const companyId = req.companyId;
+            const userId = req.userId;
 
             if (isNaN(id)) {
                 return res.sendStatus(400);
             }
 
-            const order = await Order.findOne({ where: { id: id } });
+            if (companyId) {
+                const order = await Order.findOne({ where: { id: id } });
 
-            if (order == null) {
-                return res.sendStatus(404);
+                if (order == null) {
+                    return res.sendStatus(404);
+                }
+
+                if (order.CompanyId !== companyId) {
+                    return res.sendStatus(403);
+                }
+
+                await Order.destroy({ where: { id: id } });
+
+                return res.sendStatus(204);
+            } else if (userId) {
+                console.log("deleting order with id: " + id);
+
+                await UserOrders.destroy({ where: { UserId: userId, OrderId: id } });
+                await Request.update(
+                    { accepted: false, rejected: true },
+                    { where: { UserId: userId, OrderId: id } }
+                );
+
+                return res.sendStatus(204);
             }
 
-            if (order.CompanyId !== companyId) {
-                return res.sendStatus(403);
-            }
-
-            await Order.destroy({ where: { id: id } });
-
-            return res.sendStatus(204);
+            return res.sendStatus(401);
         } catch (err) {
             return res.sendStatus(500);
         }
