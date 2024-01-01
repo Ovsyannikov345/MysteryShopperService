@@ -25,6 +25,7 @@ const requestController = require("../controllers/requestController");
 const reportController = require("../controllers/reportController");
 const userReviewController = require("../controllers/userReviewController");
 const companyReviewController = require("../controllers/companyReviewController");
+const supportRequestController = require("../controllers/supportRequestController");
 
 const router = new Router();
 
@@ -54,5 +55,7 @@ router.put("/requests/:id", requestController.update);
 
 router.post("/user-reviews", userReviewController.create);
 router.post("/company-reviews", companyReviewController.create);
+
+router.post("/support-requests", supportRequestController.create);
 
 module.exports = router;
