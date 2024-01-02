@@ -118,7 +118,18 @@ const MyOrdersPage = () => {
                 flexGrow={1}
                 bgcolor={"#FFFFFF"}
             >
-                <Grid container item maxWidth={"867px"} mt={"40px"} gap={"5px"}>
+                <Grid
+                    container
+                    item
+                    maxWidth={"867px"}
+                    gap={"5px"}
+                    mb={"30px"}
+                    sx={{
+                        pl: { xs: "3px", md: "19px", lg: 0 },
+                        pr: { xs: "3px", md: "19px", lg: 0 },
+                        mt: { xs: "10px", md: "40px" },
+                    }}
+                >
                     <Grid container item justifyContent={"space-between"} alignItems={"center"}>
                         <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                             Ваши заказы

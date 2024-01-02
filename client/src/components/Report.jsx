@@ -1,10 +1,12 @@
-import { Grid, Avatar, Stack, Typography, Rating, Button } from "@mui/material";
+import { Grid, Avatar, Stack, Typography, Rating, Button, useMediaQuery } from "@mui/material";
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import ReportReviewModal from "./modals/ReportReviewModal";
 import { createUserReview } from "../api/userReviewApi";
 
 const Report = ({ report, errorHandler, successHandler }) => {
+    const isScreenSizeUpMd = useMediaQuery((theme) => theme.breakpoints.up("md"));
+
     const navigate = useNavigate();
 
     const [reviewModalOpen, setReviewModalOpen] = useState(false);
@@ -52,6 +54,7 @@ const Report = ({ report, errorHandler, successHandler }) => {
             return;
         }
 
+        report.UserReview = response.data;
         successHandler();
         setReviewModalOpen(false);
     };
@@ -71,35 +74,43 @@ const Report = ({ report, errorHandler, successHandler }) => {
                 rowGap={"10px"}
                 style={{ border: "2px solid #DDC12C", borderRadius: "10px" }}
             >
-                <Button style={{ padding: "0px" }} onClick={() => navigate(`/user/${report.User.id}`)}>
-                    <Avatar
-                        src={
-                            report.User.id !== undefined
-                                ? `http://localhost:5000/api/users/${
-                                      report.User.id
-                                  }/avatar?jwt=${localStorage.getItem("jwt")}`
-                                : ""
-                        }
-                        variant="square"
-                        sx={{ width: 60, height: 60 }}
-                    />
-                </Button>
-                <Stack direction={"row"} justifyContent={"space-between"} flexGrow={1}>
-                    <Grid container item flexDirection={"column"} alignItems={"flex-start"} gap={"14px"}>
-                        <Typography variant="h3" height={"20px"}>
-                            {[report.User.surname, report.User.name, report.User.patronymic].join(" ")}
-                        </Typography>
-                        <Rating value={rating} readOnly />
-                    </Grid>
-                    <Grid container item width={"150px"} alignItems={"center"}>
-                        <Button variant="outlined" fullWidth onClick={() => navigate(`/user/${report.User.id}`)}>
-                            ПРОФИЛЬ
-                        </Button>
-                    </Grid>
-                </Stack>
+                <Grid container item xs={12} wrap="nowrap">
+                    <Button style={{ padding: "0px" }} onClick={() => navigate(`/user/${report.User.id}`)}>
+                        <Avatar
+                            src={
+                                report.User.id !== undefined
+                                    ? `http://localhost:5000/api/users/${
+                                          report.User.id
+                                      }/avatar?jwt=${localStorage.getItem("jwt")}`
+                                    : ""
+                            }
+                            variant="square"
+                            sx={{ width: 60, height: 60 }}
+                        />
+                    </Button>
+                    <Stack direction={"row"} justifyContent={"space-between"} flexGrow={1}>
+                        <Grid container item flexDirection={"column"} alignItems={"flex-start"} gap={"14px"}>
+                            <Typography variant="h3" height={"20px"}>
+                                {[report.User.surname, report.User.name, report.User.patronymic].join(" ")}
+                            </Typography>
+                            <Rating value={rating} readOnly />
+                        </Grid>
+                        {isScreenSizeUpMd && (
+                            <Grid container item width={"150px"} alignItems={"center"}>
+                                <Button
+                                    variant="outlined"
+                                    fullWidth
+                                    onClick={() => navigate(`/user/${report.User.id}`)}
+                                >
+                                    ПРОФИЛЬ
+                                </Button>
+                            </Grid>
+                        )}
+                    </Stack>
+                </Grid>
                 <Grid container item width={"100%"} flexDirection={"column"} gap={"10px"}>
                     <Grid container item width={"100%"} flexDirection={"column"}>
-                        <Typography variant="h2" height={"38px"}>
+                        <Typography variant="h2" height={"38px"} sx={{ fontSize: { xs: "20px", md: "24px" } }}>
                             {report.title}
                         </Typography>
                         <Typography variant="h3">{report.description}</Typography>

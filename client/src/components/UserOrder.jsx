@@ -1,4 +1,4 @@
-import { Button, Grid, Avatar, Typography, Rating } from "@mui/material";
+import { Button, Grid, Avatar, Typography, Rating, useMediaQuery } from "@mui/material";
 import React, { useState, useMemo } from "react";
 import moment from "moment";
 import addNoun from "../utils/fieldsParser";
@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import DeclineConfirmationModal from "./modals/DeclineConfirmationModal";
 
 const UserOrder = ({ orderData, declineHandler }) => {
+    const isScreenSizeUpMd = useMediaQuery((theme) => theme.breakpoints.up("md"));
+
     const [declineModalOpen, setDeclineModalOpen] = useState(false);
 
     const navigate = useNavigate();
@@ -53,9 +55,10 @@ const UserOrder = ({ orderData, declineHandler }) => {
                 gap={"27px"}
                 padding={"15px"}
                 style={{ borderRadius: "10px", border: "2px solid #DDC12C" }}
+                sx={{padding: {xs: "5px", md: "15px"}, gap: {xs: "0", md: "27px"}}}
             >
                 <Grid container item width={"100%"}>
-                    <Grid container item xs={4} gap={"10px"} flexDirection={"column"} wrap="nowrap">
+                    <Grid container item xs={12} md={5} gap={"10px"} flexDirection={"column"} wrap="nowrap">
                         <Grid container item width={"100%"} gap={"10px"}>
                             <Avatar
                                 src={`http://localhost:5000/api/companies/${
@@ -79,15 +82,14 @@ const UserOrder = ({ orderData, declineHandler }) => {
                                 <Rating value={rating} precision={0.5} readOnly />
                             </Grid>
                         </Grid>
-                        <Typography variant="h2" height={"38px"} display={"flex"} alignItems={"center"}>
+                        <Typography variant={isScreenSizeUpMd ? "h2" : "h3"} height={"38px"} display={"flex"} alignItems={"center"}>
                             {moment.utc(orderData.createdAt).format("DD/MM/YYYY")}
                         </Typography>
                     </Grid>
-
                     <Grid container item xs flexDirection={"column"}>
                         <Grid container item>
                             <Typography
-                                variant="h2"
+                                variant={isScreenSizeUpMd ? "h2" : "h3"}
                                 style={{ borderBottom: "2px solid #DDC12C" }}
                                 overflow={"hidden"}
                                 whiteSpace={"nowrap"}
@@ -101,7 +103,7 @@ const UserOrder = ({ orderData, declineHandler }) => {
                             </Typography>
                         </Grid>
                         <Typography
-                            variant="h2"
+                            variant={isScreenSizeUpMd ? "h2" : "h3"}
                             overflow={"hidden"}
                             whiteSpace={"nowrap"}
                             textOverflow={"ellipsis"}
@@ -113,7 +115,7 @@ const UserOrder = ({ orderData, declineHandler }) => {
                             {orderData.place}
                         </Typography>
                         <Typography
-                            variant="h2"
+                            variant={isScreenSizeUpMd ? "h2" : "h3"}
                             maxWidth={"100%"}
                             height={"38px"}
                             display={"flex"}
@@ -124,7 +126,7 @@ const UserOrder = ({ orderData, declineHandler }) => {
                                 : "Бессрочно"}
                         </Typography>
                         <Typography
-                            variant="h2"
+                            variant={isScreenSizeUpMd ? "h2" : "h3"}
                             maxWidth={"100%"}
                             height={"38px"}
                             display={"flex"}

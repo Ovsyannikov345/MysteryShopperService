@@ -47,26 +47,29 @@ const CompanyInfoForm = ({ authData, errorHandler }) => {
                 }
 
                 navigate("/login");
-            })
+            });
         },
     });
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <Grid container width={500} alignItems={"center"}>
+            <Grid container alignItems={"center"} sx={{ width: { xs: "300px", md: "500px" } }}>
                 <Grid
                     container
                     item
                     flexDirection={"column"}
                     alignItems={"center"}
                     justifyContent={"space-between"}
-                    paddingLeft={"139px"}
-                    paddingRight={"139px"}
                     pt={"28px"}
                     pb={"31px"}
                     boxShadow={14}
                     borderRadius={4}
-                    style={{ height: "580px", width: "100%" }}
+                    sx={{
+                        height: "580px",
+                        width: "100%",
+                        paddingLeft: { xs: "40px", md: "139px" },
+                        paddingRight: { xs: "40px", md: "139px" },
+                    }}
                 >
                     <Typography variant="h5">Расскажите о себе</Typography>
                     <TextField
@@ -92,7 +95,7 @@ const CompanyInfoForm = ({ authData, errorHandler }) => {
                         }
                         required
                     ></TextField>
-                    <Typography style={{width: "100%"}}>Данные контактного лица</Typography>
+                    <Typography style={{ width: "100%" }}>Данные контактного лица</Typography>
                     <TextField
                         sx={{
                             "& .MuiInput-underline:before": {

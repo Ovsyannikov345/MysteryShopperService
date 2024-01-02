@@ -12,7 +12,7 @@ const DeclineConfirmationModal = ({ isOpen, acceptHandler, declineHandler }) => 
                 Отказаться от заказа?
             </Typography>
             <Container>
-                <Grid container justifyContent={"space-between"} marginTop={2} marginBottom={2}>
+                <Grid container justifyContent={"space-between"} marginTop={2} marginBottom={2} rowGap={"10px"}>
                     <Grid item>
                         <Button variant="outlined" color="error" onClick={acceptHandler}>
                             Отказаться

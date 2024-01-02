@@ -26,7 +26,7 @@ const UserInfoForm = ({ authData, errorHandler }) => {
             const userData = {
                 ...authData,
                 ...values,
-            }
+            };
 
             registerUser(userData).then((response) => {
                 if (!response) {
@@ -40,13 +40,13 @@ const UserInfoForm = ({ authData, errorHandler }) => {
                 }
 
                 navigate("/login");
-            })
+            });
         },
     });
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <Grid container width={500} alignItems={"center"}>
+            <Grid container alignItems={"center"} sx={{ width: { xs: "300px", md: "500px" } }}>
                 <Grid
                     container
                     item
@@ -59,7 +59,12 @@ const UserInfoForm = ({ authData, errorHandler }) => {
                     pb={"31px"}
                     boxShadow={14}
                     borderRadius={4}
-                    style={{ height: "600px", width: "100%" }}
+                    sx={{
+                        height: "600px",
+                        width: "100%",
+                        paddingLeft: { xs: "40px", md: "139px" },
+                        paddingRight: { xs: "40px", md: "139px" },
+                    }}
                 >
                     <Typography variant="h5">Расскажите о себе</Typography>
                     <TextField

@@ -4,9 +4,9 @@ import CalendarIcon from "@mui/icons-material/CalendarTodayOutlined";
 import ListIcon from "@mui/icons-material/ListAltOutlined";
 import StarIcon from "@mui/icons-material/StarOutlineOutlined";
 
-const ProfileCards = ({registrationDate, ordersCount, rating}) => {
+const ProfileCards = ({ registrationDate, ordersCount, rating }) => {
     return (
-        <Grid container item mt={"85px"} gap={"60px"}>
+        <Grid container item sx={{ marginTop: { xs: "30px", md: "85px" }, gap: { xs: "30px", md: "60px" } }}>
             <Grid container item width={"194px"} gap={"15px"}>
                 <CalendarIcon sx={{ fontSize: 50 }} />
                 <Grid>

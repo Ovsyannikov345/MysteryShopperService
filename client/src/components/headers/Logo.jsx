@@ -1,20 +1,27 @@
 import React from "react";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, useMediaQuery } from "@mui/material";
 
 const Logo = () => {
+    const isScreenSizeUpLg = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+
     return (
         <Grid
             container
             item
-            width={"325px"}
             height={"86px"}
             bgcolor={"white"}
             borderRadius={"20px"}
             alignItems={"center"}
             justifyContent={"center"}
+            sx={{
+                width: {
+                    lg: "325px",
+                    xs: "86px",
+                },
+            }}
         >
             <Typography fontSize={36} fontWeight={700}>
-                Mystery Shopper
+                {isScreenSizeUpLg ? "Mystery Shopper" : "M"}
             </Typography>
         </Grid>
     );

@@ -46,12 +46,12 @@ const HeaderIcons = () => {
                 declineHandler={() => setRequestModalOpen(false)}
                 errorHandler={displayError}
             />
-            <Stack direction={"row"} gap={"40px"}>
+            <Stack direction={"row"} sx={{ gap: { xs: "20px", lg: "40px" } }}>
                 <IconButton onClick={(e) => navigate("/profile")} style={{ padding: 0, color: "#000000" }}>
-                    <AccountIcon sx={{ fontSize: 60 }} />
+                    <AccountIcon sx={{ fontSize: { xs: 30, md: 40, lg: 60 } }} />
                 </IconButton>
                 <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setRequestModalOpen(true)}>
-                    <SupportIcon sx={{ fontSize: 60 }} />
+                    <SupportIcon sx={{ fontSize: { xs: 30, md: 40, lg: 60 } }} />
                 </IconButton>
                 <IconButton
                     onClick={(e) => {
@@ -61,7 +61,7 @@ const HeaderIcons = () => {
                     }}
                     style={{ padding: 0, color: "#000000" }}
                 >
-                    <LogoutIcon sx={{ fontSize: 60 }} />
+                    <LogoutIcon sx={{ fontSize: { xs: 30, md: 40, lg: 60 } }} />
                 </IconButton>
             </Stack>
             <Snackbar open={error} autoHideDuration={6000} onClose={closeSnackbar}>

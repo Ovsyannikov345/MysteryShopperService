@@ -34,7 +34,18 @@ const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }) => {
 
     return (
         <form onSubmit={formik.handleSubmit} style={{ width: "100%" }}>
-            <Grid container item flexDirection={"column"} mt={"20px"} gap={"20px"} maxWidth={"768px"}>
+            <Grid
+                container
+                item
+                flexDirection={"column"}
+                mt={"20px"}
+                gap={"20px"}
+                maxWidth={"768px"}
+                sx={{
+                    width: { xs: "312px", md: "661px", lg: "768px" },
+                    paddingLeft: { xs: "10px", md: "46px", lg: 0 },
+                }}
+            >
                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                     Данные компании
                 </Typography>
@@ -118,52 +129,56 @@ const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }) => {
                         ></TextField>
                     </Grid>
                 </Grid>
-                <Grid container item maxWidth={"300px"}>
-                    <TextField
-                        id="contactEmail"
-                        name="contactEmail"
-                        fullWidth
-                        variant="outlined"
-                        label="Эл. почта"
-                        value={formik.values.contactEmail}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.contactEmail && formik.errors.contactEmail !== undefined}
-                        helperText={
-                            formik.touched.contactEmail && formik.errors.contactEmail !== undefined
-                                ? formik.errors.contactEmail
-                                : ""
-                        }
-                        required
-                    ></TextField>
-                </Grid>
-                <Grid container item maxWidth={"300px"}>
-                    <InputMask
-                        mask="+375(99)999-99-99"
-                        value={formik.values.contactPhone}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    >
-                        {() => (
-                            <TextField
-                                id="contactPhone"
-                                name="contactPhone"
-                                fullWidth
-                                variant="outlined"
-                                label="Телефон"
-                                value={formik.values.contactPhone}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                error={formik.touched.contactPhone && formik.errors.contactPhone !== undefined}
-                                helperText={
-                                    formik.touched.contactPhone && formik.errors.contactPhone !== undefined
-                                        ? formik.errors.contactPhone
-                                        : ""
-                                }
-                                required
-                            ></TextField>
-                        )}
-                    </InputMask>
+                <Grid container item rowGap={"20px"} columnGap={"15px"}>
+                    <Grid container item maxWidth={"300px"}>
+                        <TextField
+                            id="contactEmail"
+                            name="contactEmail"
+                            fullWidth
+                            variant="outlined"
+                            label="Эл. почта"
+                            value={formik.values.contactEmail}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.contactEmail && formik.errors.contactEmail !== undefined}
+                            helperText={
+                                formik.touched.contactEmail && formik.errors.contactEmail !== undefined
+                                    ? formik.errors.contactEmail
+                                    : ""
+                            }
+                            required
+                        ></TextField>
+                    </Grid>
+                    <Grid container item maxWidth={"300px"}>
+                        <InputMask
+                            mask="+375(99)999-99-99"
+                            value={formik.values.contactPhone}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                        >
+                            {() => (
+                                <TextField
+                                    id="contactPhone"
+                                    name="contactPhone"
+                                    fullWidth
+                                    variant="outlined"
+                                    label="Телефон"
+                                    value={formik.values.contactPhone}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    error={
+                                        formik.touched.contactPhone && formik.errors.contactPhone !== undefined
+                                    }
+                                    helperText={
+                                        formik.touched.contactPhone && formik.errors.contactPhone !== undefined
+                                            ? formik.errors.contactPhone
+                                            : ""
+                                    }
+                                    required
+                                ></TextField>
+                            )}
+                        </InputMask>
+                        </Grid>
                 </Grid>
                 <Grid container item columnGap={"15px"}>
                     <Grid container item maxWidth={"136px"}>

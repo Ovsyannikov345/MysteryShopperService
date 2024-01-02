@@ -42,17 +42,26 @@ const SupportRequestModal = ({ isOpen, acceptHandler, declineHandler, errorHandl
     };
 
     return (
-        <Dialog open={isOpen} onClose={closeModal}>
+        <Dialog
+            open={isOpen}
+            onClose={closeModal}
+            PaperProps={{
+                style: { margin: 0, borderRadius: "10px" },
+                sx: { maxWidth: { xs: "310px", md: "483px" } },
+            }}
+        >
             <Grid
                 container
                 item
-                width={"483px"}
-                pl={"28px"}
-                pr={"28px"}
-                pb={"25px"}
                 flexDirection={"column"}
                 alignItems={"center"}
                 gap={"20px"}
+                sx={{
+                    width: { xs: "310px", md: "483px" },
+                    pl: { xs: "5px", md: "28px" },
+                    pr: { xs: "5px", md: "28px" },
+                    pb: { xs: "9px", md: "25px" },
+                }}
             >
                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                     Опишите вашу проблему

@@ -181,14 +181,26 @@ const CompanyOrderDetails = () => {
                     container
                     item
                     pr={"40px"}
-                    pl={"40px"}
-                    mt={"40px"}
                     justifyContent={"space-between"}
                     flexWrap={"nowrap"}
+                    sx={{
+                        paddingLeft: { xs: "15px", md: "40px" },
+                        marginTop: { xs: "0", md: "40px" },
+                    }}
                 >
                     <NavigateBack label="Мои заказы" to={"/my-orders"} />
                 </Grid>
-                <Grid container item mt={"15px"} pl={"150px"} pb={"46px"} flexDirection={"column"}>
+                <Grid
+                    container
+                    item
+                    pb={"46px"}
+                    flexDirection={"column"}
+                    sx={{
+                        pl: { xs: "5px", md: "54px", lg: "115px" },
+                        pr: { xs: "5px", md: "54px", lg: "115px" },
+                        mt: { xs: 0, md: "15px" },
+                    }}
+                >
                     <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                         Информация о заказе
                     </Typography>
@@ -197,10 +209,11 @@ const CompanyOrderDetails = () => {
                             fullWidth
                             variant="standard"
                             label="Название"
+                            multiline
                             value={order.title !== undefined ? order.title : ""}
                             InputProps={{
                                 readOnly: true,
-                                style: { fontSize: "24px" },
+                                sx: { fontSize: { xs: "20px", md: "24px" } },
                             }}
                             sx={{
                                 "& .MuiInput-underline:before": {
@@ -223,7 +236,7 @@ const CompanyOrderDetails = () => {
                             value={order.description !== undefined ? order.description : ""}
                             InputProps={{
                                 readOnly: true,
-                                style: { fontSize: "24px" },
+                                sx: { fontSize: { xs: "20px", md: "24px" } },
                             }}
                             sx={{
                                 "& .MuiInput-underline:before": {
@@ -242,7 +255,7 @@ const CompanyOrderDetails = () => {
                             value={order.place !== undefined ? order.place : ""}
                             InputProps={{
                                 readOnly: true,
-                                style: { fontSize: "24px" },
+                                sx: { fontSize: { xs: "20px", md: "24px" } },
                             }}
                             sx={{
                                 "& .MuiInput-underline:before": {
@@ -264,7 +277,7 @@ const CompanyOrderDetails = () => {
                             }
                             InputProps={{
                                 readOnly: true,
-                                style: { fontSize: "24px" },
+                                sx: { fontSize: { xs: "20px", md: "24px" } },
                             }}
                             sx={{
                                 "& .MuiInput-underline:before": {
@@ -286,7 +299,7 @@ const CompanyOrderDetails = () => {
                             }
                             InputProps={{
                                 readOnly: true,
-                                style: { fontSize: "24px" },
+                                sx: { fontSize: { xs: "20px", md: "24px" } },
                             }}
                             sx={{
                                 "& .MuiInput-underline:before": {
@@ -308,7 +321,7 @@ const CompanyOrderDetails = () => {
                             }
                             InputProps={{
                                 readOnly: true,
-                                style: { fontSize: "24px" },
+                                sx: { fontSize: { xs: "20px", md: "24px" } },
                             }}
                             sx={{
                                 "& .MuiInput-underline:before": {
@@ -319,11 +332,11 @@ const CompanyOrderDetails = () => {
                                 },
                             }}
                         />
-                        <Accordion>
+                        <Accordion sx={{ width: "100%" }}>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography fontSize={"20px"}>Заявки на выполнение</Typography>
                             </AccordionSummary>
-                            <Stack gap={"15px"}>
+                            <Stack gap={"15px"} sx={{ pl: "16px", pr: "16px" }}>
                                 {filteredRequests.length > 0 ? (
                                     filteredRequests.map((request) => (
                                         <Request
@@ -340,11 +353,11 @@ const CompanyOrderDetails = () => {
                                 )}
                             </Stack>
                         </Accordion>
-                        <Accordion>
+                        <Accordion sx={{ width: "100%" }}>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography fontSize={"20px"}>Отчеты</Typography>
                             </AccordionSummary>
-                            <Stack gap={"15px"}>
+                            <Stack gap={"15px"} sx={{ pl: "16px", pr: "16px" }}>
                                 {order.Reports && order.Reports.length > 0 ? (
                                     order.Reports.map((report) => (
                                         <Report

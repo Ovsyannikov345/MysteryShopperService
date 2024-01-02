@@ -31,12 +31,22 @@ const UserEditForm = ({ userData, cancelHandler, applyCallback }) => {
 
     return (
         <form onSubmit={formik.handleSubmit} style={{ width: "100%" }}>
-            <Grid container item flexDirection={"column"} mt={"20px"} gap={"10px"} maxWidth={"768px"}>
+            <Grid
+                container
+                item
+                flexDirection={"column"}
+                mt={"20px"}
+                gap={"10px"}
+                sx={{
+                    width: { xs: "290px", md: "570px", lg: "768px" },
+                    paddingLeft: { xs: "31px", md: "46px", lg: 0 },
+                }}
+            >
                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                     Данные профиля
                 </Typography>
                 <Grid container item maxWidth={"768px"} columnGap={"15px"} rowGap={"20px"}>
-                    <Grid container item maxWidth={"246px"}>
+                    <Grid container item sx={{ maxWidth: { xs: "259px", md: "246px" } }}>
                         <TextField
                             id="surname"
                             name="surname"
@@ -55,7 +65,7 @@ const UserEditForm = ({ userData, cancelHandler, applyCallback }) => {
                             required
                         ></TextField>
                     </Grid>
-                    <Grid container item maxWidth={"246px"}>
+                    <Grid container item sx={{ maxWidth: { xs: "259px", md: "246px" } }}>
                         <TextField
                             id="name"
                             name="name"
@@ -72,7 +82,7 @@ const UserEditForm = ({ userData, cancelHandler, applyCallback }) => {
                             required
                         ></TextField>
                     </Grid>
-                    <Grid container item maxWidth={"246px"}>
+                    <Grid container item sx={{ maxWidth: { xs: "259px", md: "246px" } }}>
                         <TextField
                             id="patronymic"
                             name="patronymic"
@@ -90,7 +100,7 @@ const UserEditForm = ({ userData, cancelHandler, applyCallback }) => {
                             }
                         ></TextField>
                     </Grid>
-                    <Grid container item maxWidth={"246px"}>
+                    <Grid container item sx={{ maxWidth: { xs: "259px", md: "246px" } }}>
                         <TextField
                             id="age"
                             name="age"
@@ -106,7 +116,7 @@ const UserEditForm = ({ userData, cancelHandler, applyCallback }) => {
                             }
                         ></TextField>
                     </Grid>
-                    <Grid container item maxWidth={"246px"}>
+                    <Grid container item sx={{ maxWidth: { xs: "259px", md: "246px" } }}>
                         <TextField
                             id="city"
                             name="city"
@@ -122,7 +132,7 @@ const UserEditForm = ({ userData, cancelHandler, applyCallback }) => {
                             }
                         ></TextField>
                     </Grid>
-                    <Grid container item maxWidth={"507px"}>
+                    <Grid container item sx={{ maxWidth: { xs: "259px", md: "507px" } }}>
                         <TextField
                             id="description"
                             name="description"
@@ -142,7 +152,7 @@ const UserEditForm = ({ userData, cancelHandler, applyCallback }) => {
                             }
                         ></TextField>
                     </Grid>
-                    <Grid container item columnGap={"15px"}>
+                    <Grid container item gap={"15px"}>
                         <Grid container item maxWidth={"136px"}>
                             <Button type="submit" variant="contained">
                                 СОХРАНИТЬ

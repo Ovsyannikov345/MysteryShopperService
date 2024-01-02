@@ -85,7 +85,9 @@ const UserProfilePage = () => {
                 }
             });
 
-            return (totalGrade / count).toFixed(2);
+            const result = (totalGrade / count).toFixed(2);
+
+            return isNaN(result) ? "-" : result;
         } catch {
             return "-";
         }
@@ -184,11 +186,14 @@ const UserProfilePage = () => {
                 <Grid
                     container
                     item
-                    pr={"40px"}
-                    pl={"40px"}
                     mt={"40px"}
                     justifyContent={"space-between"}
                     flexWrap={"nowrap"}
+                    sx={{
+                        paddingLeft: { xs: "23px", lg: "40px" },
+                        paddingRight: { xs: "23px", lg: "40px" },
+                        marginTop: { xs: "0", md: "40px" },
+                    }}
                 >
                     <NavigateBack
                         label={id === undefined ? "Доступные заказы" : "Назад"}
@@ -196,12 +201,26 @@ const UserProfilePage = () => {
                     />
                     {!readonly && !editMode && userData.id !== undefined && (
                         <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setEditMode(true)}>
-                            <EditIcon sx={{ fontSize: 50 }}></EditIcon>
+                            <EditIcon sx={{ fontSize: { xs: 30, md: 40, lg: 50 } }}></EditIcon>
                         </IconButton>
                     )}
                 </Grid>
-                <Grid container item pl={"150px"} mt={"40px"} pb={"46px"}>
-                    <Grid container item gap={"50px"} alignItems={editMode ? "center" : "flex-start"}>
+                <Grid
+                    container
+                    item
+                    mt={"40px"}
+                    pb={"46px"}
+                    sx={{
+                        paddingLeft: { xs: "1px", md: "33px", lg: "150px" },
+                        marginTop: { xs: "0", md: "40px" },
+                    }}
+                >
+                    <Grid
+                        container
+                        item
+                        alignItems={editMode ? "center" : "flex-start"}
+                        sx={{ paddingLeft: { xs: "1px", md: "46px", lg: "0px" }, gap: { xs: "5px", md: "50px" } }}
+                    >
                         <Avatar
                             src={
                                 userData.id !== undefined
@@ -211,11 +230,23 @@ const UserProfilePage = () => {
                                     : ""
                             }
                             variant="square"
-                            sx={{ width: 130, height: 130 }}
+                            sx={{
+                                width: { xs: 60, md: 130 },
+                                height: { xs: 60, md: 130 },
+                                marginLeft: { xs: editMode ? "43px" : "0", md: "46px", lg: 0 },
+                            }}
                         />
                         {!editMode ? (
-                            <Grid flexDirection={"column"} gap={"10px"}>
-                                <Typography variant="h2" height={"36px"}>
+                            <Grid
+                                flexDirection={"column"}
+                                gap={"10px"}
+                                sx={{ maxWidth: { xs: "253px", md: "430px" } }}
+                            >
+                                <Typography
+                                    variant="h2"
+                                    height={"36px"}
+                                    sx={{ fontSize: { xs: "20px", md: "24px" } }}
+                                >
                                     {[userData.surname, userData.name, userData.patronymic].join(" ")}
                                 </Typography>
                                 <Typography variant="h3" height={"26px"}>
@@ -225,7 +256,10 @@ const UserProfilePage = () => {
                                             ? addNoun(userData.age, ["год", "года", "лет"])
                                             : "")}
                                 </Typography>
-                                <Typography variant="h3" maxWidth={"641px"}>
+                                <Typography
+                                    variant="h3"
+                                    sx={{ maxWidth: { xs: "253px", md: "641px" } }}
+                                >
                                     {userData.description}
                                 </Typography>
                             </Grid>
@@ -252,7 +286,15 @@ const UserProfilePage = () => {
                                 ordersCount={userData.Orders !== undefined ? userData.Orders.length : "-"}
                                 rating={rating}
                             />
-                            <Grid container item mt={"50px"} flexDirection={"column"}>
+                            <Grid
+                                container
+                                item
+                                flexDirection={"column"}
+                                sx={{
+                                    paddingLeft: { xs: "1px", md: "46px", lg: "0px" },
+                                    marginTop: { xs: "10px", md: "50px" },
+                                }}
+                            >
                                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                                     Контактная информация
                                 </Typography>
@@ -263,6 +305,7 @@ const UserProfilePage = () => {
                                         value={userData.email ?? ""}
                                         InputProps={{
                                             readOnly: true,
+                                            sx:{fontSize: { xs: "20px", md: "24px" } }
                                         }}
                                         sx={{
                                             "& .MuiInput-underline:before": {
@@ -279,6 +322,7 @@ const UserProfilePage = () => {
                                         value={userData.phone ?? ""}
                                         InputProps={{
                                             readOnly: true,
+                                            sx:{fontSize: { xs: "20px", md: "24px" } }
                                         }}
                                         sx={{
                                             "& .MuiInput-underline:before": {
@@ -292,7 +336,15 @@ const UserProfilePage = () => {
                                 </Grid>
                             </Grid>
                             {userData.Reports !== undefined ? (
-                                <Grid container item mt={"50px"} flexDirection={"column"}>
+                                <Grid
+                                    container
+                                    item
+                                    flexDirection={"column"}
+                                    sx={{
+                                        marginTop: { xs: "10px", md: "50px" },
+                                        paddingLeft: { xs: "5px", md: 0 },
+                                    }}
+                                >
                                     {userData.Reports.filter((report) => report.UserReview != null).length > 0 ? (
                                         <>
                                             <Typography

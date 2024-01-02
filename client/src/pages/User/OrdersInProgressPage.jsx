@@ -118,7 +118,18 @@ const OrdersInProgressPage = () => {
                 flexGrow={1}
                 bgcolor={"#FFFFFF"}
             >
-                <Grid container item maxWidth={"867px"} mt={"40px"} gap={"10px"} pb={"40px"}>
+                <Grid
+                    container
+                    item
+                    maxWidth={"867px"}
+                    gap={"10px"}
+                    pb={"40px"}
+                    sx={{
+                        marginLeft: { xs: "2px", md: "19px" },
+                        marginRight: { xs: "2px", md: "19px" },
+                        marginTop: { xs: "10px", md: "40px" },
+                    }}
+                >
                     <Grid container item justifyContent={"space-between"} alignItems={"center"} mb={"-5px"}>
                         <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                             Выполняемые заказы

@@ -1,13 +1,18 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Grid, Typography, Snackbar, Alert } from "@mui/material";
+import { Grid, Typography, Snackbar, Alert, useMediaQuery, IconButton, Dialog } from "@mui/material";
 import UserHeader from "../../components/headers/UserHeader";
 import SortSelector from "../../components/SortSelector";
 import { getOrders } from "../../api/ordersApi";
 import UserOrder from "../../components/UserOrder";
 import moment from "moment";
 import OrderFilter from "../../components/OrdersFilter";
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 
 const AvailableOrdersPage = () => {
+    const displayFilter = useMediaQuery((theme) => theme.breakpoints.up(1250));
+
+    const [filterModalOpen, setFilterModalOpen] = useState(false);
+
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [success, setSuccess] = useState(false);
@@ -148,12 +153,51 @@ const AvailableOrdersPage = () => {
                 flexGrow={1}
                 bgcolor={"#FFFFFF"}
             >
-                <OrderFilter queryHandler={setSearchQuery} successHandler={displaySuccess} />
-                <Grid container item maxWidth={"867px"} mt={"40px"} gap={"10px"} pb={"40px"}>
-                    <Grid container item justifyContent={"space-between"} alignItems={"center"} mb={"-5px"}>
-                        <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
-                            Доступные заказы
-                        </Typography>
+                {displayFilter ? (
+                    <OrderFilter queryHandler={setSearchQuery} successHandler={displaySuccess} />
+                ) : (
+                    <Dialog
+                        open={filterModalOpen}
+                        onClose={() => setFilterModalOpen(false)}
+                        PaperProps={{ style: { margin: 0 } }}
+                    >
+                        <OrderFilter queryHandler={setSearchQuery} successHandler={displaySuccess} />
+                    </Dialog>
+                )}
+                <Grid
+                    container
+                    item
+                    maxWidth={"867px"}
+                    mt={"40px"}
+                    gap={"10px"}
+                    pb={"40px"}
+                    sx={{ paddingLeft: { md: "19px", lg: 0 }, paddingRight: { md: "19px", lg: 0 } }}
+                >
+                    <Grid
+                        container
+                        item
+                        justifyContent={"space-between"}
+                        alignItems={"center"}
+                        mb={"-5px"}
+                        sx={{ marginLeft: { xs: "10px", md: "0px" } }}
+                    >
+                        {displayFilter ? (
+                            <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
+                                Доступные заказы
+                            </Typography>
+                        ) : (
+                            <Grid container item xs="auto" gap={"10px"}>
+                                <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
+                                    Доступные заказы
+                                </Typography>
+                                <IconButton
+                                    style={{ padding: 0, color: "#000000" }}
+                                    onClick={() => setFilterModalOpen(true)}
+                                >
+                                    <FilterAltOutlinedIcon sx={{ fontSize: 30 }} />
+                                </IconButton>
+                            </Grid>
+                        )}
                         <Grid container item width={"201px"}>
                             <SortSelector
                                 options={[

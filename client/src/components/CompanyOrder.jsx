@@ -1,4 +1,4 @@
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { Button, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,8 @@ import DeleteConfirmationModal from "./modals/DeleteConfirmationModal";
 import addNoun from "../utils/fieldsParser";
 
 const CompanyOrder = ({ order, deleteHandler }) => {
+    const isScreenSizeUpMd = useMediaQuery((theme) => theme.breakpoints.up("md"));
+
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const navigate = useNavigate();
@@ -31,7 +33,7 @@ const CompanyOrder = ({ order, deleteHandler }) => {
                 style={{ borderRadius: "10px", border: "2px solid #DDC12C" }}
             >
                 <Typography
-                    variant="h2"
+                    variant={isScreenSizeUpMd ? "h2" : "h3"}
                     style={{ borderBottom: "2px solid #DDC12C" }}
                     overflow={"hidden"}
                     whiteSpace={"nowrap"}
@@ -45,7 +47,7 @@ const CompanyOrder = ({ order, deleteHandler }) => {
                 </Typography>
                 <Stack direction={"column"} maxWidth={"100%"}>
                     <Typography
-                        variant="h2"
+                        variant={isScreenSizeUpMd ? "h2" : "h3"}
                         overflow={"hidden"}
                         whiteSpace={"nowrap"}
                         textOverflow={"ellipsis"}
@@ -57,7 +59,7 @@ const CompanyOrder = ({ order, deleteHandler }) => {
                         {order.place}
                     </Typography>
                     <Typography
-                        variant="h2"
+                        variant={isScreenSizeUpMd ? "h2" : "h3"}
                         maxWidth={"100%"}
                         height={"38px"}
                         display={"flex"}
@@ -66,7 +68,7 @@ const CompanyOrder = ({ order, deleteHandler }) => {
                         {order.completionTime != null ? addNoun(order.completionTime, ["день", "дня", 'дней']) : "Бессрочно"}
                     </Typography>
                     <Typography
-                        variant="h2"
+                        variant={isScreenSizeUpMd ? "h2" : "h3"}
                         maxWidth={"100%"}
                         height={"38px"}
                         display={"flex"}
@@ -75,7 +77,7 @@ const CompanyOrder = ({ order, deleteHandler }) => {
                         {order.price != null ? addNoun(order.price, ["бел. рубль", "бел. рубля", "бел. рублей"]) : "Бесплатно"}
                     </Typography>
                     <Typography
-                        variant="h2"
+                        variant={isScreenSizeUpMd ? "h2" : "h3"}
                         maxWidth={"100%"}
                         height={"38px"}
                         display={"flex"}

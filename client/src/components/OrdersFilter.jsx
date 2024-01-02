@@ -53,12 +53,13 @@ const OrderFilter = ({ queryHandler, successHandler }) => {
             flexDirection={"column"}
             alignItems={"center"}
             maxWidth={"300px"}
-            ml={"10px"}
+            minWidth={"300px"}
             mt={"116px"}
             pt={"5px"}
             pb={"15px"}
             borderRadius={"10px"}
             style={{ boxShadow: "0px 0px 4px 2px rgba(0, 0, 0, 0.25)" }}
+            sx={{ marginLeft: { sm: 0, lg: "10px" }, marginTop: { sm: 0, lg: "116px" } }}
         >
             <Grid container item maxWidth={"246px"} gap={"10px"}>
                 <Grid container item justifyContent={"center"} mb={"5px"}>

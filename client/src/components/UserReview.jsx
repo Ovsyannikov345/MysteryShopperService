@@ -26,13 +26,23 @@ const UserReview = ({ userReview }) => {
                     sx={{ width: 60, height: 60 }}
                 />
             </Button>
-            <Stack direction={"row"} justifyContent={"space-between"} flexGrow={1}>
-                <Typography variant="h2" height={"35px"} style={{ borderBottom: "2px solid #DDC12C" }}>
+            <Stack
+                direction={"row"}
+                justifyContent={"space-between"}
+                flexGrow={1}
+                sx={{ flexDirection: { xs: "column", md: "row" } }}
+            >
+                <Typography
+                    variant="h2"
+                    height={"35px"}
+                    style={{ borderBottom: "2px solid #DDC12C" }}
+                    sx={{ fontSize: { xs: "20px", md: "24px" } }}
+                >
                     {userReview.Company.name}
                 </Typography>
                 <Rating name="read-only" value={userReview.grade} readOnly />
             </Stack>
-            <Typography variant="h3" pl={"67px"} width={"100%"}>
+            <Typography variant="h3" pl={"67px"} width={"100%"} sx={{ paddingLeft: { xs: "0", md: "67px" } }}>
                 {userReview.text}
             </Typography>
         </Grid>

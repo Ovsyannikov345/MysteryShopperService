@@ -219,15 +219,25 @@ const UserOrderDetails = () => {
                     mt={"40px"}
                     justifyContent={"space-between"}
                     flexWrap={"nowrap"}
+                    sx={{ paddingLeft: { xs: "15px", md: "40px" }, marginTop: { xs: "15px", md: "40px" } }}
                 >
                     <NavigateBack label="Назад" to={-1} />
                 </Grid>
                 {order && (
-                    <Grid container item mt={"15px"} pl={"150px"} pb={"46px"} flexDirection={"column"}>
+                    <Grid
+                        container
+                        item
+                        pb={"46px"}
+                        flexDirection={"column"}
+                        sx={{
+                            paddingLeft: { xs: "14px", md: "53px", lg: "150px" },
+                            marginTop: { xs: "10px", md: "15px" },
+                        }}
+                    >
                         <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                             Информация о заказчике
                         </Typography>
-                        <Grid container item columnGap={"50px"} wrap="nowrap">
+                        <Grid container item wrap="nowrap" sx={{ gap: { xs: "5px", md: "50px" } }}>
                             <Avatar
                                 src={
                                     order.Company.id !== undefined
@@ -237,21 +247,33 @@ const UserOrderDetails = () => {
                                         : ""
                                 }
                                 variant="square"
-                                sx={{ width: 130, height: 130 }}
+                                sx={{ width: { xs: 60, md: 130 }, height: { xs: 60, md: 130 } }}
                             />
                             <Grid container item flexDirection={"column"}>
-                                <Grid container item alignItems={"center"} gap={"10px"}>
+                                <Grid container item alignItems={"center"} sx={{ gap: { xs: "0", md: "10px" } }}>
                                     <Typography
                                         variant="h2"
                                         height={"69px"}
                                         display={"flex"}
                                         alignItems={"center"}
+                                        sx={{
+                                            fontSize: { xs: "20px", md: "24px" },
+                                            height: { xs: "29px", md: "69px" },
+                                        }}
                                     >
                                         {order.Company.name}
                                     </Typography>
                                     <Rating value={companyRating} precision={0.5} readOnly />
                                 </Grid>
-                                <Grid container item maxWidth={"150px"} height={"52px"}>
+                                <Grid
+                                    container
+                                    item
+                                    sx={{
+                                        maxWidth: { xs: "118px", md: "150px" },
+                                        height: { xs: "36px", md: "52px" },
+                                        mt: { xs: "5px", md: 0 },
+                                    }}
+                                >
                                     <Button
                                         variant="contained"
                                         fullWidth
@@ -265,7 +287,7 @@ const UserOrderDetails = () => {
                         <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                             Детали заказа
                         </Typography>
-                        <Grid container item flexDirection={"column"} gap={"25px"} maxWidth={"660px"}>
+                        <Grid container item flexDirection={"column"} gap={"25px"} maxWidth={"660px"} sx={{maxWidth: {xs: "310px", md: "660px"}, ml: {xs: "-7px", md: 0}}}>
                             <TextField
                                 fullWidth
                                 variant="standard"
@@ -273,7 +295,7 @@ const UserOrderDetails = () => {
                                 value={order.title !== undefined ? order.title : ""}
                                 InputProps={{
                                     readOnly: true,
-                                    style: { fontSize: "24px" },
+                                    sx: { fontSize: { xs: "18px", md: "24px" } },
                                 }}
                                 sx={{
                                     "& .MuiInput-underline:before": {
@@ -296,7 +318,7 @@ const UserOrderDetails = () => {
                                 value={order.description !== undefined ? order.description : ""}
                                 InputProps={{
                                     readOnly: true,
-                                    style: { fontSize: "24px" },
+                                    sx: { fontSize: { xs: "18px", md: "24px" } },
                                 }}
                                 sx={{
                                     "& .MuiInput-underline:before": {
@@ -315,7 +337,7 @@ const UserOrderDetails = () => {
                                 value={order.place !== undefined ? order.place : ""}
                                 InputProps={{
                                     readOnly: true,
-                                    style: { fontSize: "24px" },
+                                    sx: { fontSize: { xs: "18px", md: "24px" } },
                                 }}
                                 sx={{
                                     "& .MuiInput-underline:before": {
@@ -337,7 +359,7 @@ const UserOrderDetails = () => {
                                 }
                                 InputProps={{
                                     readOnly: true,
-                                    style: { fontSize: "24px" },
+                                    sx: { fontSize: { xs: "18px", md: "24px" } },
                                 }}
                                 sx={{
                                     "& .MuiInput-underline:before": {
@@ -359,7 +381,7 @@ const UserOrderDetails = () => {
                                 }
                                 InputProps={{
                                     readOnly: true,
-                                    style: { fontSize: "24px" },
+                                    sx: { fontSize: { xs: "18px", md: "24px" } },
                                 }}
                                 sx={{
                                     "& .MuiInput-underline:before": {
@@ -381,7 +403,7 @@ const UserOrderDetails = () => {
                                 }
                                 InputProps={{
                                     readOnly: true,
-                                    style: { fontSize: "24px" },
+                                    sx: { fontSize: { xs: "18px", md: "24px" } },
                                 }}
                                 sx={{
                                     "& .MuiInput-underline:before": {

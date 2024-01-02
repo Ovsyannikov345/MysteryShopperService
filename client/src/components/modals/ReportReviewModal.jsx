@@ -12,7 +12,14 @@ const ReportReviewModal = ({ isOpen, acceptHandler, declineHandler }) => {
     };
 
     return (
-        <Dialog open={isOpen} onClose={closeModal}>
+        <Dialog
+            open={isOpen}
+            onClose={closeModal}
+            PaperProps={{
+                style: { margin: 0, borderRadius: "10px" },
+                sx: { maxWidth: { xs: "300px", md: "483px" } },
+            }}
+        >
             <Grid
                 container
                 item
@@ -22,6 +29,9 @@ const ReportReviewModal = ({ isOpen, acceptHandler, declineHandler }) => {
                 pb={"25px"}
                 flexDirection={"column"}
                 alignItems={"center"}
+                sx={{
+                    width: { xs: "300px", md: "483px" },
+                }}
             >
                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"} mb={"20px"}>
                     Оцените отчет

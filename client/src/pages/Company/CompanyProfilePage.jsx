@@ -186,11 +186,13 @@ const CompanyProfilePage = () => {
                 <Grid
                     container
                     item
-                    pr={"40px"}
-                    pl={"40px"}
-                    mt={"40px"}
                     justifyContent={"space-between"}
                     flexWrap={"nowrap"}
+                    sx={{
+                        paddingLeft: { xs: "23px", lg: "40px" },
+                        paddingRight: { xs: "23px", lg: "40px" },
+                        marginTop: { xs: "0", md: "40px" },
+                    }}
                 >
                     <NavigateBack
                         label={id === undefined ? "Мои заказы" : "Назад"}
@@ -198,12 +200,25 @@ const CompanyProfilePage = () => {
                     />
                     {!readonly && !editMode && companyData.id !== undefined && (
                         <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setEditMode(true)}>
-                            <EditIcon sx={{ fontSize: 50 }}></EditIcon>
+                            <EditIcon sx={{ fontSize: { xs: 30, md: 40, lg: 50 } }}></EditIcon>
                         </IconButton>
                     )}
                 </Grid>
-                <Grid container item pl={"150px"} mt={"40px"} pb={"46px"}>
-                    <Grid container item gap={"50px"} alignItems={"center"}>
+                <Grid
+                    container
+                    item
+                    pb={"46px"}
+                    sx={{
+                        paddingLeft: { xs: "1px", md: "33px", lg: "150px" },
+                        marginTop: { xs: "0", md: "40px" },
+                    }}
+                >
+                    <Grid
+                        container
+                        item
+                        alignItems={"center"}
+                        sx={{ gap: { xs: "5px", md: "50px" } }}
+                    >
                         <Avatar
                             src={
                                 companyData.id !== undefined
@@ -213,11 +228,23 @@ const CompanyProfilePage = () => {
                                     : ""
                             }
                             variant="square"
-                            sx={{ width: 130, height: 130 }}
+                            sx={{
+                                width: { xs: 60, md: 130 },
+                                height: { xs: 60, md: 130 },
+                                marginLeft: { xs: editMode ? "43px" : "0", md: "46px", lg: 0 },
+                            }}
                         />
                         {!editMode ? (
-                            <Grid flexDirection={"column"} gap={"10px"}>
-                                <Typography variant="h2" height={"36px"}>
+                            <Grid
+                                flexDirection={"column"}
+                                gap={"10px"}
+                                sx={{ maxWidth: { xs: "253px", md: "430px" } }}
+                            >
+                                <Typography
+                                    variant="h2"
+                                    height={"36px"}
+                                    sx={{ fontSize: { xs: "20px", md: "24px" } }}
+                                >
                                     {companyData.name}
                                 </Typography>
                                 <Typography variant="h3">{companyData.email}</Typography>
@@ -246,7 +273,15 @@ const CompanyProfilePage = () => {
                                 rating={rating}
                             />
                             {companyData.ContactPerson !== undefined ? (
-                                <Grid container item mt={"50px"} flexDirection={"column"}>
+                                <Grid
+                                    container
+                                    item
+                                    flexDirection={"column"}
+                                    sx={{
+                                        paddingLeft: { xs: "1px", md: "46px", lg: "0px" },
+                                        marginTop: { xs: "10px", md: "50px" },
+                                    }}
+                                >
                                     <Typography
                                         variant="h2"
                                         height={"69px"}
@@ -266,6 +301,7 @@ const CompanyProfilePage = () => {
                                             ].join(" ")}
                                             InputProps={{
                                                 readOnly: true,
+                                                sx: { fontSize: { xs: "20px", md: "24px" } },
                                             }}
                                             sx={{
                                                 "& .MuiInput-underline:before": {
@@ -282,6 +318,7 @@ const CompanyProfilePage = () => {
                                             value={companyData.ContactPerson.email}
                                             InputProps={{
                                                 readOnly: true,
+                                                sx: { fontSize: { xs: "20px", md: "24px" } },
                                             }}
                                             sx={{
                                                 "& .MuiInput-underline:before": {
@@ -298,6 +335,7 @@ const CompanyProfilePage = () => {
                                             value={companyData.ContactPerson.phone}
                                             InputProps={{
                                                 readOnly: true,
+                                                sx: { fontSize: { xs: "20px", md: "24px" } },
                                             }}
                                             sx={{
                                                 "& .MuiInput-underline:before": {
@@ -314,7 +352,15 @@ const CompanyProfilePage = () => {
                                 <></>
                             )}
                             {companyData.Orders !== undefined ? (
-                                <Grid container item mt={"50px"} flexDirection={"column"}>
+                                <Grid
+                                    container
+                                    item
+                                    flexDirection={"column"}
+                                    sx={{
+                                        marginTop: { xs: "10px", md: "50px" },
+                                        paddingLeft: { xs: "5px", md: 0 },
+                                    }}
+                                >
                                     {companyData.Orders.map((order) => order.CompanyReviews).length > 0 ? (
                                         <>
                                             <Typography

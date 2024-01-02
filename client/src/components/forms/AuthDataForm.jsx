@@ -43,20 +43,23 @@ const AuthDataForm = ({ nextStepHandler, errorHandler }) => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <Grid container width={498} alignItems={"center"}>
+            <Grid container alignItems={"center"} sx={{ width: { xs: "300px", md: "498px" } }}>
                 <Grid
                     container
                     item
                     flexDirection={"column"}
                     alignItems={"center"}
                     justifyContent={"space-between"}
-                    paddingLeft={"139px"}
-                    paddingRight={"139px"}
                     pt={"28px"}
                     pb={"30px"}
                     boxShadow={14}
                     borderRadius={4}
-                    style={{ height: "481px", width: "100%" }}
+                    sx={{
+                        height: "481px",
+                        width: "100%",
+                        paddingLeft: { xs: "40px", md: "139px" },
+                        paddingRight: { xs: "40px", md: "139px" },
+                    }}
                 >
                     <Typography variant="h5">Регистрация</Typography>
                     <TextField

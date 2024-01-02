@@ -54,32 +54,35 @@ const LoginPage = () => {
         <Grid container width={"100%"} height={"100%"}>
             <PublicHeader />
             <Grid container flexDirection={"column"} alignItems={"center"}>
-                <Grid container width={498} alignItems={"center"}>
+                <Grid container alignItems={"center"} sx={{ width: { xs: "300px", md: "498px" } }}>
                     <Grid
                         container
                         item
                         flexDirection={"column"}
                         alignItems={"center"}
                         justifyContent={"space-between"}
-                        paddingLeft={"139px"}
-                        paddingRight={"139px"}
                         pt={"28px"}
                         pb={"83px"}
                         boxShadow={14}
                         borderRadius={4}
                         gap={4}
-                        style={{ height: "400px", width: "100%" }}
+                        sx={{
+                            height: "400px",
+                            width: "100%",
+                            paddingLeft: { xs: "40px", md: "139px" },
+                            paddingRight: { xs: "40px", md: "139px" },
+                        }}
                     >
                         <Typography variant="h5">Вход</Typography>
                         <TextField
-                        sx={{
-                            "& .MuiInput-underline:before": {
-                                borderBottomColor: theme.palette.primary.main,
-                            },
-                            "& .MuiInput-underline:after": {
-                                borderBottomColor: theme.palette.primary.main,
-                            },
-                        }}
+                            sx={{
+                                "& .MuiInput-underline:before": {
+                                    borderBottomColor: theme.palette.primary.main,
+                                },
+                                "& .MuiInput-underline:after": {
+                                    borderBottomColor: theme.palette.primary.main,
+                                },
+                            }}
                             fullWidth
                             variant="standard"
                             label="Эл. почта"
@@ -89,14 +92,14 @@ const LoginPage = () => {
                         ></TextField>
                         <Grid item>
                             <TextField
-                            sx={{
-                                "& .MuiInput-underline:before": {
-                                    borderBottomColor: theme.palette.primary.main,
-                                },
-                                "& .MuiInput-underline:after": {
-                                    borderBottomColor: theme.palette.primary.main,
-                                },
-                            }}
+                                sx={{
+                                    "& .MuiInput-underline:before": {
+                                        borderBottomColor: theme.palette.primary.main,
+                                    },
+                                    "& .MuiInput-underline:after": {
+                                        borderBottomColor: theme.palette.primary.main,
+                                    },
+                                }}
                                 fullWidth
                                 variant="standard"
                                 type="password"

@@ -13,7 +13,7 @@ const CompanyReview = ({ companyReview }) => {
             gap={"8px"}
             style={{ border: "2px solid #DDC12C", borderRadius: "10px" }}
         >
-            <Button style={{padding: 0}} onClick={() => navigate(`/user/${companyReview.User.id}`)}>
+            <Button style={{ padding: 0 }} onClick={() => navigate(`/user/${companyReview.User.id}`)}>
                 <Avatar
                     src={
                         companyReview.User.id !== undefined
@@ -26,13 +26,18 @@ const CompanyReview = ({ companyReview }) => {
                     sx={{ width: 60, height: 60 }}
                 />
             </Button>
-            <Stack direction={"row"} justifyContent={"space-between"} flexGrow={1}>
-                <Typography variant="h2" height={"35px"} style={{ borderBottom: "2px solid #DDC12C" }}>
+            <Stack
+                direction={"row"}
+                justifyContent={"space-between"}
+                flexGrow={1}
+                sx={{ flexDirection: { xs: "column", md: "row" } }}
+            >
+                <Typography variant="h2" height={"35px"} style={{ borderBottom: "2px solid #DDC12C" }} sx={{ fontSize: { xs: "20px", md: "24px" } }}>
                     {companyReview.User.surname + " " + companyReview.User.name}
                 </Typography>
                 <Rating name="read-only" value={companyReview.grade} readOnly />
             </Stack>
-            <Typography variant="h3" pl={"67px"} width={"100%"}>
+            <Typography variant="h3" pl={"67px"} width={"100%"} sx={{ paddingLeft: { xs: "0", md: "67px" } }}>
                 {companyReview.text}
             </Typography>
         </Grid>

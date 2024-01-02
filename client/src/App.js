@@ -13,7 +13,7 @@ const App = () => {
             },
             text: {
                 main: "#000000",
-            }
+            },
         },
         typography: {
             h1: {
@@ -24,6 +24,15 @@ const App = () => {
             },
             h3: {
                 fontSize: "16px",
+            },
+        },
+        breakpoints: {
+            values: {
+                xs: 0,
+                sm: 320,
+                md: 768,
+                lg: 1200,
+                xl: 1536,
             },
         },
     });

@@ -20,7 +20,7 @@ const CreateOrderForm = ({ submitHandler }) => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <Grid container item maxWidth={"500px"} width={"500px"} gap={"15px"} mt={"50px"}>
+            <Grid container item gap={"15px"} mt={"50px"} sx={{ width: { xs: "310px", md: "500px" } }}>
                 <Grid container item height={"69px"} justifyContent={"center"} alignItems={"center"}>
                     <Typography variant="h2" textAlign={"center"}>
                         Создание заказа
