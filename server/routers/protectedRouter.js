@@ -29,14 +29,12 @@ const supportRequestController = require("../controllers/supportRequestControlle
 
 const router = new Router();
 
-router.get("/users", userController.getAll);
 router.get("/user", userController.getProfile);
 router.get("/users/:id", userController.getOne);
 router.get("/users/:id/avatar", userController.getAvatar);
 router.post("/users/:id/avatar", upload.single("image"), userController.updateAvatar);
 router.put("/users/:id", userController.update);
 
-router.get("/companies", companyController.getAll);
 router.get("/company", companyController.getProfile);
 router.get("/companies/:id", companyController.getOne);
 router.get("/companies/:id/avatar", companyController.getAvatar);

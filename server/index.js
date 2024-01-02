@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(router);
-// TODO Remove redundant controllers.
+
 const start = async () => {
     try {
         await sequelize.authenticate();

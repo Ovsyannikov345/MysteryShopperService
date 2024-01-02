@@ -4,30 +4,6 @@ const fs = require("fs");
 const path = require("path");
 
 class CompanyController {
-    async getAll(req, res) {
-        try {
-            const companies = await Company.findAll({
-                attributes: { exclude: ["password"] },
-                include: [
-                    { model: ContactPerson },
-                    {
-                        model: Order,
-                        include: [
-                            {
-                                model: CompanyReview,
-                                include: [{ model: User, attributes: ["id", "name", "surname"] }],
-                            },
-                        ],
-                    },
-                ],
-            });
-
-            return res.json(companies);
-        } catch (err) {
-            return res.sendStatus(500);
-        }
-    }
-
     async getOne(req, res) {
         const { id } = req.params;
 

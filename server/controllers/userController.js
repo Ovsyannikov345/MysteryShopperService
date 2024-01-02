@@ -4,19 +4,6 @@ const fs = require("fs");
 const path = require("path");
 
 class UserController {
-    async getAll(req, res) {
-        try {
-            const users = await User.findAll({
-                attributes: { exclude: ["password"] },
-                include: [{ model: Order }, { model: Report, include: [{ model: UserReview }] }],
-            });
-
-            return res.json(users);
-        } catch (err) {
-            return res.sendStatus(500);
-        }
-    }
-
     async getOne(req, res) {
         const { id } = req.params;
 
