@@ -85,7 +85,9 @@ const CompanyProfilePage = () => {
                 });
             });
 
-            return (totalGrade / count).toFixed(2);
+            const result = (totalGrade / count).toFixed(2);
+
+            return isNaN(result) ? "-" : result;
         } catch {
             return "-";
         }
