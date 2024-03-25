@@ -1,4 +1,4 @@
-import host from ".";
+import { host } from ".";
 
 const getProfile = async () => {
     try {
@@ -30,7 +30,7 @@ const getUser = async (id) => {
             console.log("Error while creating request");
         }
     }
-}
+};
 
 const updateUser = async (id, userData) => {
     try {

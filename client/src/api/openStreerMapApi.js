@@ -1,8 +1,8 @@
-import { host } from ".";
+import { nearestAddress } from ".";
 
-const createRequest = async (requestData) => {
+const getAddressFromCoordinates = async (location) => {
     try {
-        const response = await host.post("/api/support-requests", requestData);
+        const response = await nearestAddress.get(`https://nominatim.openstreetmap.org/reverse?lat=${location.lat}&lon=${location.lng}&format=json`);
 
         return response;
     } catch (error) {
@@ -16,4 +16,4 @@ const createRequest = async (requestData) => {
     }
 };
 
-export { createRequest };
+export { getAddressFromCoordinates };

@@ -1,4 +1,4 @@
-import host from ".";
+import { host } from ".";
 
 const createUserReview = async (reviewData) => {
     try {
