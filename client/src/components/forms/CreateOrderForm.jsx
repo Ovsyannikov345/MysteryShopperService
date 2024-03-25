@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, TextField, Typography, Button } from "@mui/material";
 import { useFormik } from "formik";
 import validateOrderData from "../../utils/validateOrderData";
+import OrderCreationMap from "../map/OrderCreationMap";
 
 const CreateOrderForm = ({ submitHandler }) => {
     const formik = useFormik({
@@ -18,9 +19,16 @@ const CreateOrderForm = ({ submitHandler }) => {
         },
     });
 
+    const setNewLocation = (address) => {
+        const addressString = [address.city, address.state, address.road, address.house_number].join(", ");
+
+        formik.setFieldValue("place", addressString);
+        console.log(formik.values.place)
+    }
+
     return (
         <form onSubmit={formik.handleSubmit}>
-            <Grid container item gap={"15px"} mt={"50px"} sx={{ width: { xs: "310px", md: "500px" } }}>
+            <Grid container item gap={"15px"} mt={"20px"} sx={{ width: { xs: "310px", md: "700px" } }}>
                 <Grid container item height={"69px"} justifyContent={"center"} alignItems={"center"}>
                     <Typography variant="h2" textAlign={"center"}>
                         Создание заказа
@@ -75,6 +83,7 @@ const CreateOrderForm = ({ submitHandler }) => {
                     }
                     required
                 />
+                <OrderCreationMap onLocationChange={setNewLocation}/>
                 <Grid container item columnGap={"20px"} rowGap={"15px"}>
                     <Grid container item width={"200px"}>
                         <TextField
