@@ -101,6 +101,14 @@ const Order = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
+        lat: {
+            type: DataTypes.DOUBLE,
+            allowNull: true,
+        },
+        lng: {
+            type: DataTypes.DOUBLE,
+            allowNull: true,
+        },
         completionTime: {
             type: DataTypes.SMALLINT,
             allowNull: true,

@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, TextField, Typography, Button } from "@mui/material";
 import { useFormik } from "formik";
 import validateOrderData from "../../utils/validateOrderData";
-import OrderCreationMap from "../map/OrderCreationMap";
+import OrderCreationMap from "../maps/OrderCreationMap";
 
 const CreateOrderForm = ({ submitHandler }) => {
     const formik = useFormik({
@@ -10,6 +10,8 @@ const CreateOrderForm = ({ submitHandler }) => {
             title: "",
             description: "",
             place: "",
+            lat: null,
+            lng: null,
             completionTime: "",
             price: "",
         },
@@ -19,12 +21,14 @@ const CreateOrderForm = ({ submitHandler }) => {
         },
     });
 
-    const setNewLocation = (address) => {
+    const setNewLocation = (newLocation, address) => {
         const addressString = [address.city, address.state, address.road, address.house_number].join(", ");
 
         formik.setFieldValue("place", addressString);
-        console.log(formik.values.place)
-    }
+        formik.setFieldValue("lat", newLocation.lat);
+        formik.setFieldValue("lng", newLocation.lng);
+        console.log(formik.values.place);
+    };
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -83,7 +87,7 @@ const CreateOrderForm = ({ submitHandler }) => {
                     }
                     required
                 />
-                <OrderCreationMap onLocationChange={setNewLocation}/>
+                <OrderCreationMap onLocationChange={setNewLocation} />
                 <Grid container item columnGap={"20px"} rowGap={"15px"}>
                     <Grid container item width={"200px"}>
                         <TextField
