@@ -12,6 +12,7 @@ import ReportForm from "../../components/forms/ReportForm";
 import { createReport } from "../../api/reportApi";
 import CompanyReviewForm from "../../components/forms/CompanyReviewForm";
 import { createCompanyReview } from "../../api/companyReviewApi";
+import OrderDetailsMap from "../../components/maps/OrderDetailsMap";
 
 const UserOrderDetails = () => {
     const theme = useTheme();
@@ -348,6 +349,7 @@ const UserOrderDetails = () => {
                                     },
                                 }}
                             />
+                            <OrderDetailsMap orderPosition={{lat: order.lat, lng: order.lng}}/>
                             <TextField
                                 fullWidth
                                 variant="standard"
