@@ -23,7 +23,7 @@ const AvailableOrdersPage = () => {
     const [searchQuery, setSearchQuery] = useState({
         name: "",
         place: "",
-        minRating: 0,
+        minRating: null,
         minPrice: null,
         maxPrice: null,
         minDays: null,
