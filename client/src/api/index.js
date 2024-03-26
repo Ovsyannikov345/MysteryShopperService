@@ -12,4 +12,9 @@ const nearestAddress = axios.create({
     withCredentials: false,
 });
 
-export { host, nearestAddress };
+const routeCalcutator = axios.create({
+    baseURL: "",
+    withCredentials: false,
+});
+
+export { host, nearestAddress, routeCalcutator };
