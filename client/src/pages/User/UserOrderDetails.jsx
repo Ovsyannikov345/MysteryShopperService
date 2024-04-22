@@ -13,6 +13,7 @@ import { createReport } from "../../api/reportApi";
 import CompanyReviewForm from "../../components/forms/CompanyReviewForm";
 import { createCompanyReview } from "../../api/companyReviewApi";
 import OrderDetailsMap from "../../components/maps/OrderDetailsMap";
+import OrderAnalyzer from "../../components/orderAnalyzer/orderAnalyzer";
 
 const UserOrderDetails = () => {
     const theme = useTheme();
@@ -288,7 +289,14 @@ const UserOrderDetails = () => {
                         <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                             Детали заказа
                         </Typography>
-                        <Grid container item flexDirection={"column"} gap={"25px"} maxWidth={"660px"} sx={{maxWidth: {xs: "310px", md: "660px"}, ml: {xs: "-7px", md: 0}}}>
+                        <Grid
+                            container
+                            item
+                            flexDirection={"column"}
+                            gap={"25px"}
+                            maxWidth={"660px"}
+                            sx={{ maxWidth: { xs: "310px", md: "660px" }, ml: { xs: "-7px", md: 0 } }}
+                        >
                             <TextField
                                 fullWidth
                                 variant="standard"
@@ -330,6 +338,7 @@ const UserOrderDetails = () => {
                                     },
                                 }}
                             />
+                            <OrderAnalyzer />
                             <TextField
                                 fullWidth
                                 variant="standard"
@@ -349,7 +358,7 @@ const UserOrderDetails = () => {
                                     },
                                 }}
                             />
-                            <OrderDetailsMap orderPosition={{lat: order.lat, lng: order.lng}}/>
+                            <OrderDetailsMap orderPosition={{ lat: order.lat, lng: order.lng }} />
                             <TextField
                                 fullWidth
                                 variant="standard"
