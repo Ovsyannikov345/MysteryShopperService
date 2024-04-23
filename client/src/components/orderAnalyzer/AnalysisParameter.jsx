@@ -12,22 +12,22 @@ const AnalysisParameter = ({ name, value }) => {
             case 1:
                 return <SentimentVeryDissatisfiedIcon color="error" />;
             case 2:
-                return <SentimentDissatisfiedIcon color="error"/>;
+                return <SentimentDissatisfiedIcon color="error" />;
             case 3:
-                return <SentimentNeutralIcon color="primary"/>;
+                return <SentimentNeutralIcon color="primary" />;
             case 4:
-                return <SentimentSatisfiedIcon color="success"/>;
+                return <SentimentSatisfiedIcon color="success" />;
             case 5:
-                return <SentimentVerySatisfiedIcon color="success"/>;
+                return <SentimentVerySatisfiedIcon color="success" />;
             default:
-                return <SentimentNeutralIcon color="primary"/>;
+                return <SentimentNeutralIcon color="primary" />;
         }
     };
 
     return (
         <Grid container item justifyContent={"space-between"} gap={"10px"}>
             <Typography>
-                {name}: <b>{value}</b>
+                {name}: <b>{value}/5</b>
             </Typography>
             {getIcon(value)}
         </Grid>
