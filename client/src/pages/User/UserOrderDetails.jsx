@@ -13,7 +13,7 @@ import { createReport } from "../../api/reportApi";
 import CompanyReviewForm from "../../components/forms/CompanyReviewForm";
 import { createCompanyReview } from "../../api/companyReviewApi";
 import OrderDetailsMap from "../../components/maps/OrderDetailsMap";
-import OrderAnalyzer from "../../components/orderAnalyzer/orderAnalyzer";
+import OrderAnalyzer from "../../components/orderAnalyzer/OrderAnalyzer";
 
 const UserOrderDetails = () => {
     const theme = useTheme();
