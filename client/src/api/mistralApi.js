@@ -6,9 +6,9 @@ const completionTimeMockResponse = {
 };
 
 const compatibilityMockResponse = {
-    age: 5,
-    gender: 5,
-    profession: 4,
+    age: 1,
+    gender: 2,
+    profession: 3,
     experience: 5,
 };
 
@@ -18,7 +18,7 @@ const getCompletionTime = async () => {
             data: completionTimeMockResponse,
         };
 
-        setTimeout(() => {}, 5000);
+        await new Promise(resolve => setTimeout(resolve, 3000));
 
         return response;
     } catch (error) {
@@ -38,7 +38,7 @@ const getCompatibility = async () => {
             data: compatibilityMockResponse,
         };
 
-        setTimeout(() => {}, 5000);
+        await new Promise(resolve => setTimeout(resolve, 3000));
 
         return response;
     } catch (error) {
