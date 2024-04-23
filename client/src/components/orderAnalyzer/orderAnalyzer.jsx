@@ -44,11 +44,20 @@ const OrderAnalyzer = ({ errorHandler }) => {
                     </Button>
                 </Grid>
             ) : (
-                <Grid container item width={"250px"}>
+                <Grid container item width={"260px"}>
                     <Typography>
                         Время выполнения:{" "}
                         <b>
                             {analysis.timeStart}-{addNoun(analysis.timeEnd, ["час", "часа", "часов"])}
+                        </b>
+                    </Typography>
+                    <Typography>
+                        Оценка совместимости:{" "}
+                        <b>
+                            {(
+                                (analysis.age + analysis.gender + analysis.profession + analysis.experience) /
+                                4
+                            ).toFixed(1)}
                         </b>
                     </Typography>
                     <AnalysisParameter name={"Возраст"} value={analysis.age} />
