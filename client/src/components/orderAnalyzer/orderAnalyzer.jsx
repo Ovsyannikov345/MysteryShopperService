@@ -1,30 +1,29 @@
 import React, { useState } from "react";
 import { Typography, Grid, Button, CircularProgress } from "@mui/material";
 import { getCompletionTime, getCompatibility } from "../../api/mistralApi";
-import addNoun from "../../utils/fieldsParser";
 import AnalysisParameter from "./AnalysisParameter";
 
-const OrderAnalyzer = ({ errorHandler }) => {
+const OrderAnalyzer = ({ orderText, errorHandler }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [analysis, setAnalysis] = useState(null);
 
     const analyze = async () => {
         setIsLoading(true);
 
-        let response = await getCompletionTime();
+        let response = await getCompletionTime(orderText);
 
         if (!response || response.status >= 300) {
-            errorHandler(response.error);
+            errorHandler("Ошибка во время анализа времени. Попробуйте еще раз");
             setIsLoading(false);
             return;
         }
 
         let result = { ...response.data };
 
-        response = await getCompatibility();
+        response = await getCompatibility(orderText);
 
         if (!response || response.status >= 300) {
-            errorHandler(response.error);
+            errorHandler("Ошибка во время анализа совместимости. Попробуйте еще раз");
             setIsLoading(false);
             return;
         }
@@ -48,7 +47,7 @@ const OrderAnalyzer = ({ errorHandler }) => {
                     <Typography>
                         Время выполнения:{" "}
                         <b>
-                            {analysis.timeStart}-{addNoun(analysis.timeEnd, ["час", "часа", "часов"])}
+                            {analysis.startInterval}-{analysis.endInterval} ч.
                         </b>
                     </Typography>
                     <Typography>

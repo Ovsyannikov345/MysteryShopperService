@@ -20,7 +20,7 @@ const AnalysisParameter = ({ name, value }) => {
             case 5:
                 return <SentimentVerySatisfiedIcon color="success" />;
             default:
-                return <SentimentNeutralIcon color="primary" />;
+                return <SentimentVeryDissatisfiedIcon color="error" />;
         }
     };
 
