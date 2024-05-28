@@ -17,4 +17,9 @@ const routeCalcutator = axios.create({
     withCredentials: false,
 });
 
-export { host, nearestAddress, routeCalcutator };
+const aiServer = axios.create({
+    baseURL: process.env.REACT_APP_AI_API_URL,
+    withCredentials: false,
+});
+
+export { host, nearestAddress, routeCalcutator, aiServer };
