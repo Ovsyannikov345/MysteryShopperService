@@ -1,5 +1,15 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Grid, Stack, TextField, Typography, Alert, Snackbar, Accordion, AccordionSummary } from "@mui/material";
+import {
+    Grid,
+    Stack,
+    TextField,
+    Typography,
+    Alert,
+    Snackbar,
+    Accordion,
+    AccordionSummary,
+    Button,
+} from "@mui/material";
 import CompanyHeader from "./../../components/headers/CompanyHeader";
 import NavigateBack from "../../components/NavigateBack";
 import { useTheme } from "@emotion/react";
@@ -12,6 +22,9 @@ import Request from "../../components/Request";
 import Report from "../../components/Report";
 import addNoun from "../../utils/fieldsParser";
 
+// TODO implement order editing with permission check.
+// TODO implement order finishing.
+
 const CompanyOrderDetails = () => {
     const theme = useTheme();
 
@@ -21,6 +34,8 @@ const CompanyOrderDetails = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [success, setSuccess] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
+
+    const [isEditMode, setIsEditMode] = useState(false);
 
     const [order, setOrder] = useState({});
 
@@ -201,9 +216,31 @@ const CompanyOrderDetails = () => {
                         mt: { xs: 0, md: "15px" },
                     }}
                 >
-                    <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
-                        Информация о заказе
-                    </Typography>
+                    <Grid container alignItems={"center"} gap={"20px"}>
+                        <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
+                            Информация о заказе
+                        </Typography>
+                        {!isEditMode ? (
+                            <Button variant="contained" onClick={() => setIsEditMode(true)}>
+                                Редактировать
+                            </Button>
+                        ) : (
+                            <>
+                                <Button variant="outlined" color="success" style={{ borderWidth: "2px" }}>
+                                    Сохранить
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    color="error"
+                                    style={{ borderWidth: "2px" }}
+                                    onClick={() => setIsEditMode(false)}
+                                >
+                                    Отменить
+                                </Button>
+                            </>
+                        )}
+                    </Grid>
+
                     <Grid container item flexDirection={"column"} gap={"25px"} maxWidth={"660px"}>
                         <TextField
                             fullWidth
@@ -374,6 +411,7 @@ const CompanyOrderDetails = () => {
                                 )}
                             </Stack>
                         </Accordion>
+                        <Button variant="contained">Завершить заказ</Button>
                     </Grid>
                 </Grid>
             </Grid>

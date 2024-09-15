@@ -125,9 +125,6 @@ const CreateOrderForm = ({ submitHandler }) => {
                         />
                     </Grid>
                 </Grid>
-                <Typography variant="h3" color={"error"}>
-                    После создания заказ изменить невозможно!
-                </Typography>
                 <Button type="submit" variant="contained" fullWidth>
                     СОЗДАТЬ
                 </Button>
