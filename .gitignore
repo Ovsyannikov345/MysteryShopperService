@@ -398,6 +398,6 @@ FodyWeavers.xsd
 *.sln.iml
 /server/ReviewGuruServer/ReviewGuruServer/debug_log.txt
 
-# misc
 .env
 .vscode
+debug_log.txt
