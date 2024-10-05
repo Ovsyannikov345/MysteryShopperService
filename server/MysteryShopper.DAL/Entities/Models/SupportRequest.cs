@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MysteryShopper.DAL.Entities.Models;
 
 public partial class SupportRequest
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
+    [MaxLength(255)]
     public string? Text { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
-    public int? UserId { get; set; }
+    public Guid? UserId { get; set; }
 
-    public int? CompanyId { get; set; }
+    public Guid? CompanyId { get; set; }
 
     public virtual Company? Company { get; set; }
 

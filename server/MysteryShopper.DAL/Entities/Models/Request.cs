@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MysteryShopper.DAL.Entities.Models;
+﻿namespace MysteryShopper.DAL.Entities.Models;
 
 public partial class Request
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public bool Accepted { get; set; }
+    public bool IsAccepted { get; set; }
 
-    public int? UserId { get; set; }
+    public bool IsRejected { get; set; }
 
-    public int? OrderId { get; set; }
+    public Guid UserId { get; set; }
 
-    public bool Rejected { get; set; }
+    public Guid OrderId { get; set; }
 
-    public virtual Order? Order { get; set; }
+    public virtual Order Order { get; set; } = null!;
 
-    public virtual User? User { get; set; }
+    public virtual User User { get; set; } = null!;
 }

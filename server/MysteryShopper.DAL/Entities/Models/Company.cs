@@ -1,25 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MysteryShopper.DAL.Entities.Models;
 
 public partial class Company
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public string Name { get; set; } = null!;
+    [MaxLength(255)]
+    public string Name { get; set; } = string.Empty;
 
-    public string Email { get; set; } = null!;
+    [MaxLength(255)]
+    public string Email { get; set; } = string.Empty;
 
-    public string Password { get; set; } = null!;
+    [MaxLength(255)]
+    public string Password { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; }
 
-    public virtual ICollection<ContactPerson> ContactPeople { get; set; } = new List<ContactPerson>();
+    public virtual ContactPerson ContactPerson { get; set; } = null!;
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<Order> Orders { get; set; } = [];
 
-    public virtual ICollection<SupportRequest> SupportRequests { get; set; } = new List<SupportRequest>();
+    public virtual ICollection<ReportCorrection> ReportCorrections { get; set; } = [];
 
-    public virtual ICollection<UserReview> UserReviews { get; set; } = new List<UserReview>();
+    public virtual ICollection<UserReview> UserReviews { get; set; } = [];
+
+    public virtual ICollection<SupportRequest> SupportRequests { get; set; } = [];
+
+    public virtual ICollection<Notification> Notifications { get; set; } = [];
 }

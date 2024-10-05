@@ -1,37 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using NetTopologySuite.Geometries;
 
 namespace MysteryShopper.DAL.Entities.Models;
 
 public partial class Order
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public string Title { get; set; } = null!;
+    [MaxLength(100)]
+    public string Title { get; set; } = string.Empty;
 
+    [Column(TypeName = "text")]
     public string? Description { get; set; }
 
-    public string Place { get; set; } = null!;
+    [MaxLength(255)]
+    public string Place { get; set; } = string.Empty;
 
-    public short? CompletionTime { get; set; }
+    public TimeSpan? TimeToComplete { get; set; }
 
     public int? Price { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
-    public int? CompanyId { get; set; }
+    public Point? Point { get; set; }
 
-    public double? Lat { get; set; }
+    public bool IsClosed { get; set; }
 
-    public double? Lng { get; set; }
+    public Guid CompanyId { get; set; }
 
-    public virtual Company? Company { get; set; }
+    public virtual Company Company { get; set; } = null!;
 
-    public virtual ICollection<CompanyReview> CompanyReviews { get; set; } = new List<CompanyReview>();
+    public virtual ICollection<UserOrder> Users { get; set; } = [];
 
-    public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
+    public virtual ICollection<Request> Requests { get; set; } = [];
 
-    public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
+    public virtual ICollection<Report> Reports { get; set; } = [];
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<Dispute> Disputes { get; set; } = [];
+
+    public virtual ICollection<CompanyReview> CompanyReviews { get; set; } = [];
+
+    public virtual ICollection<UserReview> UserReviews { get; set; } = [];
 }

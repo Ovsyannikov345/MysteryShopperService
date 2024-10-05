@@ -1,23 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MysteryShopper.DAL.Entities.Models;
 
 public partial class ContactPerson
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public string Name { get; set; } = null!;
+    [MaxLength(50)]
+    public string Name { get; set; } = string.Empty;
 
-    public string Surname { get; set; } = null!;
+    [MaxLength(50)]
+    public string Surname { get; set; } = string.Empty;
 
+    [MaxLength(50)]
     public string? Patronymic { get; set; }
 
-    public string Phone { get; set; } = null!;
+    [MaxLength(50)]
+    public string Phone { get; set; } = string.Empty;
 
-    public string Email { get; set; } = null!;
+    [MaxLength(255)]
+    public string Email { get; set; } = string.Empty;
 
-    public int? CompanyId { get; set; }
+    public Guid CompanyId { get; set; }
 
-    public virtual Company? Company { get; set; }
+    public virtual Company Company { get; set; } = null!;
 }

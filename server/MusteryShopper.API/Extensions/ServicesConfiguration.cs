@@ -13,7 +13,7 @@ namespace MysteryShopper.API.Extensions;
 
 public static class ServicesConfiguration
 {
-    public static void AddIdentityDbContext(this IServiceCollection services, IConfiguration configuration) => services.AddDbContext<MysteryShopperDbContext>(options =>
+    public static void AddDbContext(this IServiceCollection services, IConfiguration configuration) => services.AddDbContext<MysteryShopperDbContext>(options =>
     {
         var databaseUri = new Uri(configuration["DATABASE_URL"]!);
 
@@ -29,7 +29,7 @@ public static class ServicesConfiguration
             SslMode = SslMode.Disable,
         }.ToString();
 
-        options.UseNpgsql(connectionString);
+        options.UseNpgsql(connectionString, x => x.UseNetTopologySuite());
     });
 
     // TODO use for LLM requests

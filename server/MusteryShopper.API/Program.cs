@@ -22,7 +22,7 @@ public static class Program
         services.AddSwaggerGen();
 
         services.AddBusinessLogicServices();
-        services.AddIdentityDbContext(builder.Configuration);
+        services.AddDbContext(builder.Configuration);
         services.AddDataAccessRepositories();
 
         services.AddAuthenticationBearer(builder.Configuration);

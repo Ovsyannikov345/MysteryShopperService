@@ -1,21 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MysteryShopper.DAL.Entities.Models;
 
 public partial class UserReview
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
+    [MaxLength(255)]
     public string? Text { get; set; }
 
     public short Grade { get; set; }
 
-    public int? CompanyId { get; set; }
+    public Guid CompanyId { get; set; }
 
-    public int? ReportId { get; set; }
+    public virtual Company Company { get; set; } = null!;
 
-    public virtual Company? Company { get; set; }
+    public Guid UserId { get; set; }
 
-    public virtual Report? Report { get; set; }
+    public virtual User User { get; set; } = null!;
+
+    public Guid OrderId { get; set; }
+
+    public virtual Order Order { get; set; } = null!;
 }

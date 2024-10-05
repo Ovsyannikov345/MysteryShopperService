@@ -1,39 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MysteryShopper.DAL.Entities.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace MysteryShopper.DAL.Entities.Models;
 
 public partial class User
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public string Name { get; set; } = null!;
+    [MaxLength(50)]
+    public string Name { get; set; } = string.Empty;
 
-    public string Surname { get; set; } = null!;
+    [MaxLength(50)]
+    public string Surname { get; set; } = string.Empty;
 
+    [MaxLength(50)]
     public string? Patronymic { get; set; }
 
     public short? Age { get; set; }
 
+    public GenderType Gender { get; set; }
+
+    public string? WorkingExperience { get; set; }
+
+    [MaxLength(100)]
     public string? City { get; set; }
 
-    public string Phone { get; set; } = null!;
+    [MaxLength(30)]
+    public string Phone { get; set; } = string.Empty;
 
-    public string Email { get; set; } = null!;
+    [MaxLength(255)]
+    public string Email { get; set; } = string.Empty;
 
+    [MaxLength(255)]
     public string? Description { get; set; }
 
-    public string Password { get; set; } = null!;
+    [MaxLength(255)]
+    public string Password { get; set; } = string.Empty;
 
     public DateTime CreatedAt { get; set; }
 
-    public virtual ICollection<CompanyReview> CompanyReviews { get; set; } = new List<CompanyReview>();
+    public virtual ICollection<UserOrder> Orders { get; set; } = [];
 
-    public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
+    public virtual ICollection<Request> Requests { get; set; } = [];
 
-    public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
+    public virtual ICollection<Report> Reports { get; set; } = [];
 
-    public virtual ICollection<SupportRequest> SupportRequests { get; set; } = new List<SupportRequest>();
+    public virtual ICollection<Dispute> Disputes { get; set; } = [];
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<CompanyReview> CompanyReviews { get; set; } = [];
+
+    public virtual ICollection<UserReview> UserReviews { get; set; } = [];
+
+    public virtual ICollection<SupportRequest> SupportRequests { get; set; } = [];
+
+    public virtual ICollection<Notification> Notifications { get; set; } = [];
 }
