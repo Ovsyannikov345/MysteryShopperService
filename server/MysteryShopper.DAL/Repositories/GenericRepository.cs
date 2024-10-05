@@ -65,7 +65,7 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
         return entity;
     }
 
-    public async Task<TEntity?> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<TEntity?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var entity = await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
 
