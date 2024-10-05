@@ -34,7 +34,7 @@ namespace MysteryShopper.DAL.Data
         public virtual DbSet<UserOrder> UserOrders { get; set; }
 
         public virtual DbSet<UserReview> UserReviews { get; set; }
+
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }
-
-
