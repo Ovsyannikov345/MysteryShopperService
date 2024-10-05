@@ -15,6 +15,8 @@ public partial class Report
 
     public short Grade { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
     public Guid UserId { get; set; }
 
     public virtual User User { get; set; } = null!;

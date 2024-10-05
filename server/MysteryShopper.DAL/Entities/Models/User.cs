@@ -13,10 +13,7 @@ public partial class User
     [MaxLength(50)]
     public string Surname { get; set; } = string.Empty;
 
-    [MaxLength(50)]
-    public string? Patronymic { get; set; }
-
-    public short? Age { get; set; }
+    public DateTime? BirthDate { get; set; }
 
     public GenderType Gender { get; set; }
 

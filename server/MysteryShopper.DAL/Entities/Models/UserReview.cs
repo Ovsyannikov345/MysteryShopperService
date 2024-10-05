@@ -11,6 +11,8 @@ public partial class UserReview
 
     public short Grade { get; set; }
 
+    public DateTime CreatedAt { get; set; }
+
     public Guid CompanyId { get; set; }
 
     public virtual Company Company { get; set; } = null!;

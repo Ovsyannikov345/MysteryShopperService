@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MysteryShopper.DAL.Entities.Models;
@@ -16,7 +17,7 @@ public partial class Company
     [MaxLength(255)]
     public string Password { get; set; } = string.Empty;
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     public virtual ContactPerson ContactPerson { get; set; } = null!;
 
