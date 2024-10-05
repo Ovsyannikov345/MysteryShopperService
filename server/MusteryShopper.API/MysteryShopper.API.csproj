@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MysteryShopper.BLL\MysteryShopper.BLL.csproj" />
     <ProjectReference Include="..\MysteryShopper.DAL\MysteryShopper.DAL.csproj" />
   </ItemGroup>

@@ -8,6 +8,11 @@ using MysteryShopper.DAL.Repositories.IRepositories;
 using Npgsql;
 using ReviewGuru.DAL.Repositories;
 using System.Text;
+using MysteryShopper.BLL.Utilities.Mapping;
+using MysteryShopper.BLL.Utilities.Validators;
+using MysteryShopper.DAL.Repositories;
+using MysteryShopper.BLL.Services.IServices;
+using MysteryShopper.BLL.Services;
 
 namespace MysteryShopper.API.Extensions;
 
@@ -83,45 +88,32 @@ public static class ServicesConfiguration
 
     public static void AddMapper(this IServiceCollection services)
     {
-        //var mapperConfig = new MapperConfiguration(config =>
-        //{
-        //    config.AddProfile(new AutoMapperProfile());
-        //});
+        var mapperConfig = new MapperConfiguration(config =>
+        {
+            config.AddProfile(new AutoMapperProfile());
+        });
 
-        //IMapper mapper = mapperConfig.CreateMapper();
+        IMapper mapper = mapperConfig.CreateMapper();
 
-        //services.AddSingleton(mapper);
+        services.AddSingleton(mapper);
     }
 
     public static void AddBusinessLogicServices(this IServiceCollection services)
     {
-        //services.AddScoped<ITokenService, TokenService>()
-        //        .AddScoped<IAuthService, AuthService>()
-        //        .AddScoped<IAuthorService, AuthorService>()
-        //        .AddScoped<IMediaService, MediaService>()
-        //        .AddScoped<IReviewService, ReviewService>()
-        //        .AddScoped<IUserService, UserService>()
-        //        .AddScoped<IOMDbService, OMDbSrvice>();
+        services.AddScoped<ITokenService, TokenService>()
+                .AddScoped<IAuthService, AuthService>();
     }
 
     public static void AddDataAccessRepositories(this IServiceCollection services)
     {
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-        //services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
-        //        .AddScoped<IUserRepository, UserRepository>()
-        //        .AddScoped<IAuthorRepository, AuthorRepository>()
-        //        .AddScoped<IMediaRepository, MediaRepository>()
-        //        .AddScoped<IReviewRepository, ReviewRepository>();
+        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<ICompanyRepository, CompanyRepository>()
+                .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
     }
 
-    public static void AddAutoValidation(this IServiceCollection services)
+    public static void AddValidators(this IServiceCollection services)
     {
-        //services.AddValidatorsFromAssemblyContaining<RegistrationValidator>();
+        services.AddValidatorsFromAssemblyContaining<UserRegistrationValidator>();
     }
-
-    //public static void AddEmailSender(this IServiceCollection services)
-    //{
-    //    services.AddTransient<MysteryShopper.BLL.Utilities.EmailSender.IEmailSender, EmailSender>();
-    //}
 }

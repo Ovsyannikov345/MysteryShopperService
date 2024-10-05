@@ -21,16 +21,16 @@ public static class Program
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
-        services.AddBusinessLogicServices();
         services.AddDbContext(builder.Configuration);
         services.AddDataAccessRepositories();
+        services.AddBusinessLogicServices();
 
         services.AddAuthenticationBearer(builder.Configuration);
         services.AddAuthorization();
         services.AddCorsPolicy(builder.Configuration);
 
         services.AddMapper();
-        services.AddAutoValidation();
+        services.AddValidators();
 
         var app = builder.Build();
 
