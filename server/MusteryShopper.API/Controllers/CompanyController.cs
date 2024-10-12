@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
-using MysteryShopper.BLL.Utilities.Constants;
 using MysteryShopper.BLL.Utilities.Exceptions;
-using MysteryShopper.DAL.Entities.Models;
 
 namespace MysteryShopper.API.Controllers
 {

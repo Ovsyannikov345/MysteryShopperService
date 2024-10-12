@@ -1,6 +1,4 @@
-﻿using NetTopologySuite.Geometries;
-
-namespace MysteryShopper.API.ViewModels
+﻿namespace MysteryShopper.API.ViewModels
 {
     public class OrderToCreateViewModel
     {

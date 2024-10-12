@@ -1,5 +1,4 @@
 ﻿using MysteryShopper.DAL.Entities.Models;
-using NetTopologySuite.Geometries;
 
 namespace MysteryShopper.BLL.Dto
 {
