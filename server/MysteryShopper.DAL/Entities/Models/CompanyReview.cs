@@ -17,7 +17,11 @@ public partial class CompanyReview
 
     public Guid OrderId { get; set; }
 
+    public Guid CompanyId { get; set; }
+
     public virtual Order Order { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
+
+    public virtual Company Company { get; set; } = null!;
 }

@@ -18,7 +18,8 @@ namespace MysteryShopper.BLL.DI
 
             services.AddScoped<ITokenService, TokenService>()
                     .AddScoped<IAuthService, AuthService>()
-                    .AddScoped<IUserService, UserService>();
+                    .AddScoped<IUserService, UserService>()
+                    .AddScoped<ICompanyService, CompanyService>();
         }
     }
 }

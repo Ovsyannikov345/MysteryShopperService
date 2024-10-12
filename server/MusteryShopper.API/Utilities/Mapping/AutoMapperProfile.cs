@@ -10,6 +10,11 @@ namespace MysteryShopper.API.Utilities.Mapping
         {
             CreateMap<User, UserProfileViewModel>();
             CreateMap<UserToUpdateViewModel, User>();
+
+            CreateMap<Company, CompanyProfileViewModel>();
+            CreateMap<ContactPerson, ContactPersonViewModel>();
+            CreateMap<CompanyToUpdateViewModel, Company>();
+            CreateMap<ContactPersonToUpdateViewModel, ContactPerson>();
         }
     }
 }

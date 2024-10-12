@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MysteryShopper.DAL.Data;
 using NetTopologySuite.Geometries;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MysteryShopper.DAL.Migrations
 {
     [DbContext(typeof(MysteryShopperDbContext))]
-    partial class MysteryShopperDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241012152512_ConnectCompanyAndCompanyReviews")]
+    partial class ConnectCompanyAndCompanyReviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Companies", (string)null);
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.CompanyReview", b =>
@@ -90,7 +93,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CompanyReviews", (string)null);
+                    b.ToTable("CompanyReviews");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.ContactPerson", b =>
@@ -131,7 +134,7 @@ namespace MysteryShopper.DAL.Migrations
                     b.HasIndex("CompanyId")
                         .IsUnique();
 
-                    b.ToTable("ContactPeople", (string)null);
+                    b.ToTable("ContactPeople");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Dispute", b =>
@@ -166,7 +169,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Disputes", (string)null);
+                    b.ToTable("Disputes");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Notification", b =>
@@ -200,7 +203,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Order", b =>
@@ -246,7 +249,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.RefreshToken", b =>
@@ -261,7 +264,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Report", b =>
@@ -299,7 +302,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reports", (string)null);
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.ReportCorrection", b =>
@@ -330,7 +333,7 @@ namespace MysteryShopper.DAL.Migrations
                     b.HasIndex("ReportId")
                         .IsUnique();
 
-                    b.ToTable("ReportCorrections", (string)null);
+                    b.ToTable("ReportCorrections");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Request", b =>
@@ -362,7 +365,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Requests", (string)null);
+                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.SupportRequest", b =>
@@ -392,7 +395,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("SupportRequests", (string)null);
+                    b.ToTable("SupportRequests");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.User", b =>
@@ -450,7 +453,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.UserOrder", b =>
@@ -485,7 +488,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserOrders", (string)null);
+                    b.ToTable("UserOrders");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.UserReview", b =>
@@ -523,7 +526,7 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserReviews", (string)null);
+                    b.ToTable("UserReviews");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.CompanyReview", b =>
