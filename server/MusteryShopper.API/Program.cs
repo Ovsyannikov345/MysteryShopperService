@@ -1,6 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using MysteryShopper.API.Extensions;
+using MysteryShopper.API.DI;
+using MysteryShopper.API.Middleware;
+using MysteryShopper.API.Utilities.Mapping;
+using MysteryShopper.BLL.DI;
 using MysteryShopper.DAL.Data;
+using MysteryShopper.DAL.DI;
+using Serilog;
+using System.Reflection;
 
 namespace MysteryShopper.API;
 
@@ -10,27 +16,28 @@ public static class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.AddLogging();
+        builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console()
+                                               .WriteTo.File("../debug_log.txt"));
 
         // Configure services.
         var services = builder.Services;
+
+        var configuration = builder.Configuration;
+
+        services.AddDataAccessDependencies(configuration);
+        services.AddBusinessLogicDependencies();
+
+        services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
+        services.AddAuthenticationBearer(builder.Configuration);
+        services.AddCorsPolicy(builder.Configuration);
+
+        services.AddAuthorization();
 
         services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-
-        services.AddDbContext(builder.Configuration);
-        services.AddDataAccessRepositories();
-        services.AddBusinessLogicServices();
-
-        services.AddAuthenticationBearer(builder.Configuration);
-        services.AddAuthorization();
-        services.AddCorsPolicy(builder.Configuration);
-
-        services.AddMapper();
-        services.AddValidators();
 
         var app = builder.Build();
 
@@ -57,8 +64,7 @@ public static class Program
         app.UseAuthorization();
 
 
-        app.MapControllers()
-           .RequireAuthorization();
+        app.MapControllers();
 
         app.Run();
     }

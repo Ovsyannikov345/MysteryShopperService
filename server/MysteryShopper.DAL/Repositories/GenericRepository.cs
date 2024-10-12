@@ -14,7 +14,7 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
 
     private readonly ILogger _logger = logger;
 
-    public async Task<int> CountAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default)
+    public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default)
     {
         _context.Set<TEntity>();
 
@@ -25,7 +25,7 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
         return count;
     }
 
-    public async Task<TEntity?> GetByItemAsync(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity?> GetByItemAsync(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default)
     {
         var entity = await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(filter, cancellationToken);
 
@@ -45,7 +45,7 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
         return result;
     }
 
-    public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         await _dbSet.AddAsync(entity, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
@@ -55,7 +55,7 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
         return entity;
     }
 
-    public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
     {
         _dbSet.Update(entity);
         await _context.SaveChangesAsync(cancellationToken);
@@ -65,7 +65,7 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
         return entity;
     }
 
-    public async Task<TEntity?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity?> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var entity = await _dbSet.FindAsync([id], cancellationToken: cancellationToken);
 

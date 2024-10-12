@@ -2,7 +2,7 @@
 using MysteryShopper.BLL.Utilities.Exceptions;
 using System.Net;
 
-namespace MysteryShopper.API.Extensions;
+namespace MysteryShopper.API.Middleware;
 
 public class ExceptionHandlingMiddleware(RequestDelegate next)
 {
