@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using NetTopologySuite.Geometries;
 
 namespace MysteryShopper.DAL.Entities.Models;
 
@@ -23,7 +22,9 @@ public partial class Order
 
     public DateTime CreatedAt { get; set; }
 
-    public Point? Point { get; set; }
+    public double? Lat { get; set; }
+
+    public double? Lng { get; set; }
 
     public bool IsClosed { get; set; }
 
@@ -32,8 +33,6 @@ public partial class Order
     public virtual Company Company { get; set; } = null!;
 
     public virtual ICollection<UserOrder> Users { get; set; } = [];
-
-    public virtual ICollection<Request> Requests { get; set; } = [];
 
     public virtual ICollection<Report> Reports { get; set; } = [];
 

@@ -38,8 +38,6 @@ public partial class User
 
     public virtual ICollection<UserOrder> Orders { get; set; } = [];
 
-    public virtual ICollection<Request> Requests { get; set; } = [];
-
     public virtual ICollection<Report> Reports { get; set; } = [];
 
     public virtual ICollection<Dispute> Disputes { get; set; } = [];

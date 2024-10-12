@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Services;
+using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Mapping;
 using MysteryShopper.BLL.Utilities.Validators;
 using System.Reflection;
@@ -19,7 +19,8 @@ namespace MysteryShopper.BLL.DI
             services.AddScoped<ITokenService, TokenService>()
                     .AddScoped<IAuthService, AuthService>()
                     .AddScoped<IUserService, UserService>()
-                    .AddScoped<ICompanyService, CompanyService>();
+                    .AddScoped<ICompanyService, CompanyService>()
+                    .AddScoped<IOrderService, OrderService>();
         }
     }
 }

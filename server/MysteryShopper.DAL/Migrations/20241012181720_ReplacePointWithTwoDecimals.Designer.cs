@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MysteryShopper.DAL.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MysteryShopper.DAL.Migrations
 {
     [DbContext(typeof(MysteryShopperDbContext))]
-    partial class MysteryShopperDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241012181720_ReplacePointWithTwoDecimals")]
+    partial class ReplacePointWithTwoDecimals
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,6 +338,38 @@ namespace MysteryShopper.DAL.Migrations
                     b.ToTable("ReportCorrections");
                 });
 
+            modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Request", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<bool>("IsAccepted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsRejected")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Requests");
+                });
+
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.SupportRequest", b =>
                 {
                     b.Property<Guid>("Id")
@@ -434,11 +469,17 @@ namespace MysteryShopper.DAL.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("now()");
 
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsExpired")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsForceClosed")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -611,6 +652,25 @@ namespace MysteryShopper.DAL.Migrations
                     b.Navigation("Report");
                 });
 
+            modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Request", b =>
+                {
+                    b.HasOne("MysteryShopper.DAL.Entities.Models.Order", "Order")
+                        .WithMany("Requests")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MysteryShopper.DAL.Entities.Models.User", "User")
+                        .WithMany("Requests")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.SupportRequest", b =>
                 {
                     b.HasOne("MysteryShopper.DAL.Entities.Models.Company", "Company")
@@ -698,6 +758,8 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.Navigation("Reports");
 
+                    b.Navigation("Requests");
+
                     b.Navigation("UserReviews");
 
                     b.Navigation("Users");
@@ -719,6 +781,8 @@ namespace MysteryShopper.DAL.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Reports");
+
+                    b.Navigation("Requests");
 
                     b.Navigation("SupportRequests");
 

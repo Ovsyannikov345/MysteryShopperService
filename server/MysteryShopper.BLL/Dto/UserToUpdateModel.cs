@@ -1,9 +1,8 @@
 ﻿using MysteryShopper.DAL.Entities.Enums;
-using MysteryShopper.DAL.Entities.Models;
 
-namespace MysteryShopper.API.ViewModels
+namespace MysteryShopper.BLL.Dto
 {
-    public class UserProfileViewModel
+    public class UserToUpdateModel
     {
         public Guid Id { get; set; }
 
@@ -24,11 +23,5 @@ namespace MysteryShopper.API.ViewModels
         public string Email { get; set; } = string.Empty;
 
         public string? Description { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
-        public IEnumerable<UserOrder> Orders { get; set; } = [];
-
-        public IEnumerable<UserReview> UserReviews { get; set; } = [];
     }
 }

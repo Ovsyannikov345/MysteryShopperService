@@ -1,4 +1,5 @@
-﻿using MysteryShopper.DAL.Entities.Models;
+﻿using MysteryShopper.BLL.Dto;
+using MysteryShopper.DAL.Entities.Models;
 
 namespace MysteryShopper.BLL.Services.IServices
 {
@@ -6,6 +7,6 @@ namespace MysteryShopper.BLL.Services.IServices
     {
         Task<User> GetProfileAsync(Guid id, CancellationToken cancellationToken = default);
 
-        public Task<User> UpdateProfileInfoAsync(Guid currentUserId, User user, CancellationToken cancellationToken = default);
+        public Task<User> UpdateProfileInfoAsync(Guid currentUserId, UserToUpdateModel userData, CancellationToken cancellationToken = default);
     }
 }

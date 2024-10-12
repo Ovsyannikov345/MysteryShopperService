@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MysteryShopper.API.DI;
 using MysteryShopper.API.Middleware;
@@ -34,19 +35,14 @@ public static class Program
         services.AddAuthorization();
 
         services.AddControllers().AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+        {
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        });
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
         var app = builder.Build();
-
-        // Ensure database is up to date.
-        using (var scope = app.Services.CreateScope())
-        {
-            var context = scope.ServiceProvider.GetRequiredService<MysteryShopperDbContext>();
-            context.Database.Migrate();
-        }
 
         // Configure the HTTP request pipeline.
         app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -62,7 +58,6 @@ public static class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
-
 
         app.MapControllers();
 

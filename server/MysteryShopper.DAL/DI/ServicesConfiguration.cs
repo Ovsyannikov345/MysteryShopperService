@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MysteryShopper.DAL.Data;
-using MysteryShopper.DAL.Repositories.IRepositories;
 using MysteryShopper.DAL.Repositories;
+using MysteryShopper.DAL.Repositories.IRepositories;
 using Npgsql;
 using ReviewGuru.DAL.Repositories;
 
@@ -18,7 +18,8 @@ namespace MysteryShopper.DAL.DI
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
                     .AddScoped<IUserRepository, UserRepository>()
                     .AddScoped<ICompanyRepository, CompanyRepository>()
-                    .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+                    .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
+                    .AddScoped<IOrderRepository, OrderRepository>();
         }
 
         private static void AddDbContext(this IServiceCollection services, IConfiguration configuration) => services.AddDbContext<MysteryShopperDbContext>(options =>

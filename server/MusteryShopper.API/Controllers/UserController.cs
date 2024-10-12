@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MysteryShopper.API.ViewModels;
+using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
-using MysteryShopper.DAL.Entities.Models;
 
 namespace MysteryShopper.API.Controllers
 {
@@ -14,6 +14,7 @@ namespace MysteryShopper.API.Controllers
     public class UserController(IUserService userService, IMapper mapper) : ControllerBase
     {
         [HttpGet("my")]
+        [Authorize(Roles = "User")]
         public async Task<UserProfileViewModel> GetOwnProfile(CancellationToken cancellationToken)
         {
             var id = GetIdFromContext();
@@ -32,11 +33,12 @@ namespace MysteryShopper.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "User")]
         public async Task<UserProfileViewModel> UpdateProfileInfo(Guid id, UserToUpdateViewModel userToUpdate, CancellationToken cancellationToken)
         {
             var currentUserId = GetIdFromContext();
 
-            var updatedUser = await userService.UpdateProfileInfoAsync(currentUserId, mapper.Map<User>(userToUpdate), cancellationToken);
+            var updatedUser = await userService.UpdateProfileInfoAsync(currentUserId, mapper.Map<UserToUpdateModel>(userToUpdate), cancellationToken);
 
             return mapper.Map<UserProfileViewModel>(updatedUser);
         }

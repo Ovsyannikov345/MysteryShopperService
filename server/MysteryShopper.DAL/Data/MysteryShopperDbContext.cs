@@ -7,7 +7,13 @@ namespace MysteryShopper.DAL.Data
     {
         public MysteryShopperDbContext() { }
 
-        public MysteryShopperDbContext(DbContextOptions<MysteryShopperDbContext> options) : base(options) { }
+        public MysteryShopperDbContext(DbContextOptions<MysteryShopperDbContext> options) : base(options)
+        {
+            if (Database.IsRelational())
+            {
+                Database.Migrate();
+            }
+        }
 
         public virtual DbSet<Company> Companies { get; set; }
 
@@ -24,8 +30,6 @@ namespace MysteryShopper.DAL.Data
         public virtual DbSet<Report> Reports { get; set; }
 
         public virtual DbSet<ReportCorrection> ReportCorrections { get; set; }
-
-        public virtual DbSet<Request> Requests { get; set; }
 
         public virtual DbSet<SupportRequest> SupportRequests { get; set; }
 
@@ -57,10 +61,6 @@ namespace MysteryShopper.DAL.Data
 
             modelBuilder.Entity<Order>()
                 .Property(o => o.CreatedAt)
-                .HasDefaultValueSql("now()");
-
-            modelBuilder.Entity<Request>()
-                .Property(r => r.CreatedAt)
                 .HasDefaultValueSql("now()");
 
             modelBuilder.Entity<Report>()

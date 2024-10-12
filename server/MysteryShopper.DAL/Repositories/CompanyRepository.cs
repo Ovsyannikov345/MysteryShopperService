@@ -10,9 +10,11 @@ namespace MysteryShopper.DAL.Repositories
 {
     public class CompanyRepository(MysteryShopperDbContext context, ILogger logger) : GenericRepository<Company>(context, logger), ICompanyRepository
     {
+        private readonly MysteryShopperDbContext _context = context;
+
         public async Task<Company?> GetCompanyWithReviewsAsync(Expression<Func<Company, bool>> filter, CancellationToken cancellationToken = default)
         {
-            return await context.Companies
+            return await _context.Companies
                 .Include(c => c.ContactPerson)
                 .Include(c => c.Orders)
                 .Include(c => c.CompanyReviews)

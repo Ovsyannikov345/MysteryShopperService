@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MysteryShopper.DAL.Repositories.IRepositories;
 using MysteryShopper.DAL.Data;
+using MysteryShopper.DAL.Repositories.IRepositories;
 using Serilog;
 using System.Linq.Expressions;
 
@@ -78,5 +78,10 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
         _logger.Information("{0} DeleteAsync called. Entity: {1}", typeof(TEntity), entity);
 
         return entity;
+    }
+
+    public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
+    {
+        return await _dbSet.AnyAsync(predicate, cancellation);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace MysteryShopper.API.ViewModels
 {
-    public class CompanyProfileViewModel
+    public class OrderCompanyViewModel
     {
         public Guid Id { get; set; }
 
@@ -12,10 +12,6 @@ namespace MysteryShopper.API.ViewModels
 
         public DateTime? CreatedAt { get; set; }
 
-        public ContactPersonViewModel ContactPerson { get; set; } = null!;
-
-        public IEnumerable<Order> Orders { get; set; } = [];
-
-        public IEnumerable<CompanyReview> CompanyReviews { get; set; } = [];
+        public IEnumerable<OrderCompanyReviewViewModel> CompanyReviews { get; set; } = [];
     }
 }

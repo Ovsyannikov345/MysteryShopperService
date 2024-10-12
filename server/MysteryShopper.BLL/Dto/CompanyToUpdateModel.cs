@@ -1,6 +1,7 @@
-﻿namespace MysteryShopper.API.ViewModels
+﻿
+namespace MysteryShopper.BLL.Dto
 {
-    public class CompanyToUpdateViewModel
+    public class CompanyToUpdateModel
     {
         public Guid Id { get; set; }
 
@@ -8,6 +9,6 @@
 
         public string Email { get; set; } = string.Empty;
 
-        public ContactPersonToUpdateViewModel ContactPerson { get; set; } = null!;
+        public ContactPersonToUpdateModel ContactPerson { get; set; } = null!;
     }
 }

@@ -12,6 +12,9 @@ namespace MysteryShopper.BLL.Utilities.Mapping
             CreateMap<CompanyRegistrationCredentials, Company>()
                 .ForMember(dest => dest.ContactPerson, opt => opt.MapFrom(src => src.CompanyContactPerson));
             CreateMap<CompanyContactPersonCredentials, ContactPerson>();
+            CreateMap<ContactPersonToUpdateModel, ContactPerson>();
+
+            CreateMap<OrderModel, Order>().ReverseMap();
         }
     }
 }

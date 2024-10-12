@@ -1,4 +1,6 @@
-﻿namespace MysteryShopper.DAL.Entities.Models
+﻿using MysteryShopper.DAL.Entities.Enums;
+
+namespace MysteryShopper.DAL.Entities.Models
 {
     public partial class UserOrder
     {
@@ -14,10 +16,6 @@
 
         public DateTime CreatedAt { get; set; }
 
-        public bool IsCompleted { get; set; }
-
-        public bool IsExpired { get; set; }
-
-        public bool IsForceClosed { get; set; }
+        public UserOrderStatus Status { get; set; } = UserOrderStatus.Requested;
     }
 }

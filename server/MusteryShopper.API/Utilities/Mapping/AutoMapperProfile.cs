@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MysteryShopper.API.ViewModels;
+using MysteryShopper.BLL.Dto;
 using MysteryShopper.DAL.Entities.Models;
 
 namespace MysteryShopper.API.Utilities.Mapping
@@ -9,12 +10,19 @@ namespace MysteryShopper.API.Utilities.Mapping
         public AutoMapperProfile()
         {
             CreateMap<User, UserProfileViewModel>();
-            CreateMap<UserToUpdateViewModel, User>();
+            CreateMap<UserToUpdateViewModel, UserToUpdateModel>();
 
             CreateMap<Company, CompanyProfileViewModel>();
             CreateMap<ContactPerson, ContactPersonViewModel>();
-            CreateMap<CompanyToUpdateViewModel, Company>();
-            CreateMap<ContactPersonToUpdateViewModel, ContactPerson>();
+            CreateMap<CompanyToUpdateViewModel, CompanyToUpdateModel>();
+            CreateMap<ContactPersonToUpdateViewModel, ContactPersonToUpdateModel>();
+
+            CreateMap<Order, OrderViewModel>();
+            CreateMap<OrderModel, OrderViewModel>();
+            CreateMap<Company, OrderCompanyViewModel>();
+            CreateMap<OrderToCreateViewModel, OrderModel>();
+            CreateMap<CompanyReview, OrderCompanyReviewViewModel>();
+            CreateMap<UserOrder, UserOrderViewModel>();
         }
     }
 }

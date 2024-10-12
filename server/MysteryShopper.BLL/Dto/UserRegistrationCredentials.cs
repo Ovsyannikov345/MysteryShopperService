@@ -12,5 +12,6 @@ namespace MysteryShopper.BLL.Dto
         string Phone,
         string? Description,
         string Email,
-        string Password) { }
+        string Password)
+    { }
 }
