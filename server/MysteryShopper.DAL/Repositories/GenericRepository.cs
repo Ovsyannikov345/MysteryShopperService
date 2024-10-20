@@ -38,7 +38,7 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
     {
         var entities = filter == null ? _dbSet : _dbSet.Where(filter);
 
-        var result = await entities.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        var result = await entities.AsNoTracking().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
 
         _logger.Information("{0} GetAllAsync called. Entities returned: {1}", typeof(TEntity), result.Count);
 

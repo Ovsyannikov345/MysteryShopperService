@@ -1,4 +1,5 @@
-﻿using MysteryShopper.DAL.Entities.Models;
+﻿using MysteryShopper.DAL.Entities.Enums;
+using MysteryShopper.DAL.Entities.Models;
 
 namespace MysteryShopper.DAL.Repositories.IRepositories
 {
@@ -6,10 +7,6 @@ namespace MysteryShopper.DAL.Repositories.IRepositories
     {
         Task<IEnumerable<Order>> GetActiveOrdersWithCompanies(CancellationToken cancellationToken = default);
 
-        public Task<IEnumerable<UserOrder>> GetUserOrdersAsync(Guid userId, CancellationToken cancellationToken = default);
-
-        public Task<bool> IsOrderTrackedAsync(Guid orderId, Guid userId, CancellationToken cancellationToken = default);
-
-        public Task TrackOrderAsync(Guid orderId, Guid userId, CancellationToken cancellationToken = default);
+        Task<IEnumerable<UserOrder>> GetUserOrdersAsync(Guid userId, CancellationToken cancellationToken = default);
     }
 }

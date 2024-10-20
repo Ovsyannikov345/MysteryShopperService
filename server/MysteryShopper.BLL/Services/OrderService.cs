@@ -3,13 +3,16 @@ using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.BLL.Utilities.Validators;
+using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
+using System.Runtime.InteropServices;
 
 namespace MysteryShopper.BLL.Services
 {
     public class OrderService(
         IOrderRepository orderRepository,
+        IUserOrderRepository userOrderRepository,
         IMapper mapper,
         OrderCreationValidator orderValidator) : IOrderService
     {
@@ -39,12 +42,40 @@ namespace MysteryShopper.BLL.Services
 
         public async Task SendOrderRequestAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
         {
-            if (await orderRepository.IsOrderTrackedAsync(orderId, userId, cancellationToken))
+            var userOrder = await userOrderRepository.GetUserOrder(userId, orderId, cancellationToken);
+
+            if (userOrder is null)
             {
-                throw new BadRequestException("Order is already being tracked");
+                throw new NotFoundException("Order status is not defined");
             }
 
-            await orderRepository.TrackOrderAsync(orderId, userId, cancellationToken);
+            if (userOrder.Status != UserOrderStatus.None)
+            {
+                throw new BadRequestException("You can't send request to this order");
+            }
+
+            userOrder.Status = UserOrderStatus.Requested;
+
+            await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+        }
+
+        public async Task<UserOrder> GetOrderDetailsForUserAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
+        {
+            if (!await orderRepository.ExistsAsync(o => o.Id == orderId, cancellationToken))
+            {
+                throw new NotFoundException("Order is not found");
+            }
+
+            var userOrder = await userOrderRepository.GetUserOrder(userId, orderId, cancellationToken);
+
+            if (userOrder is not null)
+            {
+                return userOrder;
+            }
+
+            await userOrderRepository.AddAsync(new UserOrder { UserId = userId, OrderId = orderId, Status = UserOrderStatus.None }, cancellationToken);
+
+            return (await userOrderRepository.GetUserOrder(userId, orderId, cancellationToken))!;
         }
     }
 }

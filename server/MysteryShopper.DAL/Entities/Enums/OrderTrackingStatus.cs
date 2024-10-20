@@ -2,11 +2,12 @@
 {
     public enum UserOrderStatus
     {
-        Requested = 0,
-        InProgress = 1,
-        Rejected = 2,
-        Completed = 3,
-        Expired = 4,
-        ForceClosed = 5,
+        None = 0,
+        Requested = 1,
+        InProgress = 2,
+        Rejected = 3,
+        Completed = 4,
+        Expired = 5,
+        ForceClosed = 6,
     }
 }
