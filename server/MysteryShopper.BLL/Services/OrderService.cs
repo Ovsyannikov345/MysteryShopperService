@@ -77,5 +77,18 @@ namespace MysteryShopper.BLL.Services
 
             return (await userOrderRepository.GetUserOrder(userId, orderId, cancellationToken))!;
         }
+
+        public async Task<OrderModel> GetOrderDetailsForCompanyAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default)
+        {
+            var order = await orderRepository.GetFullOrderDetailsAsync(orderId, cancellationToken)
+                ?? throw new NotFoundException("Order is not found");
+
+            if (order.CompanyId != companyId)
+            {
+                throw new ForbiddenException("You are not the owner of the order");
+            }
+
+            return mapper.Map<OrderModel>(order);
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MysteryShopper.DAL.Data;
-using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
 using ReviewGuru.DAL.Repositories;
@@ -28,6 +27,18 @@ namespace MysteryShopper.DAL.Repositories
                     .ThenInclude(o => o.Company)
                         .ThenInclude(c => c.CompanyReviews)
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<Order?> GetFullOrderDetailsAsync(Guid orderId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Orders.AsNoTracking()
+                .Include(o => o.Company)
+                    .ThenInclude(c => c.CompanyReviews)
+                .Include(o => o.Users)
+                .Include(o => o.Reports)
+                    .ThenInclude(r => r.ReportCorrection)
+                .Include(o => o.Disputes)
+                .FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
         }
     }
 }

@@ -6,6 +6,7 @@ using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.Entities.Models;
+using System.Security.Claims;
 
 namespace MysteryShopper.API.Controllers
 {
@@ -32,21 +33,20 @@ namespace MysteryShopper.API.Controllers
             return mapper.Map<IEnumerable<UserOrder>, IEnumerable<UserOrderViewModel>>(orderList);
         }
 
-        [HttpGet("{id}/user")]
-        [Authorize(Roles = "User")]
-        public async Task<UserOrderViewModel> GetOrderDetailsForUser(Guid id, CancellationToken cancellationToken)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOrderDetails(Guid id, CancellationToken cancellationToken)
         {
-            var userOrder = await orderService.GetOrderDetailsForUserAsync(GetIdFromContext(), id, cancellationToken);
+            var role = GetRoleFromContext();
 
-            return mapper.Map<UserOrderViewModel>(userOrder);
+            if (role == "User")
+            {
+                var userOrder = await orderService.GetOrderDetailsForUserAsync(GetIdFromContext(), id, cancellationToken);
+
+                return Ok(mapper.Map<UserOrderViewModel>(userOrder));
+            }
+
+            return Ok(await orderService.GetOrderDetailsForCompanyAsync(GetIdFromContext(), id, cancellationToken));
         }
-
-        //[HttpGet("{id}/user")]
-        //[Authorize(Roles = "Company")]
-        //public async Task<> GetOrderDetailsForUser(Guid id, CancellationToken cancellationToken)
-        //{
-        //    // TODO implement details getting for company
-        //}
 
         [HttpPost]
         [Authorize(Roles = "Company")]
@@ -76,6 +76,14 @@ namespace MysteryShopper.API.Controllers
             }
 
             return id;
+        }
+
+        private string GetRoleFromContext()
+        {
+            var role = HttpContext.User.FindFirstValue(ClaimTypes.Role)
+                ?? throw new ForbiddenException("Role is not provided in request");
+
+            return role;
         }
     }
 }
