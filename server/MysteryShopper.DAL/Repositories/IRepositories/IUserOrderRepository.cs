@@ -4,6 +4,8 @@ namespace MysteryShopper.DAL.Repositories.IRepositories
 {
     public interface IUserOrderRepository : IGenericRepository<UserOrder>
     {
-        Task<UserOrder?> GetUserOrder(Guid userId, Guid orderId, CancellationToken cancellationToken = default);
+        Task<UserOrder?> GetUserOrderAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default);
+
+        Task<UserOrder?> GetUserOrderAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }

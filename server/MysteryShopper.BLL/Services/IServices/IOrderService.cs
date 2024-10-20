@@ -16,5 +16,9 @@ namespace MysteryShopper.BLL.Services.IServices
         Task<UserOrder> GetOrderDetailsForUserAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default);
 
         Task<OrderModel> GetOrderDetailsForCompanyAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default);
+
+        Task AcceptRequestAsync(Guid companyId, Guid id, CancellationToken cancellationToken = default);
+
+        Task RejectRequestAsync(Guid companyId, Guid id, CancellationToken cancellationToken = default);
     }
 }

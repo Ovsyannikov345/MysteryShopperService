@@ -20,7 +20,9 @@ namespace MysteryShopper.DAL.DI
                     .AddScoped<ICompanyRepository, CompanyRepository>()
                     .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
                     .AddScoped<IOrderRepository, OrderRepository>()
-                    .AddScoped<IUserOrderRepository, UserOrderRepository>();
+                    .AddScoped<IUserOrderRepository, UserOrderRepository>()
+                    .AddScoped<IReportRepository, ReportRepository>()
+                    .AddScoped<IReportCorrectionRepository, ReportCorrectionRepository>();
         }
 
         private static void AddDbContext(this IServiceCollection services, IConfiguration configuration) => services.AddDbContext<MysteryShopperDbContext>(options =>

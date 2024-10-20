@@ -11,13 +11,22 @@ namespace MysteryShopper.DAL.Repositories
     {
         private readonly MysteryShopperDbContext _context = context;
 
-        public async Task<UserOrder?> GetUserOrder(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
+        public async Task<UserOrder?> GetUserOrderAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
         {
             return await _context.UserOrders.AsNoTracking()
                 .Include(o => o.Order)
                     .ThenInclude(o => o.Company)
                         .ThenInclude(c => c.CompanyReviews)
                 .FirstOrDefaultAsync(o => o.UserId == userId && o.OrderId == orderId, cancellationToken);
+        }
+
+        public async Task<UserOrder?> GetUserOrderAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _context.UserOrders.AsNoTracking()
+                .Include(o => o.Order)
+                    .ThenInclude(o => o.Company)
+                        .ThenInclude(c => c.CompanyReviews)
+                .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
         }
     }
 }

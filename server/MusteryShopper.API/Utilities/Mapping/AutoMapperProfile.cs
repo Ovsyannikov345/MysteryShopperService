@@ -19,10 +19,18 @@ namespace MysteryShopper.API.Utilities.Mapping
 
             CreateMap<Order, OrderViewModel>();
             CreateMap<OrderModel, OrderViewModel>();
+
             CreateMap<Company, OrderCompanyViewModel>();
             CreateMap<OrderToCreateViewModel, OrderModel>();
+
             CreateMap<CompanyReview, OrderCompanyReviewViewModel>();
             CreateMap<UserOrder, UserOrderViewModel>();
+
+            CreateMap<ReportToCreateViewModel, ReportModel>();
+            CreateMap<ReportModel, ReportViewModel>();
+
+            CreateMap<ReportCorrectionToCreateViewModel, ReportCorrectionModel>();
+            CreateMap<ReportCorrectionModel, ReportCorrectionViewModel>();
         }
     }
 }

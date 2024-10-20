@@ -15,6 +15,8 @@ namespace MysteryShopper.BLL.Utilities.Mapping
             CreateMap<ContactPersonToUpdateModel, ContactPerson>();
 
             CreateMap<OrderModel, Order>().ReverseMap();
+            CreateMap<ReportModel, Report>().ReverseMap();
+            CreateMap<ReportCorrectionModel, ReportCorrection>().ReverseMap();
         }
     }
 }

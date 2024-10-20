@@ -6,7 +6,6 @@ using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
-using System.Runtime.InteropServices;
 
 namespace MysteryShopper.BLL.Services
 {
@@ -42,7 +41,7 @@ namespace MysteryShopper.BLL.Services
 
         public async Task SendOrderRequestAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
         {
-            var userOrder = await userOrderRepository.GetUserOrder(userId, orderId, cancellationToken);
+            var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken);
 
             if (userOrder is null)
             {
@@ -66,7 +65,7 @@ namespace MysteryShopper.BLL.Services
                 throw new NotFoundException("Order is not found");
             }
 
-            var userOrder = await userOrderRepository.GetUserOrder(userId, orderId, cancellationToken);
+            var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken);
 
             if (userOrder is not null)
             {
@@ -75,7 +74,7 @@ namespace MysteryShopper.BLL.Services
 
             await userOrderRepository.AddAsync(new UserOrder { UserId = userId, OrderId = orderId, Status = UserOrderStatus.None }, cancellationToken);
 
-            return (await userOrderRepository.GetUserOrder(userId, orderId, cancellationToken))!;
+            return (await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken))!;
         }
 
         public async Task<OrderModel> GetOrderDetailsForCompanyAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default)
@@ -89,6 +88,46 @@ namespace MysteryShopper.BLL.Services
             }
 
             return mapper.Map<OrderModel>(order);
+        }
+
+        public async Task AcceptRequestAsync(Guid companyId, Guid id, CancellationToken cancellationToken = default)
+        {
+            var userOrder = await userOrderRepository.GetUserOrderAsync(id, cancellationToken)
+                ?? throw new NotFoundException("Order status for user is not specified");
+
+            if (userOrder.Order.Company.Id != companyId)
+            {
+                throw new ForbiddenException("You can't accept this request");
+            }
+
+            if (userOrder.Status != UserOrderStatus.Requested)
+            {
+                throw new BadRequestException("You can't accept this request");
+            }
+
+            userOrder.Status = UserOrderStatus.InProgress;
+
+            await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+        }
+
+        public async Task RejectRequestAsync(Guid companyId, Guid id, CancellationToken cancellationToken = default)
+        {
+            var userOrder = await userOrderRepository.GetUserOrderAsync(id, cancellationToken)
+                ?? throw new NotFoundException("Order status for user is not specified");
+
+            if (userOrder.Order.Company.Id != companyId)
+            {
+                throw new ForbiddenException("You can't reject this request");
+            }
+
+            if (userOrder.Status != UserOrderStatus.Requested)
+            {
+                throw new BadRequestException("You can't reject this request");
+            }
+
+            userOrder.Status = UserOrderStatus.Rejected;
+
+            await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
         }
     }
 }
