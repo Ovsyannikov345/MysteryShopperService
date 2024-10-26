@@ -5,7 +5,6 @@ using MysteryShopper.DAL.Data;
 using MysteryShopper.DAL.Repositories;
 using MysteryShopper.DAL.Repositories.IRepositories;
 using Npgsql;
-using MysteryShopper.DAL.Repositories;
 
 namespace MysteryShopper.DAL.DI
 {

@@ -41,12 +41,8 @@ namespace MysteryShopper.BLL.Services
 
         public async Task SendOrderRequestAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
         {
-            var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken);
-
-            if (userOrder is null)
-            {
-                throw new NotFoundException("Order status is not defined");
-            }
+            var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken)
+                ?? throw new NotFoundException("Order status is not defined");
 
             if (userOrder.Status != UserOrderStatus.None)
             {

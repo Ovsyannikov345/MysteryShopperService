@@ -15,7 +15,7 @@ namespace MysteryShopper.API.Controllers
     {
         [HttpPost]
         [Authorize(Roles = "Company")]
-        public async Task<ReportCorrectionViewModel> CreateReportCorrection(Guid id, ReportCorrectionToCreateViewModel correctionData, CancellationToken cancellationToken)
+        public async Task<ReportCorrectionViewModel> CreateReportCorrection(ReportCorrectionToCreateViewModel correctionData, CancellationToken cancellationToken)
         {
             var correctionToCreate = mapper.Map<ReportCorrectionModel>(correctionData);
 

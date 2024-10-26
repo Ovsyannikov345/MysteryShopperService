@@ -5,6 +5,7 @@ using MysteryShopper.API.Extensions;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
+using MysteryShopper.BLL.Utilities.Exceptions;
 
 namespace MysteryShopper.API.Controllers
 {
@@ -37,6 +38,11 @@ namespace MysteryShopper.API.Controllers
         public async Task<CompanyProfileViewModel> UpdateProfileInfo(Guid id, CompanyToUpdateViewModel companyToUpdate, CancellationToken cancellationToken)
         {
             var currentCompanyId = HttpContext.GetIdFromContext();
+
+            if (id != companyToUpdate.Id)
+            {
+                throw new BadRequestException("Company id in route doesn't match with provided in body");
+            }
 
             var updatedCompany = await companyService.UpdateProfileInfoAsync(currentCompanyId, mapper.Map<CompanyToUpdateModel>(companyToUpdate), cancellationToken);
 

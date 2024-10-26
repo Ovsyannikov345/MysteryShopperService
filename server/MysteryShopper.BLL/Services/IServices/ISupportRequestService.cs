@@ -4,6 +4,6 @@ namespace MysteryShopper.BLL.Services.IServices
 {
     public interface ISupportRequestService
     {
-        Task<SupportRequestModel> CreateSupportRequestAsync(SupportRequestModel model, CancellationToken cancellationToken = default);
+        Task<SupportRequestModel> CreateSupportRequestAsync(SupportRequestModel requestData, CancellationToken cancellationToken = default);
     }
 }
