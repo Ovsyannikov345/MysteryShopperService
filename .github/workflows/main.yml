@@ -29,4 +29,4 @@ jobs:
       run: dotnet test ./server --no-build --verbosity normal --configuration Release
 
     - name: Run
-      run: dotnet run ./server --configuration Release
+      run: dotnet run ./server/MysteryShopper.API/MysteryShopper.API.csproj --configuration Release
