@@ -27,3 +27,6 @@ jobs:
 
     - name: Test
       run: dotnet test ./server --no-build --verbosity normal --configuration Release
+
+    - name: Run
+      run: dotnet run ./server --configuration Release
