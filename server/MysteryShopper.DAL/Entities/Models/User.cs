@@ -28,7 +28,7 @@ public partial class User
     [MaxLength(255)]
     public string Email { get; set; } = string.Empty;
 
-    [MaxLength(255)]
+    [MaxLength(500)]
     public string? Description { get; set; }
 
     [MaxLength(255)]

@@ -4,9 +4,9 @@ using MysteryShopper.DAL.Repositories.IRepositories;
 using Serilog;
 using System.Linq.Expressions;
 
-namespace ReviewGuru.DAL.Repositories;
+namespace MysteryShopper.DAL.Repositories;
 
-public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger logger) : IGenericRepository<TEntity> where TEntity : class, new()
+public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger logger) : IGenericRepository<TEntity> where TEntity : class
 {
     private readonly MysteryShopperDbContext _context = context;
 

@@ -5,7 +5,7 @@ using MysteryShopper.DAL.Data;
 using MysteryShopper.DAL.Repositories;
 using MysteryShopper.DAL.Repositories.IRepositories;
 using Npgsql;
-using ReviewGuru.DAL.Repositories;
+using MysteryShopper.DAL.Repositories;
 
 namespace MysteryShopper.DAL.DI
 {
@@ -25,7 +25,9 @@ namespace MysteryShopper.DAL.DI
                     .AddScoped<IReportCorrectionRepository, ReportCorrectionRepository>()
                     .AddScoped<IDisputeRepository, DisputeRepository>()
                     .AddScoped<ICompanyReviewRepository, CompanyReviewRepository>()
-                    .AddScoped<IUserReviewRepository, UserReviewRepository>();
+                    .AddScoped<IUserReviewRepository, UserReviewRepository>()
+                    .AddScoped<ISupportRequestRepository, SupportRequestRepository>()
+                    .AddScoped<INotificationRepository, NotificationRepository>();
         }
 
         private static void AddDbContext(this IServiceCollection services, IConfiguration configuration) =>

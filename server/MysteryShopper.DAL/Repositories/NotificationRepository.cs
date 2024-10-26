@@ -6,5 +6,5 @@ using Serilog;
 
 namespace MysteryShopper.DAL.Repositories
 {
-    public class CompanyReviewRepository(MysteryShopperDbContext context, ILogger logger) : GenericRepository<CompanyReview>(context, logger), ICompanyReviewRepository;
+    public class NotificationRepository(MysteryShopperDbContext context, ILogger logger) : GenericRepository<Notification>(context, logger), INotificationRepository;
 }

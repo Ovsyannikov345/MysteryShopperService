@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MysteryShopper.API.Extensions;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Services.IServices;
-using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.Entities.Models;
 
 namespace MysteryShopper.API.Controllers
@@ -19,21 +19,11 @@ namespace MysteryShopper.API.Controllers
         {
             var correctionToCreate = mapper.Map<ReportCorrectionModel>(correctionData);
 
-            correctionToCreate.CompanyId = GetIdFromContext();
+            correctionToCreate.CompanyId = HttpContext.GetIdFromContext();
 
             var createdCorrection = await reportCorrectionService.CreateReportCorrectionAsync(correctionToCreate, cancellationToken);
 
             return mapper.Map<ReportCorrectionViewModel>(createdCorrection);
-        }
-
-        private Guid GetIdFromContext()
-        {
-            if (!Guid.TryParse(HttpContext.User.FindFirst("Id")?.Value, out Guid id))
-            {
-                throw new BadRequestException("Valid id is not provided");
-            }
-
-            return id;
         }
     }
 }

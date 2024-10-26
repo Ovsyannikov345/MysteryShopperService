@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MysteryShopper.API.Extensions;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
-using MysteryShopper.BLL.Utilities.Exceptions;
 
 namespace MysteryShopper.API.Controllers
 {
@@ -17,7 +17,7 @@ namespace MysteryShopper.API.Controllers
         [Authorize(Roles = "Company")]
         public async Task<CompanyProfileViewModel> GetOwnProfile(CancellationToken cancellationToken)
         {
-            var id = GetIdFromContext();
+            var id = HttpContext.GetIdFromContext();
 
             var profile = await companyService.GetProfileAsync(id, cancellationToken);
 
@@ -36,21 +36,11 @@ namespace MysteryShopper.API.Controllers
         [Authorize(Roles = "Company")]
         public async Task<CompanyProfileViewModel> UpdateProfileInfo(Guid id, CompanyToUpdateViewModel companyToUpdate, CancellationToken cancellationToken)
         {
-            var currentCompanyId = GetIdFromContext();
+            var currentCompanyId = HttpContext.GetIdFromContext();
 
             var updatedCompany = await companyService.UpdateProfileInfoAsync(currentCompanyId, mapper.Map<CompanyToUpdateModel>(companyToUpdate), cancellationToken);
 
             return mapper.Map<CompanyProfileViewModel>(updatedCompany);
-        }
-
-        private Guid GetIdFromContext()
-        {
-            if (!Guid.TryParse(HttpContext.User.FindFirst("Id")?.Value, out Guid id))
-            {
-                throw new BadRequestException("Valid id is not provided");
-            }
-
-            return id;
         }
     }
 }

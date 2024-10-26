@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MysteryShopper.API.Extensions;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
-using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.Entities.Models;
-using System.Security.Claims;
 
 namespace MysteryShopper.API.Controllers
 {
@@ -28,7 +27,7 @@ namespace MysteryShopper.API.Controllers
         [Authorize(Roles = "User")]
         public async Task<IEnumerable<UserOrderViewModel>> GetUserOrders(CancellationToken cancellationToken)
         {
-            var orderList = await orderService.GetUserOrdersAsync(GetIdFromContext(), cancellationToken);
+            var orderList = await orderService.GetUserOrdersAsync(HttpContext.GetIdFromContext(), cancellationToken);
 
             return mapper.Map<IEnumerable<UserOrder>, IEnumerable<UserOrderViewModel>>(orderList);
         }
@@ -36,16 +35,16 @@ namespace MysteryShopper.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrderDetails(Guid id, CancellationToken cancellationToken)
         {
-            var role = GetRoleFromContext();
+            var role = HttpContext.GetRoleFromContext();
 
             if (role == "User")
             {
-                var userOrder = await orderService.GetOrderDetailsForUserAsync(GetIdFromContext(), id, cancellationToken);
+                var userOrder = await orderService.GetOrderDetailsForUserAsync(HttpContext.GetIdFromContext(), id, cancellationToken);
 
                 return Ok(mapper.Map<UserOrderViewModel>(userOrder));
             }
 
-            return Ok(await orderService.GetOrderDetailsForCompanyAsync(GetIdFromContext(), id, cancellationToken));
+            return Ok(await orderService.GetOrderDetailsForCompanyAsync(HttpContext.GetIdFromContext(), id, cancellationToken));
         }
 
         [HttpPost]
@@ -54,7 +53,7 @@ namespace MysteryShopper.API.Controllers
         {
             var orderToCreate = mapper.Map<OrderModel>(orderData);
 
-            orderToCreate.CompanyId = GetIdFromContext();
+            orderToCreate.CompanyId = HttpContext.GetIdFromContext();
 
             var createdOrder = await orderService.CreateOrderAsync(orderToCreate, cancellationToken);
 
@@ -65,39 +64,21 @@ namespace MysteryShopper.API.Controllers
         [Authorize(Roles = "User")]
         public async Task SendOrderRequest(Guid id, CancellationToken cancellationToken)
         {
-            await orderService.SendOrderRequestAsync(GetIdFromContext(), id, cancellationToken);
+            await orderService.SendOrderRequestAsync(HttpContext.GetIdFromContext(), id, cancellationToken);
         }
 
         [HttpPost("{id}/complete")]
         [Authorize(Roles = "Company")]
         public async Task CompleteOrder(Guid id, Guid userId, CancellationToken cancellationToken)
         {
-            await orderService.AcceptOrderAsync(GetIdFromContext(), userId, id, cancellationToken);
+            await orderService.AcceptOrderAsync(HttpContext.GetIdFromContext(), userId, id, cancellationToken);
         }
 
         [HttpPost("{id}/finish")]
         [Authorize(Roles = "Company")]
         public async Task FinishOrder(Guid id, CancellationToken cancellationToken)
         {
-            await orderService.FinishOrderAsync(GetIdFromContext(), id, cancellationToken);
-        }
-
-        private Guid GetIdFromContext()
-        {
-            if (!Guid.TryParse(HttpContext.User.FindFirst("Id")?.Value, out Guid id))
-            {
-                throw new BadRequestException("Valid id is not provided");
-            }
-
-            return id;
-        }
-
-        private string GetRoleFromContext()
-        {
-            var role = HttpContext.User.FindFirstValue(ClaimTypes.Role)
-                ?? throw new ForbiddenException("Role is not provided in request");
-
-            return role;
+            await orderService.FinishOrderAsync(HttpContext.GetIdFromContext(), id, cancellationToken);
         }
     }
 }

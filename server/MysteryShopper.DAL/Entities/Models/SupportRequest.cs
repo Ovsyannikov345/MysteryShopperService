@@ -6,8 +6,8 @@ public partial class SupportRequest
 {
     public Guid Id { get; set; }
 
-    [MaxLength(255)]
-    public string? Text { get; set; }
+    [MaxLength(600)]
+    public required string Text { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

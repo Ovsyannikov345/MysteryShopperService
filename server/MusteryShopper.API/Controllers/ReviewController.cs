@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MysteryShopper.API.Extensions;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
-using MysteryShopper.BLL.Utilities.Exceptions;
 
 namespace MysteryShopper.API.Controllers
 {
@@ -20,9 +20,9 @@ namespace MysteryShopper.API.Controllers
             var reviewToCreate = mapper.Map<CompanyReviewModel>(reviewData);
 
             reviewToCreate.CompanyId = id;
-            reviewToCreate.UserId = GetIdFromContext();
+            reviewToCreate.UserId = HttpContext.GetIdFromContext();
 
-            var createdReview = await reviewService.CreateCompanyReviewAsync(GetIdFromContext(), reviewToCreate, cancellationToken);
+            var createdReview = await reviewService.CreateCompanyReviewAsync(HttpContext.GetIdFromContext(), reviewToCreate, cancellationToken);
 
             return mapper.Map<ReviewViewModel>(createdReview);
         }
@@ -34,21 +34,11 @@ namespace MysteryShopper.API.Controllers
             var reviewToCreate = mapper.Map<UserReviewModel>(reviewData);
 
             reviewToCreate.UserId = id;
-            reviewToCreate.CompanyId = GetIdFromContext();
+            reviewToCreate.CompanyId = HttpContext.GetIdFromContext();
 
-            var createdReview = await reviewService.CreateUserReviewAsync(GetIdFromContext(), reviewToCreate, cancellationToken);
+            var createdReview = await reviewService.CreateUserReviewAsync(HttpContext.GetIdFromContext(), reviewToCreate, cancellationToken);
 
             return mapper.Map<ReviewViewModel>(createdReview);
-        }
-
-        private Guid GetIdFromContext()
-        {
-            if (!Guid.TryParse(HttpContext.User.FindFirst("Id")?.Value, out Guid id))
-            {
-                throw new BadRequestException("Valid id is not provided");
-            }
-
-            return id;
         }
     }
 }
