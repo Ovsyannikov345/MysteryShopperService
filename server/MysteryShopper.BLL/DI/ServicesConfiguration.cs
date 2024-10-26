@@ -22,7 +22,8 @@ namespace MysteryShopper.BLL.DI
                     .AddScoped<ICompanyService, CompanyService>()
                     .AddScoped<IOrderService, OrderService>()
                     .AddScoped<IReportService, ReportService>()
-                    .AddScoped<IReportCorrectionService, ReportCorrectionService>();
+                    .AddScoped<IReportCorrectionService, ReportCorrectionService>()
+                    .AddScoped<IDisputeService, DisputeService>();
         }
     }
 }

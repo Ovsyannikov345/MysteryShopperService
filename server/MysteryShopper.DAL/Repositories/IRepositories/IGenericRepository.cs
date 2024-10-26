@@ -8,7 +8,7 @@ namespace MysteryShopper.DAL.Repositories.IRepositories
 
         public Task<TEntity?> GetByItemAsync(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default);
 
-        public Task<IEnumerable<TEntity>> GetAllAsync(int pageNumber, int pageSize, Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default);
+        public Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default);
 
         public Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
 

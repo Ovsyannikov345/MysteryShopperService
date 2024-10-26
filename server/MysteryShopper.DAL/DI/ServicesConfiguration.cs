@@ -22,26 +22,28 @@ namespace MysteryShopper.DAL.DI
                     .AddScoped<IOrderRepository, OrderRepository>()
                     .AddScoped<IUserOrderRepository, UserOrderRepository>()
                     .AddScoped<IReportRepository, ReportRepository>()
-                    .AddScoped<IReportCorrectionRepository, ReportCorrectionRepository>();
+                    .AddScoped<IReportCorrectionRepository, ReportCorrectionRepository>()
+                    .AddScoped<IDisputeRepository, DisputeRepository>();
         }
 
-        private static void AddDbContext(this IServiceCollection services, IConfiguration configuration) => services.AddDbContext<MysteryShopperDbContext>(options =>
-        {
-            var databaseUri = new Uri(configuration["DATABASE_URL"]!);
-
-            var userInfo = databaseUri.UserInfo.Split(':');
-
-            var connectionString = new NpgsqlConnectionStringBuilder
+        private static void AddDbContext(this IServiceCollection services, IConfiguration configuration) =>
+            services.AddDbContext<MysteryShopperDbContext>(options =>
             {
-                Host = databaseUri.Host,
-                Port = databaseUri.Port,
-                Username = userInfo[0],
-                Password = userInfo[1],
-                Database = databaseUri.LocalPath.TrimStart('/'),
-                SslMode = SslMode.Disable,
-            }.ToString();
+                var databaseUri = new Uri(configuration["DATABASE_URL"]!);
 
-            options.UseNpgsql(connectionString, x => x.UseNetTopologySuite());
-        });
+                var userInfo = databaseUri.UserInfo.Split(':');
+
+                var connectionString = new NpgsqlConnectionStringBuilder
+                {
+                    Host = databaseUri.Host,
+                    Port = databaseUri.Port,
+                    Username = userInfo[0],
+                    Password = userInfo[1],
+                    Database = databaseUri.LocalPath.TrimStart('/'),
+                    SslMode = SslMode.Disable,
+                }.ToString();
+
+                options.UseNpgsql(connectionString, x => x.UseNetTopologySuite());
+            });
     }
 }

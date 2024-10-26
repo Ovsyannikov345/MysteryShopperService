@@ -20,5 +20,9 @@ namespace MysteryShopper.BLL.Services.IServices
         Task AcceptRequestAsync(Guid companyId, Guid id, CancellationToken cancellationToken = default);
 
         Task RejectRequestAsync(Guid companyId, Guid id, CancellationToken cancellationToken = default);
+
+        Task AcceptOrderAsync(Guid companyId, Guid userId, Guid orderId, CancellationToken cancellationToken = default);
+
+        Task FinishOrderAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default);
     }
 }

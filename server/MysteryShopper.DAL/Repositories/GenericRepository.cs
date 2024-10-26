@@ -34,11 +34,11 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
         return entity;
     }
 
-    public virtual async Task<IEnumerable<TEntity>> GetAllAsync(int pageNumber, int pageSize, Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default)
+    public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default)
     {
         var entities = filter == null ? _dbSet : _dbSet.Where(filter);
 
-        var result = await entities.AsNoTracking().Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        var result = await entities.AsNoTracking().ToListAsync(cancellationToken);
 
         _logger.Information("{0} GetAllAsync called. Entities returned: {1}", typeof(TEntity), result.Count);
 

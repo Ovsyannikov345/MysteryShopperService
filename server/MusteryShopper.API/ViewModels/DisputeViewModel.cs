@@ -1,15 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using MysteryShopper.DAL.Entities.Models;
 
-namespace MysteryShopper.DAL.Entities.Models
+namespace MysteryShopper.API.ViewModels
 {
-    public partial class Dispute
+    public class DisputeViewModel
     {
         public Guid Id { get; set; }
 
-        [Column(TypeName = "text")]
         public string? CompanyText { get; set; }
 
-        [Column(TypeName = "text")]
         public string? UserText { get; set; }
 
         public DateTime CreatedAt { get; set; }
@@ -18,10 +16,10 @@ namespace MysteryShopper.DAL.Entities.Models
 
         public Guid OrderId { get; set; }
 
-        public virtual Order Order { get; set; } = null!;
+        public required Order Order { get; set; }
 
         public Guid UserId { get; set; }
 
-        public virtual User User { get; set; } = null!;
+        public required User User { get; set; }
     }
 }

@@ -126,8 +126,47 @@ namespace MysteryShopper.BLL.Services
             }
 
             userOrder.Status = UserOrderStatus.Rejected;
-
             await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+        }
+
+        public async Task AcceptOrderAsync(Guid companyId, Guid userId, Guid orderId, CancellationToken cancellationToken = default)
+        {
+            var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken)
+                ?? throw new NotFoundException("Order status for user is not specified");
+
+            if (userOrder.Order.Company.Id != companyId)
+            {
+                throw new ForbiddenException("You can't finish this order");
+            }
+
+            if (userOrder.Status != UserOrderStatus.InProgress)
+            {
+                throw new BadRequestException("You can't finish this order");
+            }
+
+            userOrder.Status = UserOrderStatus.Completed;
+            await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+        }
+
+        public async Task FinishOrderAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default)
+        {
+            var order = await orderRepository.GetByItemAsync(o => o.Id == orderId, cancellationToken)
+                ?? throw new NotFoundException("Order is not found");
+
+            if (order.CompanyId != companyId)
+            {
+                throw new ForbiddenException("You can't finish this order");
+            }
+
+            var userOrders = await userOrderRepository.GetAllAsync(u => u.OrderId == orderId, cancellationToken);
+
+            if (userOrders.Any(u => u.Status == UserOrderStatus.InProgress))
+            {
+                throw new BadRequestException("Some users are currently working on this order");
+            }
+
+            order.IsClosed = true;
+            await orderRepository.UpdateAsync(order, cancellationToken);
         }
     }
 }
