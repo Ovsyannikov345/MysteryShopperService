@@ -34,6 +34,11 @@ namespace MysteryShopper.API.Utilities.Mapping
 
             CreateMap<DisputeToCreateViewModel, DisputeModel>();
             CreateMap<DisputeModel, DisputeViewModel>().ReverseMap();
+
+            CreateMap<CompanyReviewToCreateViewModel, CompanyReviewModel>();
+            CreateMap<UserReviewToCreateViewModel, UserReviewModel>();
+            CreateMap<CompanyReviewModel, ReviewViewModel>();
+            CreateMap<UserReviewModel, ReviewViewModel>();
         }
     }
 }

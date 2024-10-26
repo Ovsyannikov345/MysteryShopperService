@@ -23,7 +23,9 @@ namespace MysteryShopper.DAL.DI
                     .AddScoped<IUserOrderRepository, UserOrderRepository>()
                     .AddScoped<IReportRepository, ReportRepository>()
                     .AddScoped<IReportCorrectionRepository, ReportCorrectionRepository>()
-                    .AddScoped<IDisputeRepository, DisputeRepository>();
+                    .AddScoped<IDisputeRepository, DisputeRepository>()
+                    .AddScoped<ICompanyReviewRepository, CompanyReviewRepository>()
+                    .AddScoped<IUserReviewRepository, UserReviewRepository>();
         }
 
         private static void AddDbContext(this IServiceCollection services, IConfiguration configuration) =>
