@@ -4,14 +4,22 @@ using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
+using Serilog;
 
 namespace MysteryShopper.BLL.Services
 {
-    public class NotificationService(INotificationRepository notificationRepository, IMapper mapper) : INotificationService
+    public class NotificationService(INotificationRepository notificationRepository, IMapper mapper, ILogger logger) : INotificationService
     {
         public async Task CreateNotificationAsync(NotificationModel notificationData, CancellationToken cancellationToken = default)
         {
-            await notificationRepository.AddAsync(mapper.Map<Notification>(notificationData), cancellationToken);
+            try
+            {
+                await notificationRepository.AddAsync(mapper.Map<Notification>(notificationData), cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, ex.Message);
+            }
         }
 
         public async Task<IEnumerable<NotificationModel>> GetCompanyNotificationsAsync(Guid companyId, CancellationToken cancellationToken = default)

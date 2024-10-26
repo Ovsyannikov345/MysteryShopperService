@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
+using MysteryShopper.BLL.Utilities.Messages;
 using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
@@ -8,6 +10,7 @@ using MysteryShopper.DAL.Repositories.IRepositories;
 namespace MysteryShopper.BLL.Services
 {
     public class ReportCorrectionService(
+        INotificationService notificationService,
         IReportRepository reportRepository,
         IReportCorrectionRepository reportCorrectionRepository,
         IMapper mapper,
@@ -36,6 +39,12 @@ namespace MysteryShopper.BLL.Services
             }
 
             var createdCorrection = await reportCorrectionRepository.AddAsync(mapper.Map<ReportCorrection>(correctionData), cancellationToken);
+
+            await notificationService.CreateNotificationAsync(new NotificationModel
+            {
+                UserId = report.UserId,
+                Text = NotificationMessages.NewReportCorrection,
+            }, cancellationToken);
 
             return mapper.Map<ReportCorrectionModel>(createdCorrection);
         }

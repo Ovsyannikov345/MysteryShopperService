@@ -2,6 +2,7 @@
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
+using MysteryShopper.BLL.Utilities.Messages;
 using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
@@ -10,6 +11,7 @@ using MysteryShopper.DAL.Repositories.IRepositories;
 namespace MysteryShopper.BLL.Services
 {
     public class ReportService(
+        INotificationService notificationService,
         IReportRepository reportRepository,
         IUserOrderRepository userOrderRepository,
         IMapper mapper,
@@ -32,6 +34,12 @@ namespace MysteryShopper.BLL.Services
             }
 
             var createdReport = await reportRepository.AddAsync(mapper.Map<Report>(reportData), cancellationToken);
+
+            await notificationService.CreateNotificationAsync(new NotificationModel
+            {
+                CompanyId = userOrder.Order.CompanyId,
+                Text = NotificationMessages.NewReport,
+            }, cancellationToken);
 
             return mapper.Map<ReportModel>(createdReport);
         }

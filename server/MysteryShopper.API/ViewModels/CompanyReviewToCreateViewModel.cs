@@ -1,6 +1,4 @@
-﻿using MysteryShopper.DAL.Entities.Models;
-
-namespace MysteryShopper.API.ViewModels
+﻿namespace MysteryShopper.API.ViewModels
 {
     public class CompanyReviewToCreateViewModel
     {

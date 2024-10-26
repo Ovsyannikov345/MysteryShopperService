@@ -6,7 +6,6 @@ using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
 
-
 namespace MysteryShopper.BLL.Services
 {
     public class ReviewService(

@@ -2,7 +2,6 @@
 using MysteryShopper.DAL.Data;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
-using MysteryShopper.DAL.Repositories;
 using Serilog;
 using System.Linq.Expressions;
 

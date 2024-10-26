@@ -5,6 +5,7 @@ using MysteryShopper.API.Extensions;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
+using MysteryShopper.BLL.Utilities.Constants;
 
 namespace MysteryShopper.API.Controllers
 {
@@ -36,7 +37,9 @@ namespace MysteryShopper.API.Controllers
         {
             var disputeToCreate = mapper.Map<DisputeModel>(disputeData);
 
-            var dispute = await disputeService.CreateDisputeAsync(disputeToCreate, cancellationToken);
+            var role = HttpContext.GetRoleFromContext() == "User" ? Roles.User : Roles.Company;
+
+            var dispute = await disputeService.CreateDisputeAsync(role, disputeToCreate, cancellationToken);
 
             return mapper.Map<DisputeViewModel>(dispute);
         }

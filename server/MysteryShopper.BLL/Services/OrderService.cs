@@ -2,6 +2,7 @@
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
+using MysteryShopper.BLL.Utilities.Messages;
 using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
@@ -10,6 +11,7 @@ using MysteryShopper.DAL.Repositories.IRepositories;
 namespace MysteryShopper.BLL.Services
 {
     public class OrderService(
+        INotificationService notificationService,
         IOrderRepository orderRepository,
         IUserOrderRepository userOrderRepository,
         IMapper mapper,
@@ -52,6 +54,12 @@ namespace MysteryShopper.BLL.Services
             userOrder.Status = UserOrderStatus.Requested;
 
             await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+
+            await notificationService.CreateNotificationAsync(new NotificationModel
+            {
+                CompanyId = userOrder.Order.CompanyId,
+                Text = NotificationMessages.NewRequest,
+            }, cancellationToken);
         }
 
         public async Task<UserOrder> GetOrderDetailsForUserAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
@@ -102,8 +110,13 @@ namespace MysteryShopper.BLL.Services
             }
 
             userOrder.Status = UserOrderStatus.InProgress;
-
             await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+
+            await notificationService.CreateNotificationAsync(new NotificationModel
+            {
+                UserId = userOrder.UserId,
+                Text = NotificationMessages.RequestAccepted,
+            }, cancellationToken);
         }
 
         public async Task RejectRequestAsync(Guid companyId, Guid id, CancellationToken cancellationToken = default)
@@ -123,6 +136,12 @@ namespace MysteryShopper.BLL.Services
 
             userOrder.Status = UserOrderStatus.Rejected;
             await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+
+            await notificationService.CreateNotificationAsync(new NotificationModel
+            {
+                UserId = userOrder.UserId,
+                Text = NotificationMessages.RequestRejected,
+            }, cancellationToken);
         }
 
         public async Task AcceptOrderAsync(Guid companyId, Guid userId, Guid orderId, CancellationToken cancellationToken = default)
@@ -142,6 +161,12 @@ namespace MysteryShopper.BLL.Services
 
             userOrder.Status = UserOrderStatus.Completed;
             await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+
+            await notificationService.CreateNotificationAsync(new NotificationModel
+            {
+                UserId = userOrder.UserId,
+                Text = NotificationMessages.OrderCompleted,
+            }, cancellationToken);
         }
 
         public async Task FinishOrderAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default)

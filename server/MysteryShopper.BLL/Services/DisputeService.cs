@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
+using MysteryShopper.BLL.Utilities.Constants;
 using MysteryShopper.BLL.Utilities.Exceptions;
+using MysteryShopper.BLL.Utilities.Messages;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
@@ -9,6 +11,7 @@ using MysteryShopper.DAL.Repositories.IRepositories;
 namespace MysteryShopper.BLL.Services
 {
     public class DisputeService(
+        INotificationService notificationService,
         IOrderRepository orderRepository,
         IUserOrderRepository userOrderRepository,
         IDisputeRepository disputeRepository,
@@ -48,12 +51,10 @@ namespace MysteryShopper.BLL.Services
             return mapper.Map<DisputeModel>(updatedDispute);
         }
 
-        public async Task<DisputeModel> CreateDisputeAsync(DisputeModel disputeData, CancellationToken cancellationToken = default)
+        public async Task<DisputeModel> CreateDisputeAsync(Roles creatorRole, DisputeModel disputeData, CancellationToken cancellationToken = default)
         {
-            if (!await orderRepository.ExistsAsync(o => o.Id == disputeData.OrderId, cancellationToken))
-            {
-                throw new NotFoundException("Order is not found");
-            }
+            var order = await orderRepository.GetFullOrderDetailsAsync(disputeData.OrderId, cancellationToken)
+                ?? throw new NotFoundException("Order is not found");
 
             if (await disputeRepository.ExistsAsync(d => d.Id == disputeData.Id, cancellationToken))
             {
@@ -68,6 +69,13 @@ namespace MysteryShopper.BLL.Services
             }
 
             var createdDispute = await disputeRepository.AddAsync(mapper.Map<Dispute>(disputeData), cancellationToken);
+
+            await notificationService.CreateNotificationAsync(new NotificationModel
+            {
+                UserId = creatorRole == Roles.Company ? createdDispute.UserId : null,
+                CompanyId = creatorRole == Roles.User ? order.CompanyId : null,
+                Text = NotificationMessages.NewDespute,
+            }, cancellationToken);
 
             return mapper.Map<DisputeModel>(createdDispute);
         }

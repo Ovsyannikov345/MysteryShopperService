@@ -4,7 +4,7 @@ using System.Net;
 
 namespace MysteryShopper.API.Middleware;
 
-public class ExceptionHandlingMiddleware(RequestDelegate next)
+public class ExceptionHandlingMiddleware(RequestDelegate next, Serilog.ILogger logger)
 {
     private readonly RequestDelegate _next = next;
 
@@ -20,8 +20,10 @@ public class ExceptionHandlingMiddleware(RequestDelegate next)
         }
     }
 
-    private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
+    private async Task HandleExceptionAsync(HttpContext context, Exception ex)
     {
+        logger.Error(ex.Message);
+
         ExceptionResponse response = ex switch
         {
             BadRequestException => new(HttpStatusCode.BadRequest, ex.Message),
