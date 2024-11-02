@@ -51,7 +51,7 @@ namespace MysteryShopper.BLL.Services
             return mapper.Map<DisputeModel>(updatedDispute);
         }
 
-        public async Task<DisputeModel> CreateDisputeAsync(Roles creatorRole, DisputeModel disputeData, CancellationToken cancellationToken = default)
+        public async Task<DisputeModel> CreateDisputeAsync(Role creatorRole, DisputeModel disputeData, CancellationToken cancellationToken = default)
         {
             var order = await orderRepository.GetFullOrderDetailsAsync(disputeData.OrderId, cancellationToken)
                 ?? throw new NotFoundException("Order is not found");
@@ -72,9 +72,9 @@ namespace MysteryShopper.BLL.Services
 
             await notificationService.CreateNotificationAsync(new NotificationModel
             {
-                UserId = creatorRole == Roles.Company ? createdDispute.UserId : null,
-                CompanyId = creatorRole == Roles.User ? order.CompanyId : null,
-                Text = NotificationMessages.NewDespute,
+                UserId = creatorRole == Role.Company ? createdDispute.UserId : null,
+                CompanyId = creatorRole == Role.User ? order.CompanyId : null,
+                Text = NotificationMessages.NewDispute,
             }, cancellationToken);
 
             return mapper.Map<DisputeModel>(createdDispute);

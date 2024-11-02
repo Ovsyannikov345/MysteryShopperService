@@ -14,7 +14,7 @@ namespace MysteryShopper.API.Controllers
     public class SupportRequestController(ISupportRequestService supportRequestService, IMapper mapper) : ControllerBase
     {
         [HttpPost]
-        public async Task<SupportRequestViewModel> CreateSupportRequest(string requestText, CancellationToken cancellationToken)
+        public async Task<SupportRequestViewModel> CreateSupportRequest([FromBody] string requestText, CancellationToken cancellationToken)
         {
             var userRole = HttpContext.GetRoleFromContext();
 

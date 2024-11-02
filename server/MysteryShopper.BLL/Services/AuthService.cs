@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
+using MysteryShopper.BLL.Utilities.Constants;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Models;
@@ -32,7 +33,7 @@ namespace MysteryShopper.BLL.Services
 
         private readonly CompanyRegistrationValidator _companyRegistrationValidator = companyRegistrationValidator;
 
-        public async Task<TokenPair> LoginAsync(string email, string password, CancellationToken cancellationToken = default)
+        public async Task<AuthCredentials> LoginAsync(string email, string password, CancellationToken cancellationToken = default)
         {
             var user = await _userRepository.GetByItemAsync(u => u.Email == email, cancellationToken);
 
@@ -56,7 +57,14 @@ namespace MysteryShopper.BLL.Services
 
                 _logger.Information("Company {0} logged in successfully", company.Id);
 
-                return await _tokenService.GetTokensAsync(company, cancellationToken);
+                var companyTokens = await _tokenService.GetTokensAsync(company, cancellationToken);
+
+                return new AuthCredentials
+                {
+                    AccessToken = companyTokens.AccessToken,
+                    RefreshToken = companyTokens.RefreshToken,
+                    Role = Role.Company,
+                };
             }
 
             if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
@@ -68,7 +76,14 @@ namespace MysteryShopper.BLL.Services
 
             _logger.Information("User {0} logged in successfully", user.Id);
 
-            return await _tokenService.GetTokensAsync(user, cancellationToken);
+            var userTokens = await _tokenService.GetTokensAsync(user, cancellationToken);
+
+            return new AuthCredentials
+            {
+                AccessToken = userTokens.AccessToken,
+                RefreshToken = userTokens.RefreshToken,
+                Role = Role.User,
+            };
         }
 
         public async Task LogoutAsync(string refreshToken, CancellationToken cancellationToken = default)
@@ -77,7 +92,7 @@ namespace MysteryShopper.BLL.Services
             _logger.Information("User or company logged out successfully. RefreshToken: {0}", refreshToken);
         }
 
-        public async Task<TokenPair> RegisterUser(UserRegistrationCredentials userData, CancellationToken cancellationToken = default)
+        public async Task<AuthCredentials> RegisterUser(UserRegistrationCredentials userData, CancellationToken cancellationToken = default)
         {
             var validationResult = _userRegistrationValidator.Validate(userData);
 
@@ -103,10 +118,17 @@ namespace MysteryShopper.BLL.Services
 
             _logger.Information("User {0} registered successfully", createdUser.Id);
 
-            return await _tokenService.GetTokensAsync(createdUser, cancellationToken);
+            var tokens = await _tokenService.GetTokensAsync(createdUser, cancellationToken);
+
+            return new AuthCredentials
+            {
+                AccessToken = tokens.AccessToken,
+                RefreshToken = tokens.RefreshToken,
+                Role = Role.User,
+            };
         }
 
-        public async Task<TokenPair> RegisterCompany(CompanyRegistrationCredentials companyData, CancellationToken cancellationToken = default)
+        public async Task<AuthCredentials> RegisterCompany(CompanyRegistrationCredentials companyData, CancellationToken cancellationToken = default)
         {
             var validationResult = _companyRegistrationValidator.Validate(companyData);
 
@@ -132,7 +154,26 @@ namespace MysteryShopper.BLL.Services
 
             _logger.Information("Company {0} registered successfully", createdCompany.Id);
 
-            return await _tokenService.GetTokensAsync(createdCompany, cancellationToken);
+            var tokens = await _tokenService.GetTokensAsync(createdCompany, cancellationToken);
+
+            return new AuthCredentials
+            {
+                AccessToken = tokens.AccessToken,
+                RefreshToken = tokens.RefreshToken,
+                Role = Role.User,
+            };
+        }
+
+        public async Task<bool> IsEmailAvailableAsync(string email, CancellationToken cancellationToken = default)
+        {
+            bool a = await _userRepository.ExistsAsync(u => u.Email == email, cancellationToken);
+
+            if (a)
+            {
+                return false;
+            }
+
+            return !(await _companyRepository.ExistsAsync(c => c.Email == email, cancellationToken));
         }
     }
 }

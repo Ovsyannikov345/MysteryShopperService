@@ -2,7 +2,7 @@
 {
     public static class NotificationMessages
     {
-        public const string NewDespute = "You have a new despute. Please, describe the problem.";
+        public const string NewDispute = "You have a new despute. Please, describe the problem.";
 
         public const string NewRequest = "You have a new order request.";
 

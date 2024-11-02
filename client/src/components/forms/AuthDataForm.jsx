@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import validateRegistrationData from "../../utils/validateRegistrationData";
 import { useTheme } from "@emotion/react";
-import { checkEmail } from "../../api/authApi";
+import { checkEmail } from "../../api/authApi.ts";
 
 const AuthDataForm = ({ nextStepHandler, errorHandler }) => {
     const theme = useTheme();

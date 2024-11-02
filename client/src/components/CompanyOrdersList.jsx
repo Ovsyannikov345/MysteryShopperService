@@ -2,13 +2,13 @@ import React from "react";
 import { Grid, Typography } from "@mui/material";
 import CompanyOrder from "./CompanyOrder";
 
-const CompanyOrdersList = ({ orders, deleteHandler }) => {
+const CompanyOrdersList = ({ orders }) => {
     return (
         <>
             {orders.length > 0 ? (
                 <Grid container item flexDirection={"column"} gap={"10px"}>
                     {orders.map((order) => (
-                        <CompanyOrder key={order.id} order={order} deleteHandler={deleteHandler} />
+                        <CompanyOrder key={order.id} order={order} />
                     ))}
                 </Grid>
             ) : (

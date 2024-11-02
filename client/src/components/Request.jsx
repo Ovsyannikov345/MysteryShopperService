@@ -45,7 +45,7 @@ const Request = ({ request, acceptHandler, declineHandler }) => {
                             request.User.id !== undefined
                                 ? `http://localhost:5000/api/users/${
                                       request.User.id
-                                  }/avatar?jwt=${localStorage.getItem("jwt")}`
+                                  }/avatar?jwt=${localStorage.getItem("accessToken")}`
                                 : ""
                         }
                         variant="square"

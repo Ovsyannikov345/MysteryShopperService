@@ -51,7 +51,7 @@ const CompanyProfilePage = () => {
             }
 
             if (response.status === 401) {
-                localStorage.removeItem("jwt");
+                localStorage.removeItem("accessToken");
                 localStorage.removeItem("role");
                 window.location.reload();
             }
@@ -115,7 +115,7 @@ const CompanyProfilePage = () => {
         }
 
         if (response.status === 401) {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("role");
             window.location.reload();
         }
@@ -147,7 +147,7 @@ const CompanyProfilePage = () => {
         }
 
         if (response.status === 401) {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("role");
             window.location.reload();
         }
@@ -224,7 +224,7 @@ const CompanyProfilePage = () => {
                                 companyData.id !== undefined
                                     ? `http://localhost:5000/api/companies/${
                                           companyData.id
-                                      }/avatar?jwt=${localStorage.getItem("jwt")}`
+                                      }/avatar?jwt=${localStorage.getItem("accessToken")}`
                                     : ""
                             }
                             variant="square"

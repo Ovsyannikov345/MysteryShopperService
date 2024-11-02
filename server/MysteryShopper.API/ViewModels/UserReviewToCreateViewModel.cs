@@ -7,7 +7,5 @@
         public short Grade { get; set; }
 
         public Guid OrderId { get; set; }
-
-        public Guid CompanyId { get; set; }
     }
 }

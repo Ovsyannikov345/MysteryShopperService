@@ -2,7 +2,7 @@ import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import ZoomCalculator from "./ZoomCalculator";
 import { orderIcon, userIcon } from "./mapIcons";
 import { Typography } from "@mui/material";
-import { calculateRouteLength } from "../../api/openStreerMapApi";
+import { calculateRouteLength } from "../../api/openStreetMapApi";
 import { useEffect, useState } from "react";
 
 const OrderDetailsMap = ({ orderPosition }) => {

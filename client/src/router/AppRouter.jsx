@@ -6,12 +6,12 @@ import { companyRoutes } from "./companyRoutes";
 import { COMPANY_PROFILE_ROUTE, LOGIN_ROUTE, USER_PROFILE_ROUTE } from "../utils/consts";
 
 const AppRouter = () => {
-    const [jwt, setJwt] = useState(localStorage.getItem("jwt"));
+    const [jwt, setJwt] = useState(localStorage.getItem("accessToken"));
     const navigate = useNavigate();
 
     useEffect(() => {
         const handleStorageChange = () => {
-            setJwt(localStorage.getItem("jwt"));
+            setJwt(localStorage.getItem("accessToken"));
             navigate("/");
         };
 

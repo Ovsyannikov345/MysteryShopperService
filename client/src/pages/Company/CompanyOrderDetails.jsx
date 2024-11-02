@@ -57,7 +57,7 @@ const CompanyOrderDetails = () => {
             }
 
             if (response.status === 401) {
-                localStorage.removeItem("jwt");
+                localStorage.removeItem("accessToken");
                 localStorage.removeItem("role");
                 window.location.reload();
             }
@@ -103,7 +103,7 @@ const CompanyOrderDetails = () => {
         }
 
         if (response.status === 401) {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("role");
             window.location.reload();
         }
@@ -130,7 +130,7 @@ const CompanyOrderDetails = () => {
         }
 
         if (response.status === 401) {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("role");
             window.location.reload();
         }
@@ -157,7 +157,7 @@ const CompanyOrderDetails = () => {
         }
 
         if (response.status === 401) {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("role");
             window.location.reload();
         }

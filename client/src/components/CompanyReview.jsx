@@ -19,7 +19,7 @@ const CompanyReview = ({ companyReview }) => {
                         companyReview.User.id !== undefined
                             ? `http://localhost:5000/api/users/${
                                   companyReview.User.id
-                              }/avatar?jwt=${localStorage.getItem("jwt")}`
+                              }/avatar?jwt=${localStorage.getItem("accessToken")}`
                             : ""
                     }
                     variant="square"

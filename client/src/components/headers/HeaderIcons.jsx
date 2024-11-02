@@ -70,7 +70,7 @@ const HeaderIcons = () => {
                 </IconButton>
                 <IconButton
                     onClick={(e) => {
-                        localStorage.removeItem("jwt");
+                        localStorage.removeItem("accessToken");
                         localStorage.removeItem("role");
                         window.location.reload();
                     }}

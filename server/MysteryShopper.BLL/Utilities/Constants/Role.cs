@@ -1,6 +1,6 @@
 ﻿namespace MysteryShopper.BLL.Utilities.Constants;
 
-public enum Roles
+public enum Role
 {
     User = 1,
     Company = 2,

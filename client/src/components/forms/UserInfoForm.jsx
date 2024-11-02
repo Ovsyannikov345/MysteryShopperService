@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import InputMask from "react-input-mask";
 import validateUserData from "../../utils/validateUserData";
 import { useTheme } from "@emotion/react";
-import { registerUser } from "../../api/authApi";
+import { registerUser } from "../../api/authApi.ts";
 import { useNavigate } from "react-router-dom";
 
 const UserInfoForm = ({ authData, errorHandler }) => {

@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer } from "react-leaflet";
 import MapLocationFinder from "./MapLocationFinder";
 import PlaceableMarker from "./PlaceableMarker";
-import { getAddressFromCoordinates } from "../../api/openStreerMapApi";
+import { getAddressFromCoordinates } from "../../api/openStreetMapApi";
 
 const OrderCreationMap = ({ onLocationChange }) => {
     const changeLocation = async (newLocation) => {

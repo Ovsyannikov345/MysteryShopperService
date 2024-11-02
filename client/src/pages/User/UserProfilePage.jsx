@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTheme } from "@emotion/react";
-import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar, Button } from "@mui/material";
+import { Avatar, Grid, IconButton, TextField, Typography, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import UserHeader from "./../../components/headers/UserHeader";
@@ -13,6 +13,7 @@ import UserEditForm from "./../../components/forms/UserEditForm";
 import addNoun from "./../../utils/fieldsParser";
 import moment from "moment";
 import { useParams } from "react-router-dom";
+import { useNotifications } from "@toolpad/core/useNotifications";
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -27,6 +28,8 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const UserProfilePage = () => {
+    const notifications = useNotifications();
+
     const theme = useTheme();
 
     const { id } = useParams();
@@ -38,31 +41,17 @@ const UserProfilePage = () => {
 
     const [image, setImage] = useState(undefined);
 
-    const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-
     useEffect(() => {
         const loadData = async () => {
             const response = id !== undefined ? await getUser(id) : await getProfile();
 
-            if (!response) {
-                displayError("Сервис временно недоступен");
-                return;
-            }
-
-            if (response.status === 401) {
-                localStorage.removeItem("jwt");
-                localStorage.removeItem("role");
-                window.location.reload();
-            }
-
             if (response.status >= 300) {
-                displayError("Ошибка при загрузке профиля. Код: " + response.status);
-                console.log(response);
+                notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
                 return;
             }
 
             setUserData(response.data);
+            console.log(response);
             setReadonly(id !== undefined);
         };
 
@@ -71,57 +60,23 @@ const UserProfilePage = () => {
 
     const rating = useMemo(() => {
         try {
-            if (userData.Reports.map((report) => report.UserReview).length === 0) {
+            if (userData.userReviews.length === 0) {
                 return "-";
             }
 
-            let totalGrade = 0;
-            let count = 0;
-
-            userData.Reports.forEach((report) => {
-                if (report.UserReview != null) {
-                    totalGrade += report.UserReview.grade;
-                    count++;
-                }
-            });
-
-            const result = (totalGrade / count).toFixed(2);
+            const result = (userData.userReviews.map(r => r.grade).reduce((acc, val) => acc += val, 0) / userData.userReviews.length).toFixed(2);
 
             return isNaN(result) ? "-" : result;
         } catch {
             return "-";
         }
-    }, [userData.Reports]);
-
-    const displayError = (message) => {
-        setErrorMessage(message);
-        setError(true);
-    };
-
-    const closeSnackbar = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-
-        setError(false);
-    };
+    }, [userData.userReviews]);
 
     const applyChanges = async (updatedUserData) => {
         const response = await updateUser(userData.id, updatedUserData);
 
-        if (!response) {
-            displayError("Сервис временно недоступен");
-            return;
-        }
-
-        if (response.status === 401) {
-            localStorage.removeItem("jwt");
-            localStorage.removeItem("role");
-            window.location.reload();
-        }
-
         if (response.status >= 300) {
-            displayError("Ошибка при изменении данных. Код: " + response.status);
+            notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
             return;
         }
 
@@ -141,20 +96,8 @@ const UserProfilePage = () => {
 
         const response = await updateAvatar(userData.id, image);
 
-        if (!response) {
-            displayError("Сервис временно недоступен");
-            return false;
-        }
-
-        if (response.status === 401) {
-            localStorage.removeItem("jwt");
-            localStorage.removeItem("role");
-            window.location.reload();
-        }
-
         if (response.status >= 300) {
-            displayError("Ошибка при отправке изображения. Код: " + response.status);
-            console.log(response);
+            notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
             return false;
         }
 
@@ -226,7 +169,7 @@ const UserProfilePage = () => {
                                 userData.id !== undefined
                                     ? `http://localhost:5000/api/users/${
                                           userData.id
-                                      }/avatar?jwt=${localStorage.getItem("jwt")}`
+                                      }/avatar?jwt=${localStorage.getItem("accessToken")}`
                                     : ""
                             }
                             variant="square"
@@ -237,29 +180,16 @@ const UserProfilePage = () => {
                             }}
                         />
                         {!editMode ? (
-                            <Grid
-                                flexDirection={"column"}
-                                gap={"10px"}
-                                sx={{ maxWidth: { xs: "253px", md: "430px" } }}
-                            >
-                                <Typography
-                                    variant="h2"
-                                    height={"36px"}
-                                    sx={{ fontSize: { xs: "20px", md: "24px" } }}
-                                >
+                            <Grid flexDirection={"column"} gap={"10px"} sx={{ maxWidth: { xs: "253px", md: "430px" } }}>
+                                <Typography variant="h2" height={"36px"} sx={{ fontSize: { xs: "20px", md: "24px" } }}>
                                     {[userData.surname, userData.name, userData.patronymic].join(" ")}
                                 </Typography>
                                 <Typography variant="h3" height={"26px"}>
                                     {(userData.city ?? "") +
                                         (userData.city != null && userData.age != null ? ", " : "") +
-                                        (userData.age != null
-                                            ? addNoun(userData.age, ["год", "года", "лет"])
-                                            : "")}
+                                        (userData.age != null ? addNoun(userData.age, ["год", "года", "лет"]) : "")}
                                 </Typography>
-                                <Typography
-                                    variant="h3"
-                                    sx={{ maxWidth: { xs: "253px", md: "641px" } }}
-                                >
+                                <Typography variant="h3" sx={{ maxWidth: { xs: "253px", md: "641px" } }}>
                                     {userData.description}
                                 </Typography>
                             </Grid>
@@ -279,11 +209,9 @@ const UserProfilePage = () => {
                         <>
                             <ProfileCards
                                 registrationDate={
-                                    userData.createdAt !== undefined
-                                        ? moment.utc(userData.createdAt).format("DD-MM-YYYY")
-                                        : "-"
+                                    userData.createdAt !== undefined ? moment.utc(userData.createdAt).format("DD-MM-YYYY") : "-"
                                 }
-                                ordersCount={userData.Orders !== undefined ? userData.Orders.length : "-"}
+                                ordersCount={userData.orders !== undefined ? userData.orders.length : "-"}
                                 rating={rating}
                             />
                             <Grid
@@ -305,7 +233,7 @@ const UserProfilePage = () => {
                                         value={userData.email ?? ""}
                                         InputProps={{
                                             readOnly: true,
-                                            sx:{fontSize: { xs: "20px", md: "24px" } }
+                                            sx: { fontSize: { xs: "20px", md: "24px" } },
                                         }}
                                         sx={{
                                             "& .MuiInput-underline:before": {
@@ -322,7 +250,7 @@ const UserProfilePage = () => {
                                         value={userData.phone ?? ""}
                                         InputProps={{
                                             readOnly: true,
-                                            sx:{fontSize: { xs: "20px", md: "24px" } }
+                                            sx: { fontSize: { xs: "20px", md: "24px" } },
                                         }}
                                         sx={{
                                             "& .MuiInput-underline:before": {
@@ -347,39 +275,18 @@ const UserProfilePage = () => {
                                 >
                                     {userData.Reports.filter((report) => report.UserReview != null).length > 0 ? (
                                         <>
-                                            <Typography
-                                                variant="h2"
-                                                height={"69px"}
-                                                display={"flex"}
-                                                alignItems={"center"}
-                                            >
+                                            <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                                                 Отзывы
                                             </Typography>
 
-                                            <Grid
-                                                container
-                                                item
-                                                maxWidth={"700px"}
-                                                flexDirection={"column"}
-                                                gap={"25px"}
-                                            >
-                                                {userData.Reports.filter(
-                                                    (report) => report.UserReview != null
-                                                ).map((report) => (
-                                                    <UserReview
-                                                        key={report.UserReview.id}
-                                                        userReview={report.UserReview}
-                                                    />
+                                            <Grid container item maxWidth={"700px"} flexDirection={"column"} gap={"25px"}>
+                                                {userData.Reports.filter((report) => report.UserReview != null).map((report) => (
+                                                    <UserReview key={report.UserReview.id} userReview={report.UserReview} />
                                                 ))}
                                             </Grid>
                                         </>
                                     ) : (
-                                        <Typography
-                                            variant="h2"
-                                            height={"69px"}
-                                            display={"flex"}
-                                            alignItems={"center"}
-                                        >
+                                        <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                                             Отзывов пока нет
                                         </Typography>
                                     )}
@@ -389,19 +296,10 @@ const UserProfilePage = () => {
                             )}{" "}
                         </>
                     ) : (
-                        <UserEditForm
-                            userData={userData}
-                            cancelHandler={() => setEditMode(false)}
-                            applyCallback={applyChanges}
-                        />
+                        <UserEditForm userData={userData} cancelHandler={() => setEditMode(false)} applyCallback={applyChanges} />
                     )}
                 </Grid>
             </Grid>
-            <Snackbar open={error} autoHideDuration={6000} onClose={closeSnackbar}>
-                <Alert onClose={closeSnackbar} severity="error" sx={{ width: "100%" }}>
-                    {errorMessage}
-                </Alert>
-            </Snackbar>
         </Grid>
     );
 };

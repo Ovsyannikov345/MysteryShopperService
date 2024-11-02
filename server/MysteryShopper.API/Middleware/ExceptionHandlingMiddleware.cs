@@ -8,6 +8,8 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, Serilog.ILogger l
 {
     private readonly RequestDelegate _next = next;
 
+    private readonly Serilog.ILogger _logger = logger;
+
     public async Task InvokeAsync(HttpContext httpContext)
     {
         try
@@ -22,7 +24,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, Serilog.ILogger l
 
     private async Task HandleExceptionAsync(HttpContext context, Exception ex)
     {
-        logger.Error(ex.Message);
+        _logger.Error(ex, "Exception was caught {@Ex}");
 
         ExceptionResponse response = ex switch
         {

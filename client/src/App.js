@@ -1,6 +1,7 @@
 import { ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter } from "react-router-dom";
 import { LocalizationProvider } from "@mui/x-date-pickers";
+import { NotificationsProvider } from "@toolpad/core/useNotifications";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import "moment/locale/en-gb";
 import AppRouter from "./router/AppRouter";
@@ -40,9 +41,11 @@ const App = () => {
     return (
         <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="en-gb">
             <ThemeProvider theme={theme}>
-                <BrowserRouter>
-                    <AppRouter />
-                </BrowserRouter>
+                <NotificationsProvider >
+                    <BrowserRouter>
+                        <AppRouter />
+                    </BrowserRouter>
+                </NotificationsProvider>
             </ThemeProvider>
         </LocalizationProvider>
     );

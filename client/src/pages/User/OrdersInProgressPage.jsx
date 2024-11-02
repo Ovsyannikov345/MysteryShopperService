@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Grid, Typography, Snackbar, Alert } from "@mui/material";
 import UserHeader from "../../components/headers/UserHeader";
 import SortSelector from "../../components/SortSelector";
-import { deleteOrder, getUserOrders } from "../../api/ordersApi";
+import { getUserOrders } from "../../api/ordersApi";
 import UserOrder from "../../components/UserOrder";
 
 const OrdersInProgressPage = () => {
@@ -39,7 +39,7 @@ const OrdersInProgressPage = () => {
             }
 
             if (response.status === 401) {
-                localStorage.removeItem("jwt");
+                localStorage.removeItem("accessToken");
                 localStorage.removeItem("role");
                 window.location.reload();
             }
@@ -72,29 +72,6 @@ const OrdersInProgressPage = () => {
 
         setSuccess(false);
         setError(false);
-    };
-
-    const declineOrder = async (id) => {
-        const response = await deleteOrder(id);
-
-        if (!response) {
-            displayError("Сервис временно недоступен");
-            return;
-        }
-
-        if (response.status === 401) {
-            localStorage.removeItem("jwt");
-            localStorage.removeItem("role");
-            window.location.reload();
-        }
-
-        if (response.status >= 300) {
-            displayError("Ошибка при удалении заказа. Код: " + response.status);
-            return;
-        }
-
-        displaySuccess("Заказ удален");
-        setOrders(orders.filter((order) => order.id !== id));
     };
 
     return (
@@ -147,7 +124,7 @@ const OrdersInProgressPage = () => {
                     </Grid>
                     {sortedOrders.length > 0 ? (
                         sortedOrders.map((order) => (
-                            <UserOrder key={order.id} orderData={order} declineHandler={declineOrder} />
+                            <UserOrder key={order.id} orderData={order} />
                         ))
                     ) : (
                         <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>

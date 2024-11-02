@@ -44,7 +44,7 @@ const Report = ({ report, errorHandler, successHandler }) => {
         }
 
         if (response.status === 401) {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("role");
             window.location.reload();
         }
@@ -81,7 +81,7 @@ const Report = ({ report, errorHandler, successHandler }) => {
                                 report.User.id !== undefined
                                     ? `http://localhost:5000/api/users/${
                                           report.User.id
-                                      }/avatar?jwt=${localStorage.getItem("jwt")}`
+                                      }/avatar?jwt=${localStorage.getItem("accessToken")}`
                                     : ""
                             }
                             variant="square"

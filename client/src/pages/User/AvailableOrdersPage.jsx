@@ -35,13 +35,9 @@ const AvailableOrdersPage = () => {
     const sortedOrders = useMemo(() => {
         switch (sortOption) {
             case "date asc":
-                return [...orders].sort(
-                    (a, b) => new Date(a.createdAt.slice(0, -1)) - new Date(b.createdAt.slice(0, -1))
-                );
+                return [...orders].sort((a, b) => new Date(a.createdAt.slice(0, -1)) - new Date(b.createdAt.slice(0, -1)));
             case "date desc":
-                return [...orders].sort(
-                    (a, b) => new Date(b.createdAt.slice(0, -1)) - new Date(a.createdAt.slice(0, -1))
-                );
+                return [...orders].sort((a, b) => new Date(b.createdAt.slice(0, -1)) - new Date(a.createdAt.slice(0, -1)));
             default:
                 return [...orders];
         }
@@ -51,34 +47,12 @@ const AvailableOrdersPage = () => {
         const startDate = searchQuery.startDate != null ? moment(searchQuery.startDate, "YYYY-MM-DD") : null;
         const endDate = searchQuery.endDate != null ? moment(searchQuery.endDate, "YYYY-MM-DD") : null;
 
-        const getCompanyRating = (companyData) => {
-            try {
-                if (companyData.Orders.map((order) => order.CompanyReviews).length === 0) {
-                    return 0;
-                }
-
-                let totalGrade = 0;
-                let count = 0;
-
-                companyData.Orders.forEach((order) => {
-                    order.CompanyReviews.forEach((review) => {
-                        totalGrade += review.grade;
-                        count++;
-                    });
-                });
-
-                return (totalGrade / count).toFixed(2);
-            } catch {
-                return 0;
-            }
-        };
-
         return sortedOrders.filter(
             (order) =>
-                (order.title.toLowerCase().includes(searchQuery.name.toLowerCase()) ||
-                    order.Company.name.toLowerCase().includes(searchQuery.name.toLowerCase())) &&
-                order.place.toLowerCase().includes(searchQuery.place.toLowerCase()) &&
-                (searchQuery.minRating == null || getCompanyRating(order.Company) >= searchQuery.minRating) &&
+                // (order.title.toLowerCase().includes(searchQuery.name.toLowerCase()) ||
+                //     order.company.name.toLowerCase().includes(searchQuery.name.toLowerCase())) &&
+                // order.place.toLowerCase().includes(searchQuery.place.toLowerCase()) &&
+                (searchQuery.minRating == null || order.companyRating >= searchQuery.minRating) &&
                 (searchQuery.minPrice == null || (order.price ?? 0) >= searchQuery.minPrice) &&
                 (searchQuery.maxPrice == null || (order.price ?? 0) <= searchQuery.maxPrice) &&
                 (searchQuery.minDays == null || (order.completionTime ?? 0) >= searchQuery.minDays) &&
@@ -92,23 +66,27 @@ const AvailableOrdersPage = () => {
         const loadOrders = async () => {
             const response = await getOrders();
 
-            if (!response) {
-                displayError("Сервис временно недоступен");
+            console.log(response);
+
+            if (!response.status >= 300) {
+                displayError(response.message);
                 return;
             }
 
-            if (response.status === 401) {
-                localStorage.removeItem("jwt");
-                localStorage.removeItem("role");
-                window.location.reload();
-            }
+            const calculateCompanyRating = (company) => {
+                if (company.companyReviews.length === 0) {
+                    return 0;
+                }
 
-            if (response.status >= 300) {
-                displayError("Ошибка при загрузке заказов. Код: " + response.status);
-                return;
-            }
+                return (
+                    company.companyReviews.map((r) => r.grade).reduce((acc, val) => (acc += val), 0) /
+                    company.companyReviews.length
+                );
+            };
 
-            setOrders(response.data);
+            let loadedOrders = response.data.map((o) => (o.companyRating = calculateCompanyRating(o.company)));
+
+            setOrders(loadedOrders);
         };
 
         loadOrders();
@@ -144,15 +122,7 @@ const AvailableOrdersPage = () => {
             bgcolor={"#E7E7E7"}
         >
             <UserHeader />
-            <Grid
-                container
-                item
-                alignItems={"flex-start"}
-                maxWidth={"1500px"}
-                gap={"70px"}
-                flexGrow={1}
-                bgcolor={"#FFFFFF"}
-            >
+            <Grid container item alignItems={"flex-start"} maxWidth={"1500px"} gap={"70px"} flexGrow={1} bgcolor={"#FFFFFF"}>
                 {displayFilter ? (
                     <OrderFilter queryHandler={setSearchQuery} successHandler={displaySuccess} />
                 ) : (
@@ -190,10 +160,7 @@ const AvailableOrdersPage = () => {
                                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                                     Доступные заказы
                                 </Typography>
-                                <IconButton
-                                    style={{ padding: 0, color: "#000000" }}
-                                    onClick={() => setFilterModalOpen(true)}
-                                >
+                                <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setFilterModalOpen(true)}>
                                     <FilterAltOutlinedIcon sx={{ fontSize: 30 }} />
                                 </IconButton>
                             </Grid>

@@ -1,51 +1,16 @@
 import { Button, Grid, Avatar, Typography, Rating, useMediaQuery } from "@mui/material";
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import moment from "moment";
 import addNoun from "../utils/fieldsParser";
 import { useNavigate } from "react-router-dom";
-import DeclineConfirmationModal from "./modals/DeclineConfirmationModal";
 
-const UserOrder = ({ orderData, declineHandler }) => {
+const UserOrder = ({ orderData }) => {
     const isScreenSizeUpMd = useMediaQuery((theme) => theme.breakpoints.up("md"));
-
-    const [declineModalOpen, setDeclineModalOpen] = useState(false);
 
     const navigate = useNavigate();
 
-    const declineOrder = () => {
-        declineHandler(orderData.id);
-        setDeclineModalOpen(false);
-    };
-
-    const rating = useMemo(() => {
-        try {
-            let sum = 0;
-            let count = 0;
-
-            orderData.Company.Orders.forEach((order) =>
-                order.CompanyReviews.forEach((review) => {
-                    sum += review.grade;
-                    count++;
-                })
-            );
-
-            if (count === 0) {
-                return 0;
-            }
-
-            return sum / count;
-        } catch {
-            return 0;
-        }
-    }, [orderData.Company.Orders]);
-
     return (
         <>
-            <DeclineConfirmationModal
-                isOpen={declineModalOpen}
-                acceptHandler={declineOrder}
-                declineHandler={() => setDeclineModalOpen(false)}
-            />
             <Grid
                 container
                 item
@@ -62,8 +27,8 @@ const UserOrder = ({ orderData, declineHandler }) => {
                         <Grid container item width={"100%"} gap={"10px"}>
                             <Avatar
                                 src={`http://localhost:5000/api/companies/${
-                                    orderData.Company.id
-                                }/avatar?jwt=${localStorage.getItem("jwt")}`}
+                                    orderData.company.id
+                                }/avatar?jwt=${localStorage.getItem("accessToken")}`}
                                 variant="square"
                                 sx={{ width: 60, height: 60 }}
                             />
@@ -77,9 +42,9 @@ const UserOrder = ({ orderData, declineHandler }) => {
                                     display={"flex"}
                                     alignItems={"center"}
                                 >
-                                    {orderData.Company.name}
+                                    {orderData.company.name}
                                 </Typography>
-                                <Rating value={rating} precision={0.5} readOnly />
+                                <Rating value={orderData.companyRating} precision={0.5} readOnly />
                             </Grid>
                         </Grid>
                         <Typography variant={isScreenSizeUpMd ? "h2" : "h3"} height={"38px"} display={"flex"} alignItems={"center"}>
@@ -144,13 +109,6 @@ const UserOrder = ({ orderData, declineHandler }) => {
                             ПОДРОБНЕЕ
                         </Button>
                     </Grid>
-                    {declineHandler !== undefined && (
-                        <Grid container item width={"143px"}>
-                            <Button fullWidth variant="outlined" onClick={() => setDeclineModalOpen(true)}>
-                                ОТКАЗАТЬСЯ
-                            </Button>
-                        </Grid>
-                    )}
                 </Grid>
             </Grid>
         </>

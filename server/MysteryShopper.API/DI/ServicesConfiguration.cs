@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 namespace MysteryShopper.API.DI;
@@ -30,6 +31,7 @@ public static class ServicesConfiguration
         {
             options.TokenValidationParameters = new TokenValidationParameters
             {
+                //NameClaimType = ClaimTypes.NameIdentifier,
                 ValidateIssuer = true,
                 ValidIssuer = configuration["Jwt:Issuer"],
                 ValidateAudience = true,

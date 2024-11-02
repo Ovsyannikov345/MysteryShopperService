@@ -1,8 +1,8 @@
 import React from "react";
-import { Grid, Typography, useMediaQuery } from "@mui/material";
+import { Grid, Theme, Typography, useMediaQuery } from "@mui/material";
 
 const Logo = () => {
-    const isScreenSizeUpLg = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+    const isScreenSizeUpLg = useMediaQuery((theme: Theme) => theme.breakpoints.up("lg"));
 
     return (
         <Grid

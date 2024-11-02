@@ -13,7 +13,7 @@ const compatibilityPrompt =
     "{age: x, gender: x, profession: x, experience: x}. " +
     "Nothing except json should occur in response. Текст заказа: ";
 
-const getCompletionTime = async (orderText) => {
+const getCompletionTime = async (orderText: string) => {
     try {
         const request = {
             model: "mistral",
@@ -38,7 +38,7 @@ const getCompletionTime = async (orderText) => {
             status: 200,
             data: timeIntervals,
         };
-    } catch (error) {
+    } catch (error: any) {
         if (error.response) {
             return { error: "Failed to analyze" };
         } else if (error.request) {
@@ -49,7 +49,7 @@ const getCompletionTime = async (orderText) => {
     }
 };
 
-const getCompatibility = async (orderText) => {
+const getCompatibility = async (orderText: string) => {
     try {
         const request = {
             model: "mistral",
@@ -61,7 +61,7 @@ const getCompatibility = async (orderText) => {
 
         const regex = /"(\w+)":\s*([-+]?\d*\.?\d+)/g;
 
-        const pairs = {};
+        const pairs: any = {};
 
         let match;
 
@@ -75,7 +75,7 @@ const getCompatibility = async (orderText) => {
             status: 200,
             data: pairs,
         };
-    } catch (error) {
+    } catch (error: any) {
         if (error.response) {
             return error.response;
         } else if (error.request) {

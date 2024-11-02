@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid } from "@mui/material";
-import { useTheme } from "@emotion/react";
+import { useTheme } from '@mui/material/styles';
 import Logo from "./Logo";
 
 const PublicHeader = () => {

@@ -1,11 +1,14 @@
-import { Grid, TextField, Typography, Button, Alert, Snackbar } from "@mui/material";
+import { Grid, TextField, Typography, Button } from "@mui/material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { login } from "../api/authApi";
 import PublicHeader from "../components/headers/PublicHeader";
-import { useTheme } from "@emotion/react";
+import { useTheme } from "@mui/material/styles";
+import { useNotifications } from "@toolpad/core/useNotifications";
 
 const LoginPage = () => {
+    const notifications = useNotifications();
+
     const theme = useTheme();
 
     const [loginData, setLoginData] = useState({
@@ -13,40 +16,16 @@ const LoginPage = () => {
         password: "",
     });
 
-    const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-
-    const closeSnackbar = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
-        }
-
-        setError(false);
-    };
-
     const submit = async () => {
-        const response = await login(loginData);
-
-        if (!response) {
-            setErrorMessage("Сервис временно недоступен");
-            setError(true);
-            return;
-        }
-
-        if (response.status === 500) {
-            setErrorMessage("Повторите попытку позже");
-            setError(true);
-            return;
-        }
+        let response: any = await login(loginData);
 
         if (response.status >= 300) {
-            setErrorMessage("Неверные данные аккаунта");
-            setError(true);
+            notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
             return;
         }
 
-        localStorage.setItem("role", response.data.role);
-        localStorage.setItem("jwt", response.data.token);
+        localStorage.setItem("role", response.data.role === 1 ? "user" : "company");
+        localStorage.setItem("accessToken", response.data.accessToken);
         window.location.reload();
     };
 
@@ -117,11 +96,6 @@ const LoginPage = () => {
                     </Grid>
                 </Grid>
             </Grid>
-            <Snackbar open={error} autoHideDuration={6000} onClose={closeSnackbar}>
-                <Alert onClose={closeSnackbar} severity="error" sx={{ width: "100%" }}>
-                    {errorMessage}
-                </Alert>
-            </Snackbar>
         </Grid>
     );
 };

@@ -11,7 +11,7 @@ import { createRequest } from "../../api/requestApi";
 import ReportForm from "../../components/forms/ReportForm";
 import { createReport } from "../../api/reportApi";
 import CompanyReviewForm from "../../components/forms/CompanyReviewForm";
-import { createCompanyReview } from "../../api/companyReviewApi";
+import { createCompanyReview } from "../../api/companyReviewApi.ts";
 import OrderDetailsMap from "../../components/maps/OrderDetailsMap";
 import OrderAnalyzer from "../../components/orderAnalyzer/OrderAnalyzer";
 
@@ -61,7 +61,7 @@ const UserOrderDetails = () => {
             }
 
             if (response.status === 401) {
-                localStorage.removeItem("jwt");
+                localStorage.removeItem("accessToken");
                 localStorage.removeItem("role");
                 window.location.reload();
             }
@@ -113,7 +113,7 @@ const UserOrderDetails = () => {
         }
 
         if (response.status === 401) {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("role");
             window.location.reload();
         }
@@ -136,7 +136,7 @@ const UserOrderDetails = () => {
         }
 
         if (response.status === 401) {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("role");
             window.location.reload();
         }
@@ -166,7 +166,7 @@ const UserOrderDetails = () => {
         }
 
         if (response.status === 401) {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("role");
             window.location.reload();
         }
@@ -187,7 +187,7 @@ const UserOrderDetails = () => {
         }
 
         if (response.status === 401) {
-            localStorage.removeItem("jwt");
+            localStorage.removeItem("accessToken");
             localStorage.removeItem("role");
             window.location.reload();
         }
@@ -252,7 +252,7 @@ const UserOrderDetails = () => {
                                     order.Company.id !== undefined
                                         ? `http://localhost:5000/api/companies/${
                                               order.Company.id
-                                          }/avatar?jwt=${localStorage.getItem("jwt")}`
+                                          }/avatar?jwt=${localStorage.getItem("accessToken")}`
                                         : ""
                                 }
                                 variant="square"

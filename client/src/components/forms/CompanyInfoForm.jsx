@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import InputMask from "react-input-mask";
 import validateCompanyData from "../../utils/validateCompanyData";
 import { useTheme } from "@emotion/react";
-import { registerCompany } from "../../api/authApi";
+import { registerCompany } from "../../api/authApi.ts";
 import { useNavigate } from "react-router-dom";
 
 const CompanyInfoForm = ({ authData, errorHandler }) => {

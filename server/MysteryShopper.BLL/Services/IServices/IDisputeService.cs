@@ -9,7 +9,7 @@ namespace MysteryShopper.BLL.Services.IServices
 
         Task<IEnumerable<DisputeModel>> GetOrderDisputesAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default);
 
-        Task<DisputeModel> CreateDisputeAsync(Roles creatorRole, DisputeModel disputeData, CancellationToken cancellationToken = default);
+        Task<DisputeModel> CreateDisputeAsync(Role creatorRole, DisputeModel disputeData, CancellationToken cancellationToken = default);
 
         Task<DisputeModel> AddUserDisputeTextAsync(Guid disputeId, Guid userId, string text, CancellationToken cancellationToken = default);
 

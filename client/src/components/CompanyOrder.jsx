@@ -1,29 +1,16 @@
 import { Button, Grid, Stack, Typography, useMediaQuery } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
-import DeleteConfirmationModal from "./modals/DeleteConfirmationModal";
 import addNoun from "../utils/fieldsParser";
 
-const CompanyOrder = ({ order, deleteHandler }) => {
+const CompanyOrder = ({ order }) => {
     const isScreenSizeUpMd = useMediaQuery((theme) => theme.breakpoints.up("md"));
-
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
     const navigate = useNavigate();
 
-    const deleteOrder = () => {
-        deleteHandler(order.id);
-        setDeleteModalOpen(false);
-    };
-
     return (
         <>
-            <DeleteConfirmationModal
-                isOpen={deleteModalOpen}
-                acceptHandler={deleteOrder}
-                declineHandler={() => setDeleteModalOpen(false)}
-            />
             <Grid
                 container
                 item
@@ -65,7 +52,7 @@ const CompanyOrder = ({ order, deleteHandler }) => {
                         display={"flex"}
                         alignItems={"center"}
                     >
-                        {order.completionTime != null ? addNoun(order.completionTime, ["день", "дня", 'дней']) : "Бессрочно"}
+                        {order.completionTime != null ? addNoun(order.completionTime, ["день", "дня", "дней"]) : "Бессрочно"}
                     </Typography>
                     <Typography
                         variant={isScreenSizeUpMd ? "h2" : "h3"}
@@ -89,9 +76,6 @@ const CompanyOrder = ({ order, deleteHandler }) => {
                 <Grid container item gap={"20px"} mt={"20px"}>
                     <Button variant="contained" onClick={() => navigate(`/my-orders/${order.id}`)}>
                         ПОДРОБНЕЕ
-                    </Button>
-                    <Button variant="outlined" onClick={() => setDeleteModalOpen(true)}>
-                        УДАЛИТЬ
                     </Button>
                 </Grid>
             </Grid>

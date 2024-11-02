@@ -37,7 +37,7 @@ namespace MysteryShopper.API.Controllers
         {
             var disputeToCreate = mapper.Map<DisputeModel>(disputeData);
 
-            var role = HttpContext.GetRoleFromContext() == "User" ? Roles.User : Roles.Company;
+            var role = HttpContext.GetRoleFromContext() == "User" ? Role.User : Role.Company;
 
             var dispute = await disputeService.CreateDisputeAsync(role, disputeToCreate, cancellationToken);
 

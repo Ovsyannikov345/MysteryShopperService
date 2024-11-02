@@ -163,7 +163,7 @@ namespace MysteryShopper.BLL.Services
             var claims = new List<Claim>()
             {
                 new("Id", user.Id.ToString()),
-                new(ClaimTypes.Role, Roles.User.ToString()),
+                new(ClaimTypes.Role, Role.User.ToString()),
                 new(JwtRegisteredClaimNames.Sub, user.Email),
             };
 
@@ -175,7 +175,7 @@ namespace MysteryShopper.BLL.Services
             var claims = new List<Claim>()
             {
                 new("Id", company.Id.ToString()),
-                new(ClaimTypes.Role, Roles.Company.ToString()),
+                new(ClaimTypes.Role, Role.Company.ToString()),
                 new(JwtRegisteredClaimNames.Sub, company.Email),
             };
 
