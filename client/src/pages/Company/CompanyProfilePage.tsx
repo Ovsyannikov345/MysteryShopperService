@@ -15,6 +15,7 @@ import UserHeader from "../../components/headers/UserHeader";
 import { useParams } from "react-router-dom";
 import { ApiError } from "../../api";
 import { useNotifications } from "@toolpad/core/useNotifications";
+import isApiError from "../../utils/isApiError";
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -80,10 +81,6 @@ const CompanyProfilePage = () => {
     }, [companyData]);
 
     const applyChanges = async (updatedCompanyData: CompanyToUpdate) => {
-        const isApiError = (response: UpdatedCompanyData | ApiError): response is ApiError => {
-            return (response as ApiError).message !== undefined;
-        };
-
         if (companyData === undefined) {
             return;
         }

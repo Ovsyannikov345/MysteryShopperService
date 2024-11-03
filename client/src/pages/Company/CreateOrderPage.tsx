@@ -1,8 +1,8 @@
 import React from "react";
 import { Grid } from "@mui/material";
 import CompanyHeader from "../../components/headers/CompanyHeader";
-import CreateOrderForm from "../../components/forms/CreateOrderForm";
-import { createOrder, OrderToCreate } from "../../api/ordersApi";
+import CreateOrderForm, { OrderCreationData } from "../../components/forms/CreateOrderForm";
+import { createOrder } from "../../api/ordersApi";
 import { useNavigate } from "react-router-dom";
 import isApiError from "../../utils/isApiError";
 import { useNotifications } from "@toolpad/core";
@@ -10,21 +10,26 @@ import { useNotifications } from "@toolpad/core";
 const CreateOrderPage = () => {
     const navigate = useNavigate();
 
-    //const notifications = useNotifications();
+    const notifications = useNotifications();
 
-    const create = async (orderData: OrderToCreate) => {
-        const response = await createOrder(orderData);
+    const create = async (orderData: OrderCreationData) => {
+        let order: any = { ...orderData };
+
+        if (orderData.timeToComplete) {
+            order.timeToComplete = `${orderData.timeToComplete}.00:00:00`;
+        }
+
+        const response = await createOrder(order);
 
         if (isApiError(response)) {
             displayError(response.message);
         } else {
-            console.log(response);
-            //navigate("/my-orders");
+            navigate("/my-orders");
         }
     };
 
     const displayError = (message: string) => {
-        //notifications.show(message, { severity: "error", autoHideDuration: 3000 });
+        notifications.show(message, { severity: "error", autoHideDuration: 3000 });
     };
 
     return (

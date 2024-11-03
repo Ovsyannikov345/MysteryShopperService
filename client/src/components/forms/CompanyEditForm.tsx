@@ -24,7 +24,7 @@ const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }: CompanyE
         validate: validateCompanyData,
         onSubmit: async (values) => {
             const updatedCompanyData = {
-                ...companyData,
+                id: companyData.id,
                 name: values.name,
                 contactPerson: {
                     id: companyData.contactPerson.id,

@@ -1,8 +1,6 @@
-import { OrderToCreate } from "../api/ordersApi";
+import { OrderCreationData } from "../components/forms/CreateOrderForm";
 
-const validateOrderData = (values: OrderToCreate) => {
-    console.log(values)
-
+const validateOrderData = (values: OrderCreationData) => {
     const errors: any = {};
 
     if (!values.title) {
@@ -21,11 +19,14 @@ const validateOrderData = (values: OrderToCreate) => {
         errors.place = "Слишком длинный адрес";
     }
 
-    if (values.timeToComplete && !/^\d{2}:00:00$/.test(values.timeToComplete)) {
+    if (
+        values.timeToComplete &&
+        (!Number.isInteger(values.timeToComplete) || values.timeToComplete < 1 || values.timeToComplete > 30)
+    ) {
         errors.completionTime = "Некорректное значение";
     }
 
-    if (values.price && (isNaN(values.price) || values.price < 0 || values.price > 99999)) {
+    if (values.price && (!Number.isInteger(values.timeToComplete) || values.price < 0 || values.price > 99999)) {
         errors.price = "Некорректное значение";
     }
 

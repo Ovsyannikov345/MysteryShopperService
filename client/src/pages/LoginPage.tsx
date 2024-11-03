@@ -5,6 +5,8 @@ import { login } from "../api/authApi";
 import PublicHeader from "../components/headers/PublicHeader";
 import { useTheme } from "@mui/material/styles";
 import { useNotifications } from "@toolpad/core/useNotifications";
+import isApiError from "../utils/isApiError";
+import { Roles } from "../api/enums";
 
 const LoginPage = () => {
     const notifications = useNotifications();
@@ -17,16 +19,15 @@ const LoginPage = () => {
     });
 
     const submit = async () => {
-        let response: any = await login(loginData);
+        let response = await login(loginData);
 
-        if (response.status >= 300) {
+        if (isApiError(response)) {
             notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
-            return;
+        } else {
+            localStorage.setItem("role", response.role === Roles.User ? "user" : "company");
+            localStorage.setItem("accessToken", response.accessToken);
+            window.location.reload();
         }
-
-        localStorage.setItem("role", response.data.role === 1 ? "user" : "company");
-        localStorage.setItem("accessToken", response.data.accessToken);
-        window.location.reload();
     };
 
     return (

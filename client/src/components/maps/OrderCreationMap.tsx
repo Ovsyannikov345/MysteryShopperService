@@ -19,7 +19,7 @@ const OrderCreationMap = ({ onLocationChange }: { onLocationChange: (newLocation
         if (isApiError(response)) {
             notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
         } else {
-            const address = response.data.address;
+            const address = response.address;
 
             onLocationChange(newLocation, address);
         }

@@ -1,13 +1,9 @@
-import { host } from ".";
+import { ApiError, host } from ".";
+import { Genders, Roles } from "./enums";
 
 interface LoginData {
     email: string;
     password: string;
-}
-
-enum Genders {
-    Male = 1,
-    Female = 2,
 }
 
 interface UserRegistrationData {
@@ -38,10 +34,17 @@ interface CompanyRegistrationData {
     companyContactPerson: ContactPersonData;
 }
 
-const login = async (loginData: LoginData) => {
+export interface AuthCredentials {
+    accessToken: string;
+    refreshToken: string;
+    role: Roles;
+}
+
+const login = async (loginData: LoginData): Promise<AuthCredentials | ApiError> => {
     const response = await host.post("/auth/login", loginData);
 
-    return response;
+    console.log(response);
+    return response.data;
 };
 
 const checkEmail = async (email: string) => {

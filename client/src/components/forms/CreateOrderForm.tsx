@@ -4,22 +4,36 @@ import { useFormik } from "formik";
 import validateOrderData from "../../utils/validateOrderData";
 import OrderCreationMap from "../maps/OrderCreationMap";
 import { LatLng } from "leaflet";
-import { OrderToCreate } from "../../api/ordersApi";
+
+export interface OrderCreationData {
+    title: string;
+    description: string;
+    place: string;
+    timeToComplete: number | undefined;
+    price: number | undefined;
+    lat: number | undefined;
+    lng: number | undefined;
+}
 
 const CreateOrderForm = ({ submitHandler }: { submitHandler: Function }) => {
-    const formik = useFormik<OrderToCreate>({
+    const formik = useFormik<OrderCreationData>({
         initialValues: {
             title: "",
             description: "",
             place: "",
-            timeToComplete: null,
-            price: null,
-            lat: null,
-            lng: null,
+            timeToComplete: 0,
+            price: 0,
+            lat: undefined,
+            lng: undefined,
         },
         validate: validateOrderData,
         onSubmit: (values) => {
-            submitHandler(values);
+            let newOrder = { ...values };
+
+            newOrder.timeToComplete = values.timeToComplete === 0 ? undefined : values.timeToComplete;
+            newOrder.price = values.price === 0 ? undefined : values.price;
+
+            submitHandler(newOrder);
         },
     });
 
@@ -86,12 +100,14 @@ const CreateOrderForm = ({ submitHandler }: { submitHandler: Function }) => {
                 <Grid container item columnGap={"20px"} rowGap={"15px"}>
                     <Grid container item width={"200px"}>
                         <TextField
-                            id="completionTime"
-                            name="completionTime"
+                            id="timeToComplete"
+                            name="timeToComplete"
                             variant="outlined"
                             label="Дней на выполнение"
-                            value={formik.values.timeToComplete}
-                            onChange={e => formik.setFieldValue("timeToComplete", `${parseInt(e.target.value) * 24}:00:00`)}
+                            value={formik.values.timeToComplete !== 0 ? formik.values.timeToComplete : ""}
+                            onChange={(e) =>
+                                formik.setFieldValue("timeToComplete", e.target.value ? parseInt(e.target.value) : 0)
+                            }
                             onBlur={formik.handleBlur}
                             error={formik.touched.timeToComplete && formik.errors.timeToComplete !== undefined}
                             helperText={
@@ -108,8 +124,8 @@ const CreateOrderForm = ({ submitHandler }: { submitHandler: Function }) => {
                             fullWidth
                             variant="outlined"
                             label="Стоимость"
-                            value={formik.values.price}
-                            onChange={formik.handleChange}
+                            value={formik.values.price !== 0 ? formik.values.price : ""}
+                            onChange={(e) => formik.setFieldValue("price", e.target.value ? parseInt(e.target.value) : 0)}
                             onBlur={formik.handleBlur}
                             error={formik.touched.price && formik.errors.price !== undefined}
                             helperText={formik.touched.price && formik.errors.price !== undefined ? formik.errors.price : ""}
