@@ -1,11 +1,12 @@
+import { LatLngExpression } from "leaflet";
 import { useState } from "react";
 import { Marker, useMapEvents } from "react-leaflet";
 
-const PlaceableMarker = ({ onMoveCallback }) => {
-    const [position, setPosition] = useState(null);
+const PlaceableMarker = ({ onMoveCallback }: { onMoveCallback: Function }) => {
+    const [position, setPosition] = useState<LatLngExpression>();
 
     useMapEvents({
-        click: (e) => {
+        click: (e: { latlng: LatLngExpression }) => {
             setPosition(e.latlng);
             onMoveCallback?.(e.latlng);
         },

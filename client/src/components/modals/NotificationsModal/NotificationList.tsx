@@ -1,11 +1,23 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { List, ListItem, ListItemIcon, ListItemText, Typography, Button, Grid } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import AirlineStopsIcon from "@mui/icons-material/AirlineStops";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-const NotificationList = ({ notifications }) => {
+interface Notification {
+    id: string;
+    type: string;
+    title: string;
+    description: string;
+    icon: ReactElement | undefined;
+}
+
+interface NotificationListProps {
+    notifications: Notification[];
+}
+
+const NotificationList = ({ notifications }: NotificationListProps) => {
     notifications.forEach((notification) => {
         switch (notification.type) {
             case "newRequest":

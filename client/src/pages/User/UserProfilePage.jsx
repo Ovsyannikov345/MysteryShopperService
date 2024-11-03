@@ -45,6 +45,8 @@ const UserProfilePage = () => {
         const loadData = async () => {
             const response = id !== undefined ? await getUser(id) : await getProfile();
 
+            console.log(response)
+
             if (response.status >= 300) {
                 notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
                 return;

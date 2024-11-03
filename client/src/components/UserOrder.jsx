@@ -1,5 +1,5 @@
 import { Button, Grid, Avatar, Typography, Rating, useMediaQuery } from "@mui/material";
-import React, { useMemo } from "react";
+import React from "react";
 import moment from "moment";
 import addNoun from "../utils/fieldsParser";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ const UserOrder = ({ orderData }) => {
                     <Grid container item xs={12} md={5} gap={"10px"} flexDirection={"column"} wrap="nowrap">
                         <Grid container item width={"100%"} gap={"10px"}>
                             <Avatar
-                                src={`http://localhost:5000/api/companies/${
+                                src={`http://localhost:7201/api/companies/${
                                     orderData.company.id
                                 }/avatar?jwt=${localStorage.getItem("accessToken")}`}
                                 variant="square"

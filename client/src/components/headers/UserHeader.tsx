@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, Stack, Typography, useMediaQuery, SpeedDial, SpeedDialAction } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { useTheme } from "@emotion/react";
+import { Theme, useTheme } from "@mui/material/styles";
 import Logo from "./Logo";
 import HeaderIcons from "./HeaderIcons";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -9,7 +9,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 
 const UserHeader = () => {
-    const isScreenSizeUpMd = useMediaQuery((theme) => theme.breakpoints.up("md"));
+    const isScreenSizeUpMd = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
     const actions = [
         { icon: <AssignmentIcon />, name: "Доступные заказы", link: "/orders" },
@@ -62,10 +62,7 @@ const UserHeader = () => {
                     ))}
                 </SpeedDial>
             )}
-            <Stack
-                direction={"row"}
-                sx={{ marginRight: { xs: "10px", lg: "50px" }, gap: { xs: "20px", lg: "50px" } }}
-            >
+            <Stack direction={"row"} sx={{ marginRight: { xs: "10px", lg: "50px" }, gap: { xs: "20px", lg: "50px" } }}>
                 {isScreenSizeUpMd && (
                     <Typography variant="h1" textAlign={"center"}>
                         <Grid container item height={"100%"} alignItems={"center"}>

@@ -1,5 +1,9 @@
-const validateOrderData = (values) => {
-    const errors = {};
+import { OrderToCreate } from "../api/ordersApi";
+
+const validateOrderData = (values: OrderToCreate) => {
+    console.log(values)
+
+    const errors: any = {};
 
     if (!values.title) {
         errors.title = "Обязательное поле";
@@ -17,11 +21,11 @@ const validateOrderData = (values) => {
         errors.place = "Слишком длинный адрес";
     }
 
-    if (values.completionTime && (isNaN(values.completionTime) || parseInt(values.completionTime) < 0 || parseInt(values.completionTime) > 365)) {
+    if (values.timeToComplete && !/^\d{2}:00:00$/.test(values.timeToComplete)) {
         errors.completionTime = "Некорректное значение";
     }
 
-    if (values.price && (isNaN(values.price) || parseInt(values.price) < 0 || parseInt(values.price) > 9999)) {
+    if (values.price && (isNaN(values.price) || values.price < 0 || values.price > 99999)) {
         errors.price = "Некорректное значение";
     }
 

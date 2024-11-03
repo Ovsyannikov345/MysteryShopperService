@@ -3,17 +3,19 @@ import { Grid, TextField, Typography, Button } from "@mui/material";
 import { useFormik } from "formik";
 import validateOrderData from "../../utils/validateOrderData";
 import OrderCreationMap from "../maps/OrderCreationMap";
+import { LatLng } from "leaflet";
+import { OrderToCreate } from "../../api/ordersApi";
 
-const CreateOrderForm = ({ submitHandler }) => {
-    const formik = useFormik({
+const CreateOrderForm = ({ submitHandler }: { submitHandler: Function }) => {
+    const formik = useFormik<OrderToCreate>({
         initialValues: {
             title: "",
             description: "",
             place: "",
+            timeToComplete: null,
+            price: null,
             lat: null,
             lng: null,
-            completionTime: "",
-            price: "",
         },
         validate: validateOrderData,
         onSubmit: (values) => {
@@ -21,13 +23,12 @@ const CreateOrderForm = ({ submitHandler }) => {
         },
     });
 
-    const setNewLocation = (newLocation, address) => {
+    const setNewLocation = (newLocation: LatLng, address: any) => {
         const addressString = [address.city, address.state, address.road, address.house_number].join(", ");
 
         formik.setFieldValue("place", addressString);
         formik.setFieldValue("lat", newLocation.lat);
         formik.setFieldValue("lng", newLocation.lng);
-        console.log(formik.values.place);
     };
 
     return (
@@ -48,9 +49,7 @@ const CreateOrderForm = ({ submitHandler }) => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     error={formik.touched.title && formik.errors.title !== undefined}
-                    helperText={
-                        formik.touched.title && formik.errors.title !== undefined ? formik.errors.title : ""
-                    }
+                    helperText={formik.touched.title && formik.errors.title !== undefined ? formik.errors.title : ""}
                     required
                 />
                 <TextField
@@ -67,9 +66,7 @@ const CreateOrderForm = ({ submitHandler }) => {
                     onBlur={formik.handleBlur}
                     error={formik.touched.description && formik.errors.description !== undefined}
                     helperText={
-                        formik.touched.description && formik.errors.description !== undefined
-                            ? formik.errors.description
-                            : ""
+                        formik.touched.description && formik.errors.description !== undefined ? formik.errors.description : ""
                     }
                 />
                 <TextField
@@ -82,9 +79,7 @@ const CreateOrderForm = ({ submitHandler }) => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     error={formik.touched.place && formik.errors.place !== undefined}
-                    helperText={
-                        formik.touched.place && formik.errors.place !== undefined ? formik.errors.place : ""
-                    }
+                    helperText={formik.touched.place && formik.errors.place !== undefined ? formik.errors.place : ""}
                     required
                 />
                 <OrderCreationMap onLocationChange={setNewLocation} />
@@ -95,13 +90,13 @@ const CreateOrderForm = ({ submitHandler }) => {
                             name="completionTime"
                             variant="outlined"
                             label="Дней на выполнение"
-                            value={formik.values.completionTime}
-                            onChange={formik.handleChange}
+                            value={formik.values.timeToComplete}
+                            onChange={e => formik.setFieldValue("timeToComplete", `${parseInt(e.target.value) * 24}:00:00`)}
                             onBlur={formik.handleBlur}
-                            error={formik.touched.completionTime && formik.errors.completionTime !== undefined}
+                            error={formik.touched.timeToComplete && formik.errors.timeToComplete !== undefined}
                             helperText={
-                                formik.touched.completionTime && formik.errors.completionTime !== undefined
-                                    ? formik.errors.completionTime
+                                formik.touched.timeToComplete && formik.errors.timeToComplete !== undefined
+                                    ? formik.errors.timeToComplete
                                     : ""
                             }
                         />
@@ -117,11 +112,7 @@ const CreateOrderForm = ({ submitHandler }) => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             error={formik.touched.price && formik.errors.price !== undefined}
-                            helperText={
-                                formik.touched.price && formik.errors.price !== undefined
-                                    ? formik.errors.price
-                                    : ""
-                            }
+                            helperText={formik.touched.price && formik.errors.price !== undefined ? formik.errors.price : ""}
                         />
                     </Grid>
                 </Grid>

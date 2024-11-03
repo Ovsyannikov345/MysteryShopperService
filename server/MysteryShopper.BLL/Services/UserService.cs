@@ -30,9 +30,14 @@ public class UserService(IUserRepository userRepository) : IUserService
         {
             var userProperty = Array.Find(userProperties, p => p.Name == modelProperty.Name);
 
-            if (userProperty != null && userProperty.CanWrite)
+            if (userProperty is not null && userProperty.CanWrite)
             {
                 var value = modelProperty.GetValue(userData);
+
+                if (value is string stringValue && string.IsNullOrWhiteSpace(stringValue))
+                {
+                    userProperty.SetValue(user, null);
+                }
 
                 userProperty.SetValue(user, value);
             }

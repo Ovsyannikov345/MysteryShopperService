@@ -1,5 +1,14 @@
-const validateCompanyData = (values) => {
-    const errors = {};
+interface CompanyEditedData {
+    name: string;
+    contactSurname: string;
+    contactName: string;
+    contactPatronymic: string;
+    contactEmail: string;
+    contactPhone: string;
+}
+
+const validateCompanyData = (values: CompanyEditedData) => {
+    const errors: any = {};
 
     if (!values.name) {
         errors.name = "Обязательное поле";

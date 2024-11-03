@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { Dialog, Typography, Grid, Button, TextField } from "@mui/material";
 import { createRequest } from "../../api/supportRequestApi";
 
-const SupportRequestModal = ({ isOpen, acceptHandler, declineHandler, errorHandler }) => {
+interface SupportRequestModalProps {
+    isOpen: boolean;
+    acceptHandler: Function;
+    declineHandler: Function;
+    errorHandler: Function;
+}
+
+const SupportRequestModal = ({ isOpen, acceptHandler, declineHandler, errorHandler }: SupportRequestModalProps) => {
     const [request, setRequest] = useState({
         text: "",
     });
@@ -17,21 +24,10 @@ const SupportRequestModal = ({ isOpen, acceptHandler, declineHandler, errorHandl
             return;
         }
 
-        const response = await createRequest(request);
-
-        if (!response) {
-            errorHandler("Сервис временно недоступен");
-            return;
-        }
-
-        if (response.status === 401) {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("role");
-            window.location.reload();
-        }
+        const response = await createRequest(request.text);
 
         if (response.status >= 300) {
-            errorHandler("Ошибка при отправке запроса. Код: " + response.status);
+            errorHandler("Сервис временно недоступен");
             return;
         }
 

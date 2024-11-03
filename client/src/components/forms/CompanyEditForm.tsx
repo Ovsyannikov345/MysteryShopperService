@@ -3,23 +3,31 @@ import React from "react";
 import { useFormik } from "formik";
 import InputMask from "react-input-mask";
 import validateCompanyData from "../../utils/validateCompanyData";
+import { Company } from "../../api/companyApi";
 
-const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }) => {
+interface CompanyEditFormProps {
+    companyData: Company;
+    cancelHandler: Function;
+    applyCallback: Function;
+}
+
+const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }: CompanyEditFormProps) => {
     const formik = useFormik({
         initialValues: {
             name: companyData.name,
-            contactSurname: companyData.ContactPerson.surname,
-            contactName: companyData.ContactPerson.name,
-            contactPatronymic: companyData.ContactPerson.patronymic,
-            contactEmail: companyData.ContactPerson.email,
-            contactPhone: companyData.ContactPerson.phone,
+            contactSurname: companyData.contactPerson.surname,
+            contactName: companyData.contactPerson.name,
+            contactPatronymic: companyData.contactPerson.patronymic ?? "",
+            contactEmail: companyData.contactPerson.email,
+            contactPhone: companyData.contactPerson.phone,
         },
         validate: validateCompanyData,
         onSubmit: async (values) => {
             const updatedCompanyData = {
-                id: companyData.id,
+                ...companyData,
                 name: values.name,
-                contactPersonInfo: {
+                contactPerson: {
+                    id: companyData.contactPerson.id,
                     name: values.contactName,
                     surname: values.contactSurname,
                     patronymic: values.contactPatronymic,
@@ -60,9 +68,7 @@ const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }) => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         error={formik.touched.name && formik.errors.name !== undefined}
-                        helperText={
-                            formik.touched.name && formik.errors.name !== undefined ? formik.errors.name : ""
-                        }
+                        helperText={formik.touched.name && formik.errors.name !== undefined ? formik.errors.name : ""}
                         required
                     ></TextField>
                 </Grid>
@@ -118,9 +124,7 @@ const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }) => {
                             value={formik.values.contactPatronymic}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            error={
-                                formik.touched.contactPatronymic && formik.errors.contactPatronymic !== undefined
-                            }
+                            error={formik.touched.contactPatronymic && formik.errors.contactPatronymic !== undefined}
                             helperText={
                                 formik.touched.contactPatronymic && formik.errors.contactPatronymic !== undefined
                                     ? formik.errors.contactPatronymic
@@ -156,7 +160,7 @@ const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }) => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                         >
-                            {() => (
+                            
                                 <TextField
                                     id="contactPhone"
                                     name="contactPhone"
@@ -166,9 +170,7 @@ const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }) => {
                                     value={formik.values.contactPhone}
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    error={
-                                        formik.touched.contactPhone && formik.errors.contactPhone !== undefined
-                                    }
+                                    error={formik.touched.contactPhone && formik.errors.contactPhone !== undefined}
                                     helperText={
                                         formik.touched.contactPhone && formik.errors.contactPhone !== undefined
                                             ? formik.errors.contactPhone
@@ -176,9 +178,9 @@ const CompanyEditForm = ({ companyData, cancelHandler, applyCallback }) => {
                                     }
                                     required
                                 ></TextField>
-                            )}
+                            
                         </InputMask>
-                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid container item columnGap={"15px"}>
                     <Grid container item maxWidth={"136px"}>

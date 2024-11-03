@@ -1,7 +1,7 @@
 import React from "react";
-import { Grid, Stack, Typography, SpeedDial, SpeedDialAction, useMediaQuery } from "@mui/material";
+import { Grid, Stack, Typography, SpeedDial, SpeedDialAction, useMediaQuery, Theme } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { useTheme } from "@emotion/react";
+import { useTheme } from '@mui/material/styles';
 import Logo from "./Logo";
 import HeaderIcons from "./HeaderIcons";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -9,7 +9,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 
 const CompanyHeader = () => {
-    const isScreenSizeUpMd = useMediaQuery((theme) => theme.breakpoints.up("md"));
+    const isScreenSizeUpMd = useMediaQuery((theme: Theme) => theme.breakpoints.up("md"));
 
     const theme = useTheme();
 

@@ -1,13 +1,41 @@
-import { host } from ".";
+import { ApiError, host } from ".";
 
-interface OrderData {
+export interface OrderToCreate {
+    title: string;
+    description: string | null;
+    place: string;
+    timeToComplete: string | null;
+    price: number | null;
+    lat: number | null;
+    lng: number | null;
+}
+
+interface CompanyReview {
+    id: string;
+    text: string;
+    grade: number;
+}
+
+interface Company {
+    id: string;
+    name: string;
+    email: string;
+    createdAt: Date;
+    companyReviews: CompanyReview[];
+}
+
+export interface Order {
+    id: string;
     title: string;
     description: string;
     place: string;
     timeToComplete: string;
     price: number;
+    createdAt: Date;
     lat: number;
     lng: number;
+    isClosed: boolean;
+    company: Company;
 }
 
 const getOrders = async () => {
@@ -28,10 +56,10 @@ const getOrder = async (orderId: string) => {
     return response;
 };
 
-const createOrder = async (orderData: OrderData) => {
+const createOrder = async (orderData: OrderToCreate): Promise<Order | ApiError> => {
     const response = await host.post("/api/Order", orderData);
 
-    return response;
+    return response.data;
 };
 
 const completeUserOrder = async (orderId: string, userId: string) => {

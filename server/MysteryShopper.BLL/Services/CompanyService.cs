@@ -34,9 +34,14 @@ namespace MysteryShopper.BLL.Services
 
                 var companyProperty = Array.Find(companyProperties, p => p.Name == modelProperty.Name);
 
-                if (companyProperty != null && companyProperty.CanWrite)
+                if (companyProperty is not null && companyProperty.CanWrite)
                 {
                     var value = modelProperty.GetValue(companyData);
+
+                    if (value is string stringValue && string.IsNullOrWhiteSpace(stringValue))
+                    {
+                        companyProperty.SetValue(company, null);
+                    }
 
                     companyProperty.SetValue(company, value);
                 }

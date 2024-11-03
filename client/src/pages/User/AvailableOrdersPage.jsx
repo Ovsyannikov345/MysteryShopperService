@@ -49,9 +49,9 @@ const AvailableOrdersPage = () => {
 
         return sortedOrders.filter(
             (order) =>
-                // (order.title.toLowerCase().includes(searchQuery.name.toLowerCase()) ||
-                //     order.company.name.toLowerCase().includes(searchQuery.name.toLowerCase())) &&
-                // order.place.toLowerCase().includes(searchQuery.place.toLowerCase()) &&
+                (order.title.toLowerCase().includes(searchQuery.name.toLowerCase()) ||
+                    order.company.name.toLowerCase().includes(searchQuery.name.toLowerCase())) &&
+                order.place.toLowerCase().includes(searchQuery.place.toLowerCase()) &&
                 (searchQuery.minRating == null || order.companyRating >= searchQuery.minRating) &&
                 (searchQuery.minPrice == null || (order.price ?? 0) >= searchQuery.minPrice) &&
                 (searchQuery.maxPrice == null || (order.price ?? 0) <= searchQuery.maxPrice) &&
@@ -65,8 +65,6 @@ const AvailableOrdersPage = () => {
     useEffect(() => {
         const loadOrders = async () => {
             const response = await getOrders();
-
-            console.log(response);
 
             if (!response.status >= 300) {
                 displayError(response.message);
@@ -84,7 +82,9 @@ const AvailableOrdersPage = () => {
                 );
             };
 
-            let loadedOrders = response.data.map((o) => (o.companyRating = calculateCompanyRating(o.company)));
+            let loadedOrders = response.data.map(order => {
+                return {...order, companyRating: calculateCompanyRating(order.company)};
+            })
 
             setOrders(loadedOrders);
         };
