@@ -14,8 +14,7 @@ namespace MysteryShopper.DAL.DI
         {
             services.AddDbContext(configuration);
 
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>))
-                    .AddScoped<IUserRepository, UserRepository>()
+            services.AddScoped<IUserRepository, UserRepository>()
                     .AddScoped<ICompanyRepository, CompanyRepository>()
                     .AddScoped<IRefreshTokenRepository, RefreshTokenRepository>()
                     .AddScoped<IOrderRepository, OrderRepository>()
@@ -26,7 +25,9 @@ namespace MysteryShopper.DAL.DI
                     .AddScoped<ICompanyReviewRepository, CompanyReviewRepository>()
                     .AddScoped<IUserReviewRepository, UserReviewRepository>()
                     .AddScoped<ISupportRequestRepository, SupportRequestRepository>()
-                    .AddScoped<INotificationRepository, NotificationRepository>();
+                    .AddScoped<INotificationRepository, NotificationRepository>()
+                    .AddScoped<ICategoryRepository, CategoryRepository>()
+                    .AddScoped<IOrderTagRepository, OrderTagRepository>();
         }
 
         private static void AddDbContext(this IServiceCollection services, IConfiguration configuration) =>
