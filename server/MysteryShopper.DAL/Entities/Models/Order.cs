@@ -41,4 +41,6 @@ public partial class Order
     public virtual ICollection<CompanyReview> CompanyReviews { get; set; } = [];
 
     public virtual ICollection<UserReview> UserReviews { get; set; } = [];
+
+    public virtual ICollection<OrderTag> Tags { get; set; } = [];
 }

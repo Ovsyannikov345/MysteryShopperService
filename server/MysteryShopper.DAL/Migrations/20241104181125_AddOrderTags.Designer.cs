@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MysteryShopper.DAL.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MysteryShopper.DAL.Migrations
 {
     [DbContext(typeof(MysteryShopperDbContext))]
-    partial class MysteryShopperDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241104181125_AddOrderTags")]
+    partial class AddOrderTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,6 +278,9 @@ namespace MysteryShopper.DAL.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text");
@@ -282,6 +288,8 @@ namespace MysteryShopper.DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("OrderTag");
                 });
@@ -526,21 +534,6 @@ namespace MysteryShopper.DAL.Migrations
                     b.ToTable("UserReviews");
                 });
 
-            modelBuilder.Entity("OrderOrderTag", b =>
-                {
-                    b.Property<Guid>("OrdersId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("TagsId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("OrdersId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("OrderOrderTag");
-                });
-
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.CompanyReview", b =>
                 {
                     b.HasOne("MysteryShopper.DAL.Entities.Models.Company", "Company")
@@ -631,6 +624,10 @@ namespace MysteryShopper.DAL.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("MysteryShopper.DAL.Entities.Models.Order", null)
+                        .WithMany("Tags")
+                        .HasForeignKey("OrderId");
 
                     b.Navigation("Category");
                 });
@@ -734,21 +731,6 @@ namespace MysteryShopper.DAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OrderOrderTag", b =>
-                {
-                    b.HasOne("MysteryShopper.DAL.Entities.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MysteryShopper.DAL.Entities.Models.OrderTag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Category", b =>
                 {
                     b.Navigation("Tags");
@@ -779,6 +761,8 @@ namespace MysteryShopper.DAL.Migrations
                     b.Navigation("Disputes");
 
                     b.Navigation("Reports");
+
+                    b.Navigation("Tags");
 
                     b.Navigation("UserReviews");
 
