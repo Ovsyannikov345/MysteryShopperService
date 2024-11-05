@@ -23,11 +23,11 @@ public static class Program
         var configuration = builder.Configuration;
 
         services.AddDataAccessDependencies(configuration);
-        services.AddBusinessLogicDependencies();
+        services.AddBusinessLogicDependencies(configuration);
 
         services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
-        services.AddAuthenticationBearer(builder.Configuration);
-        services.AddCorsPolicy(builder.Configuration);
+        services.AddAuthenticationBearer(configuration);
+        services.AddCorsPolicy(configuration);
 
         services.AddAuthorization();
 

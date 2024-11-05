@@ -1,8 +1,11 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MysteryShopper.BLL.Services;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Mapping;
+using MysteryShopper.BLL.Utilities.Mistral.Services;
+using MysteryShopper.BLL.Utilities.Mistral.Services.IServices;
 using MysteryShopper.BLL.Utilities.Validators;
 using System.Reflection;
 
@@ -10,8 +13,19 @@ namespace MysteryShopper.BLL.DI
 {
     public static class ServicesConfiguration
     {
-        public static void AddBusinessLogicDependencies(this IServiceCollection services)
+        public static void AddBusinessLogicDependencies(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpClient("MistralAPIClient")
+            .ConfigureHttpClient(client =>
+            {
+                var apiKey = configuration["MistralAPI:Key"];
+
+                var apiUri = new Uri(configuration["MistralAPI:Uri"]!);
+
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+                client.BaseAddress = apiUri;
+            });
+
             services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
 
             services.AddValidatorsFromAssemblyContaining<UserRegistrationValidator>();
@@ -25,7 +39,8 @@ namespace MysteryShopper.BLL.DI
                     .AddScoped<IReportCorrectionService, ReportCorrectionService>()
                     .AddScoped<IDisputeService, DisputeService>()
                     .AddScoped<IReviewService, ReviewService>()
-                    .AddScoped<INotificationService, NotificationService>();
+                    .AddScoped<INotificationService, NotificationService>()
+                    .AddScoped<IMistralService, MistralService>();
         }
     }
 }

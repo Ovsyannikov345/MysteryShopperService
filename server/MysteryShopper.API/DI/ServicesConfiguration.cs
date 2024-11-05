@@ -7,19 +7,6 @@ namespace MysteryShopper.API.DI;
 
 public static class ServicesConfiguration
 {
-    // TODO use for LLM requests
-
-    //public static void AddHttpClientWithApiKey(this IServiceCollection services, IConfiguration configuration)
-    //{
-    //    services.AddHttpClient("ReviewGuruAPIClient")
-    //        .ConfigureHttpClient(client =>
-    //        {
-    //            var apiKey = configuration["APIKey"];
-
-    //            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
-    //        });
-    //}
-
     public static void AddAuthenticationBearer(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthentication(options =>
@@ -31,7 +18,7 @@ public static class ServicesConfiguration
         {
             options.TokenValidationParameters = new TokenValidationParameters
             {
-                //NameClaimType = ClaimTypes.NameIdentifier,
+                NameClaimType = ClaimTypes.NameIdentifier,
                 ValidateIssuer = true,
                 ValidIssuer = configuration["Jwt:Issuer"],
                 ValidateAudience = true,
