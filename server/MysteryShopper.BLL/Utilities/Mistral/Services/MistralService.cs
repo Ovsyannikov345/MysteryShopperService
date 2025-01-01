@@ -16,8 +16,17 @@ namespace MysteryShopper.BLL.Utilities.Mistral.Services
             IEnumerable<string> existingTags,
             CancellationToken cancellationToken = default)
         {
-            var mistralResponse = await SendRequestAsync(
-                PromptMessageTemplates.CategorizationMessage(orderDescription, category, existingTags), cancellationToken);
+            MistralResponse mistralResponse;
+
+            try
+            {
+                mistralResponse = await SendRequestAsync(
+                    PromptMessageTemplates.CategorizationMessage(orderDescription, category, existingTags), cancellationToken);
+            }
+            catch
+            {
+                throw new InternalServerErrorException("Categorization failed");
+            }
 
             var content = mistralResponse.Choices[0].Message.Content.Trim('`');
 
@@ -36,7 +45,7 @@ namespace MysteryShopper.BLL.Utilities.Mistral.Services
             return tagData;
         }
 
-        public async Task<MistralResponse> SendRequestAsync(string promptText, CancellationToken cancellationToken = default)
+        private async Task<MistralResponse> SendRequestAsync(string promptText, CancellationToken cancellationToken = default)
         {
             var httpMistralClient = httpClientFactory.CreateClient("MistralAPIClient");
 
@@ -59,17 +68,13 @@ namespace MysteryShopper.BLL.Utilities.Mistral.Services
 
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                throw new InternalServerErrorException("Categorization failed");
+                throw new InternalServerErrorException("Mistral request failed");
             }
 
             using var contentStream = await httpResponseMessage.Content.ReadAsStreamAsync(cancellationToken);
 
-            MistralResponse? mistralResponse = await JsonSerializer.DeserializeAsync<MistralResponse>(contentStream, cancellationToken: cancellationToken);
-
-            if (mistralResponse is null)
-            {
-                throw new InternalServerErrorException("Categorization failed");
-            }
+            MistralResponse? mistralResponse = await JsonSerializer.DeserializeAsync<MistralResponse>(contentStream, cancellationToken: cancellationToken)
+                ?? throw new InternalServerErrorException("Mistral request failed");
 
             return mistralResponse;
         }

@@ -74,7 +74,6 @@ const CreateOrderForm = ({ submitHandler }: { submitHandler: Function }) => {
                     label="Описание"
                     multiline
                     minRows={2}
-                    maxRows={7}
                     value={formik.values.description}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}

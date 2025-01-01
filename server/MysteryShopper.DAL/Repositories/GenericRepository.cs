@@ -16,7 +16,7 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
 
     public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default)
     {
-        _context.Set<TEntity>();
+        _context.Set<TEntity>().AsNoTracking();
 
         int count = filter == null ? await _dbSet.CountAsync(cancellationToken) : await _dbSet.CountAsync(filter, cancellationToken);
 

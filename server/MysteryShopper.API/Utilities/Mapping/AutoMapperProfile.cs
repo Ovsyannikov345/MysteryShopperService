@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MysteryShopper.API.Controllers;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.DAL.Entities.Models;
@@ -39,6 +40,10 @@ namespace MysteryShopper.API.Utilities.Mapping
             CreateMap<UserReviewToCreateViewModel, UserReviewModel>();
             CreateMap<CompanyReviewModel, ReviewViewModel>();
             CreateMap<UserReviewModel, ReviewViewModel>();
+
+
+            // TODO remove
+            CreateMap<TagToCreate, OrderTag>();
         }
     }
 }

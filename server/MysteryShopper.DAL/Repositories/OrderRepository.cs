@@ -12,7 +12,7 @@ namespace MysteryShopper.DAL.Repositories
 
         public async Task<IEnumerable<Order>> GetActiveOrdersWithCompanies(CancellationToken cancellationToken = default)
         {
-            return await _context.Orders
+            return await _context.Orders.AsNoTracking()
                 .Include(o => o.Company)
                     .ThenInclude(c => c.CompanyReviews)
                 .Where(o => !o.IsClosed)
@@ -21,7 +21,8 @@ namespace MysteryShopper.DAL.Repositories
 
         public async Task<IEnumerable<UserOrder>> GetUserOrdersAsync(Guid userId, CancellationToken cancellationToken = default)
         {
-            return await _context.UserOrders.Where(x => x.UserId == userId)
+            return await _context.UserOrders.AsNoTracking()
+                .Where(x => x.UserId == userId)
                 .Include(u => u.Order)
                     .ThenInclude(o => o.Company)
                         .ThenInclude(c => c.CompanyReviews)

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MysteryShopper.DAL.Entities.Models.Company">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAECIAAAACIgAAAABDAAAAQAAAAAAAACAAAAAAAAACA=</HashCode>
+      <FileName>Entities\Models\Company.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MysteryShopper.DAL.Entities.Models.CompanyReview">
+    <Position X="0.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAEDAAAAAAIAAAAAACAAAAgAAAAAAAAAAAAADAEAAAA=</HashCode>
+      <FileName>Entities\Models\CompanyReview.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MysteryShopper.DAL.Entities.Models.ContactPerson">
+    <Position X="0.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACACAAACIAAAAAAAAAAAQABAAAAAAAAAAAJAAAAAA=</HashCode>
+      <FileName>Entities\Models\ContactPerson.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MysteryShopper.DAL.Entities.Models.Notification">
+    <Position X="6" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAIAAAAAACAAEAgAAAAAAAAAAAAADAAAAAA=</HashCode>
+      <FileName>Entities\Models\Notification.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MysteryShopper.DAL.Entities.Models.Order">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IQCCACAAASIgAEAAACAABAAAAAAAAEAAAEAABAAAACA=</HashCode>
+      <FileName>Entities\Models\Order.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MysteryShopper.DAL.Entities.Models.RefreshToken">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Entities\Models\RefreshToken.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MysteryShopper.DAL.Entities.Models.Report">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAEDAAAAAAAgAEAAACAAAAgAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Entities\Models\Report.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MysteryShopper.DAL.Entities.Models.SupportRequest">
+    <Position X="7.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAADAAAAAAIAAAAAACAAAAgAAAAAAAAAAAAADAAAAAA=</HashCode>
+      <FileName>Entities\Models\SupportRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MysteryShopper.DAL.Entities.Models.User">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAECAAAAACIgAACIADAABAQgBAAAAAACAAAAIAAAACA=</HashCode>
+      <FileName>Entities\Models\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MysteryShopper.DAL.Entities.Models.UserOrder">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAEDAAAEAAAAAAAAACAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Models\UserOrder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MysteryShopper.DAL.Entities.Models.UserReview">
+    <Position X="2.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAEDAAAAAAIAAAAAACAAAAgAAAAAAAAAAAAADAEAAAA=</HashCode>
+      <FileName>Entities\Models\UserReview.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

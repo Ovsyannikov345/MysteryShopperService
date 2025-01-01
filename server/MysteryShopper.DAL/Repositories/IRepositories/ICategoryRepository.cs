@@ -2,5 +2,8 @@
 
 namespace MysteryShopper.DAL.Repositories.IRepositories
 {
-    public interface ICategoryRepository : IGenericRepository<Category>;
+    public interface ICategoryRepository : IGenericRepository<Category>
+    {
+        Task<IEnumerable<Category>> GetCategoriesWithTags(CancellationToken cancellationToken = default);
+    }
 }

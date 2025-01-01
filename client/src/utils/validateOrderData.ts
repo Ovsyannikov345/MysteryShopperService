@@ -6,17 +6,17 @@ const validateOrderData = (values: OrderCreationData) => {
     if (!values.title) {
         errors.title = "Обязательное поле";
     } else if (values.title.length > 50) {
-        errors.title = "Слишком длинное название";
+        errors.title = "Длина не более 50 символов";
     }
 
-    if (values.description && values.description.length > 255) {
-        errors.description = "Слишком длинное описание";
+    if (values.description && values.description.length > 5000) {
+        errors.description = "Длина не более 5000 символов";
     }
 
     if (!values.place) {
         errors.place = "Обязательное поле";
     } else if (values.place.length > 255) {
-        errors.place = "Слишком длинный адрес";
+        errors.place = "Длина не более 255 символов";
     }
 
     if (
