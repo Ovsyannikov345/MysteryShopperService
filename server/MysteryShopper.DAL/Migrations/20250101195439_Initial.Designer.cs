@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MysteryShopper.DAL.Data;
-using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -13,19 +12,39 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MysteryShopper.DAL.Migrations
 {
     [DbContext(typeof(MysteryShopperDbContext))]
-    [Migration("20241005164921_Initial-Migration")]
-    partial class InitialMigration
+    [Migration("20250101195439_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Company", b =>
                 {
@@ -51,6 +70,9 @@ namespace MysteryShopper.DAL.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
@@ -62,6 +84,12 @@ namespace MysteryShopper.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<short>("Grade")
                         .HasColumnType("smallint");
 
@@ -72,10 +100,15 @@ namespace MysteryShopper.DAL.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("OrderId");
 
@@ -92,6 +125,9 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -117,6 +153,9 @@ namespace MysteryShopper.DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId")
@@ -140,7 +179,10 @@ namespace MysteryShopper.DAL.Migrations
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("ResolvedAt")
+                    b.Property<DateTime?>("ResolvedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
@@ -178,6 +220,9 @@ namespace MysteryShopper.DAL.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
 
@@ -208,13 +253,16 @@ namespace MysteryShopper.DAL.Migrations
                     b.Property<bool>("IsClosed")
                         .HasColumnType("boolean");
 
+                    b.Property<double?>("Lat")
+                        .HasColumnType("double precision");
+
+                    b.Property<double?>("Lng")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("Place")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
-
-                    b.Property<Point>("Point")
-                        .HasColumnType("geometry");
 
                     b.Property<int?>("Price")
                         .HasColumnType("integer");
@@ -227,6 +275,9 @@ namespace MysteryShopper.DAL.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
@@ -234,11 +285,61 @@ namespace MysteryShopper.DAL.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.OrderTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("OrderTags");
+                });
+
+            modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Report", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -254,6 +355,9 @@ namespace MysteryShopper.DAL.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -286,6 +390,9 @@ namespace MysteryShopper.DAL.Migrations
                     b.Property<Guid>("ReportId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
@@ -294,33 +401,6 @@ namespace MysteryShopper.DAL.Migrations
                         .IsUnique();
 
                     b.ToTable("ReportCorrections");
-                });
-
-            modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Request", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<bool>("IsAccepted")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsRejected")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.SupportRequest", b =>
@@ -336,8 +416,12 @@ namespace MysteryShopper.DAL.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Text")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .IsRequired()
+                        .HasMaxLength(600)
+                        .HasColumnType("character varying(600)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uuid");
@@ -357,8 +441,8 @@ namespace MysteryShopper.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<short?>("Age")
-                        .HasColumnType("smallint");
+                    b.Property<DateTime?>("BirthDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("City")
                         .HasMaxLength(100)
@@ -368,8 +452,8 @@ namespace MysteryShopper.DAL.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -389,10 +473,6 @@ namespace MysteryShopper.DAL.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<string>("Patronymic")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -402,6 +482,9 @@ namespace MysteryShopper.DAL.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("WorkingExperience")
                         .HasColumnType("text");
@@ -420,17 +503,14 @@ namespace MysteryShopper.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsCompleted")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsExpired")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsForceClosed")
-                        .HasColumnType("boolean");
-
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -453,6 +533,9 @@ namespace MysteryShopper.DAL.Migrations
                     b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<short>("Grade")
                         .HasColumnType("smallint");
 
@@ -462,6 +545,9 @@ namespace MysteryShopper.DAL.Migrations
                     b.Property<string>("Text")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -477,8 +563,29 @@ namespace MysteryShopper.DAL.Migrations
                     b.ToTable("UserReviews");
                 });
 
+            modelBuilder.Entity("OrderOrderTag", b =>
+                {
+                    b.Property<Guid>("OrdersId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("OrdersId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("OrderOrderTag");
+                });
+
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.CompanyReview", b =>
                 {
+                    b.HasOne("MysteryShopper.DAL.Entities.Models.Company", "Company")
+                        .WithMany("CompanyReviews")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MysteryShopper.DAL.Entities.Models.Order", "Order")
                         .WithMany("CompanyReviews")
                         .HasForeignKey("OrderId")
@@ -490,6 +597,8 @@ namespace MysteryShopper.DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Company");
 
                     b.Navigation("Order");
 
@@ -552,6 +661,17 @@ namespace MysteryShopper.DAL.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.OrderTag", b =>
+                {
+                    b.HasOne("MysteryShopper.DAL.Entities.Models.Category", "Category")
+                        .WithMany("Tags")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Report", b =>
                 {
                     b.HasOne("MysteryShopper.DAL.Entities.Models.Order", "Order")
@@ -588,25 +708,6 @@ namespace MysteryShopper.DAL.Migrations
                     b.Navigation("Company");
 
                     b.Navigation("Report");
-                });
-
-            modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Request", b =>
-                {
-                    b.HasOne("MysteryShopper.DAL.Entities.Models.Order", "Order")
-                        .WithMany("Requests")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MysteryShopper.DAL.Entities.Models.User", "User")
-                        .WithMany("Requests")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.SupportRequest", b =>
@@ -670,8 +771,30 @@ namespace MysteryShopper.DAL.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("OrderOrderTag", b =>
+                {
+                    b.HasOne("MysteryShopper.DAL.Entities.Models.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrdersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MysteryShopper.DAL.Entities.Models.OrderTag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Category", b =>
+                {
+                    b.Navigation("Tags");
+                });
+
             modelBuilder.Entity("MysteryShopper.DAL.Entities.Models.Company", b =>
                 {
+                    b.Navigation("CompanyReviews");
+
                     b.Navigation("ContactPerson")
                         .IsRequired();
 
@@ -694,8 +817,6 @@ namespace MysteryShopper.DAL.Migrations
 
                     b.Navigation("Reports");
 
-                    b.Navigation("Requests");
-
                     b.Navigation("UserReviews");
 
                     b.Navigation("Users");
@@ -717,8 +838,6 @@ namespace MysteryShopper.DAL.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Reports");
-
-                    b.Navigation("Requests");
 
                     b.Navigation("SupportRequests");
 

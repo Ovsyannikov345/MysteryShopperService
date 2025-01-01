@@ -2,14 +2,10 @@
 
 namespace MysteryShopper.DAL.Entities.Models
 {
-    public partial class ReportCorrection
+    public partial class ReportCorrection : EntityBase
     {
-        public Guid Id { get; set; }
-
         [Column(TypeName = "text")]
         public string Description { get; set; } = string.Empty;
-
-        public DateTime CreatedAt { get; set; }
 
         public Guid CompanyId { get; set; }
 

@@ -2,16 +2,12 @@
 
 namespace MysteryShopper.DAL.Entities.Models
 {
-    public partial class Notification
+    public partial class Notification : EntityBase
     {
-        public Guid Id { get; set; }
-
         [MaxLength(255)]
         public string Text { get; set; } = string.Empty;
 
         public bool IsRead { get; set; }
-
-        public DateTime CreatedAt { get; set; }
 
         public Guid? UserId { get; set; }
 

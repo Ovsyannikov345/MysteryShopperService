@@ -2,17 +2,13 @@
 
 namespace MysteryShopper.DAL.Entities.Models
 {
-    public partial class Dispute
+    public partial class Dispute : EntityBase
     {
-        public Guid Id { get; set; }
-
         [Column(TypeName = "text")]
         public string? CompanyText { get; set; }
 
         [Column(TypeName = "text")]
         public string? UserText { get; set; }
-
-        public DateTime CreatedAt { get; set; }
 
         public DateTime? ResolvedAt { get; set; }
 

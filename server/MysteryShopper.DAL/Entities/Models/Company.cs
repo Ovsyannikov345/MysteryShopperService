@@ -2,10 +2,8 @@
 
 namespace MysteryShopper.DAL.Entities.Models;
 
-public partial class Company
+public partial class Company : EntityBase
 {
-    public Guid Id { get; set; }
-
     [MaxLength(255)]
     public string Name { get; set; } = string.Empty;
 
@@ -14,8 +12,6 @@ public partial class Company
 
     [MaxLength(255)]
     public string Password { get; set; } = string.Empty;
-
-    public DateTime? CreatedAt { get; set; }
 
     public virtual ContactPerson ContactPerson { get; set; } = null!;
 

@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MysteryShopper.DAL.Entities.Models;
 
-public partial class User
+public partial class User : EntityBase
 {
-    public Guid Id { get; set; }
-
     [MaxLength(50)]
     public string Name { get; set; } = string.Empty;
 
@@ -33,8 +31,6 @@ public partial class User
 
     [MaxLength(255)]
     public string Password { get; set; } = string.Empty;
-
-    public DateTime CreatedAt { get; set; }
 
     public virtual ICollection<UserOrder> Orders { get; set; } = [];
 

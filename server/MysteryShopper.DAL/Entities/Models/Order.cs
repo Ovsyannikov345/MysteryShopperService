@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MysteryShopper.DAL.Entities.Models;
 
-public partial class Order
+public partial class Order : EntityBase
 {
-    public Guid Id { get; set; }
-
     [MaxLength(100)]
     public string Title { get; set; } = string.Empty;
 
@@ -19,8 +17,6 @@ public partial class Order
     public TimeSpan? TimeToComplete { get; set; }
 
     public int? Price { get; set; }
-
-    public DateTime CreatedAt { get; set; }
 
     public double? Lat { get; set; }
 

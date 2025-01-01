@@ -1,9 +1,7 @@
 ﻿namespace MysteryShopper.DAL.Entities.Models
 {
-    public partial class OrderTag
+    public partial class OrderTag : EntityBase
     {
-        public Guid Id { get; set; }
-
         public required string Text { get; set; }
 
         public Guid CategoryId { get; set; }

@@ -2,14 +2,10 @@
 
 namespace MysteryShopper.DAL.Entities.Models;
 
-public partial class SupportRequest
+public partial class SupportRequest : EntityBase
 {
-    public Guid Id { get; set; }
-
     [MaxLength(600)]
     public required string Text { get; set; }
-
-    public DateTime CreatedAt { get; set; }
 
     public Guid? UserId { get; set; }
 

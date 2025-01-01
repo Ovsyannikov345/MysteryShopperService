@@ -2,10 +2,8 @@
 
 namespace MysteryShopper.DAL.Entities.Models;
 
-public partial class ContactPerson
+public partial class ContactPerson : EntityBase
 {
-    public Guid Id { get; set; }
-
     [MaxLength(50)]
     public string Name { get; set; } = string.Empty;
 

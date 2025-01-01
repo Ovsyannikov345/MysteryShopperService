@@ -7,13 +7,7 @@ namespace MysteryShopper.DAL.Data
     {
         public MysteryShopperDbContext() { }
 
-        public MysteryShopperDbContext(DbContextOptions<MysteryShopperDbContext> options) : base(options)
-        {
-            if (Database.IsRelational())
-            {
-                Database.Migrate();
-            }
-        }
+        public MysteryShopperDbContext(DbContextOptions<MysteryShopperDbContext> options) : base(options) { }
 
         public virtual DbSet<Company> Companies { get; set; }
 
@@ -41,51 +35,44 @@ namespace MysteryShopper.DAL.Data
 
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public virtual DbSet<Category> Categories { get; set; }
+
+        public virtual DbSet<OrderTag> OrderTags { get; set; }
+
+        public override int SaveChanges()
         {
-            modelBuilder.Entity<Company>()
-                .Property(c => c.CreatedAt)
-                    .HasDefaultValueSql("now()");
+            AddTimestamps();
 
-            modelBuilder.Entity<CompanyReview>()
-                .Property(o => o.CreatedAt)
-                    .HasDefaultValueSql("now()");
+            return base.SaveChanges();
+        }
 
-            modelBuilder.Entity<Dispute>()
-                .Property(d => d.CreatedAt)
-                .HasDefaultValueSql("now()");
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            AddTimestamps();
 
-            modelBuilder.Entity<Notification>()
-                .Property(n => n.CreatedAt)
-                .HasDefaultValueSql("now()");
+            return await base.SaveChangesAsync(cancellationToken);
+        }
 
-            modelBuilder.Entity<Order>()
-                .Property(o => o.CreatedAt)
-                .HasDefaultValueSql("now()");
+        private void AddTimestamps()
+        {
+            var entities = ChangeTracker.Entries()
+                .Where(x => x.Entity is EntityBase && (x.State == EntityState.Added || x.State == EntityState.Modified));
 
-            modelBuilder.Entity<Report>()
-                .Property(r => r.CreatedAt)
-                .HasDefaultValueSql("now()");
+            foreach (var entity in entities)
+            {
+                var now = DateTime.UtcNow;
 
-            modelBuilder.Entity<ReportCorrection>()
-                .Property(r => r.CreatedAt)
-                .HasDefaultValueSql("now()");
+                if (entity.State == EntityState.Added)
+                {
+                    ((EntityBase)entity.Entity).CreatedAt = now;
+                }
+                else
+                {
+                    entity.Property(nameof(EntityBase.CreatedAt)).IsModified = false;
+                }
 
-            modelBuilder.Entity<SupportRequest>()
-                .Property(s => s.CreatedAt)
-                .HasDefaultValueSql("now()");
-
-            modelBuilder.Entity<User>()
-                .Property(u => u.CreatedAt)
-                .HasDefaultValueSql("now()");
-
-            modelBuilder.Entity<UserOrder>()
-                .Property(u => u.CreatedAt)
-                .HasDefaultValueSql("now()");
-
-            modelBuilder.Entity<UserReview>()
-                .Property(u => u.CreatedAt)
-                .HasDefaultValueSql("now()");
+                ((EntityBase)entity.Entity).UpdatedAt = now;
+            }
         }
     }
 }

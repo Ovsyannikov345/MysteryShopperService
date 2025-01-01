@@ -47,7 +47,7 @@ namespace MysteryShopper.DAL.DI
                     SslMode = SslMode.Disable,
                 }.ToString();
 
-                options.UseNpgsql(connectionString, x => x.UseNetTopologySuite());
+                options.UseNpgsql(connectionString);
             });
     }
 }

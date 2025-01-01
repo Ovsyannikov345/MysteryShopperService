@@ -2,16 +2,12 @@
 
 namespace MysteryShopper.DAL.Entities.Models;
 
-public partial class CompanyReview
+public partial class CompanyReview : EntityBase
 {
-    public Guid Id { get; set; }
-
     [MaxLength(255)]
     public string? Text { get; set; }
 
     public short Grade { get; set; }
-
-    public DateTime CreatedAt { get; set; }
 
     public Guid UserId { get; set; }
 
