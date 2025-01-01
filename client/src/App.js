@@ -16,32 +16,12 @@ const App = () => {
                 main: "#000000",
             },
         },
-        typography: {
-            h1: {
-                fontSize: "36px",
-            },
-            h2: {
-                fontSize: "24px",
-            },
-            h3: {
-                fontSize: "16px",
-            },
-        },
-        breakpoints: {
-            values: {
-                xs: 0,
-                sm: 320,
-                md: 768,
-                lg: 1200,
-                xl: 1536,
-            },
-        },
     });
 
     return (
         <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="en-gb">
             <ThemeProvider theme={theme}>
-                <NotificationsProvider >
+                <NotificationsProvider>
                     <BrowserRouter>
                         <AppRouter />
                     </BrowserRouter>
