@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, Stack, Typography, useMediaQuery, SpeedDial, SpeedDialAction } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { Theme, useTheme } from "@mui/material/styles";
-import Logo from "./Logo";
+import logo from "../../images/logo-cropped2.png";
 import HeaderIcons from "./HeaderIcons";
 import MenuIcon from "@mui/icons-material/Menu";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -34,7 +34,7 @@ const UserHeader = () => {
         >
             {isScreenSizeUpMd ? (
                 <Stack direction={"row"} flexShrink={1} sx={{ gap: { xs: "30px", lg: "93px" } }}>
-                    <Logo />
+                    <img src={logo} alt="logo" height={"100px"}/>
                     <Typography variant="h1" textAlign={"center"}>
                         <Grid container item height={"100%"} alignItems={"center"}>
                             <Link to={"/orders"} style={{ textDecoration: "none", color: "#000000" }}>

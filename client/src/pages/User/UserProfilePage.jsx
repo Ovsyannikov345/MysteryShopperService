@@ -87,7 +87,7 @@ const UserProfilePage = () => {
         if (imageSuccess) {
             setUserData(response.data);
             setEditMode(false);
-            window.location.reload();
+            
         }
     };
 

@@ -41,7 +41,7 @@ const OrdersInProgressPage = () => {
             if (response.status === 401) {
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("role");
-                window.location.reload();
+                
             }
 
             if (response.status >= 300) {

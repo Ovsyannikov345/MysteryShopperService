@@ -102,7 +102,7 @@ const CompanyProfilePage = () => {
         await sendImage();
 
         setEditMode(false);
-        window.location.reload();
+        
     };
 
     const sendImage = async () => {

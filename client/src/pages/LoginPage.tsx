@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { Container, Grid2, TextField, Typography, Button, CircularProgress } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useNotifications } from "@toolpad/core/useNotifications";
-import { login } from "../api/authApi";
-import isApiError from "../utils/isApiError";
-import { Roles } from "../api/enums";
 import backgroundImage from "../images/background.jpg";
 import logo from "../images/logo-cropped.png";
+import useAuthApi from "../hooks/useAuthApi";
 
 const LoginPage = () => {
     const notifications = useNotifications();
@@ -15,6 +13,8 @@ const LoginPage = () => {
     const theme = useTheme();
 
     const navigate = useNavigate();
+
+    const { login } = useAuthApi();
 
     const [loading, setLoading] = useState(false);
 
@@ -26,16 +26,12 @@ const LoginPage = () => {
     const submit = async () => {
         setLoading(true);
 
-        let response = await login(loginData);
+        let response = await login(loginData.email, loginData.password);
 
-        setLoading(false);
-
-        if (isApiError(response)) {
+        if (response) {
             notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
-        } else {
-            localStorage.setItem("role", response.role === Roles.User ? "user" : "company");
-            localStorage.setItem("accessToken", response.accessToken);
-            window.location.reload();
+            setLoading(false);
+            return;
         }
     };
 

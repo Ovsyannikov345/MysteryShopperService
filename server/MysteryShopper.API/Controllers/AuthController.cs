@@ -22,7 +22,7 @@ namespace MysteryShopper.API.Controllers
             return credentials;
         }
 
-        [HttpPost("register")]
+        [HttpPost("check-email")]
         [AllowAnonymous]
         public async Task<EmailAvailabilityViewModel> CheckEmailAvailability([FromBody] string email, CancellationToken cancellationToken = default)
         {

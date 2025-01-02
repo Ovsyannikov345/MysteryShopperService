@@ -1,8 +1,8 @@
 import React from "react";
 import { Grid, Stack, Typography, SpeedDial, SpeedDialAction, useMediaQuery, Theme } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import { useTheme } from '@mui/material/styles';
-import Logo from "./Logo";
+import { useTheme } from "@mui/material/styles";
+import logo from "../../images/logo-cropped.png";
 import HeaderIcons from "./HeaderIcons";
 import MenuIcon from "@mui/icons-material/Menu";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -31,7 +31,7 @@ const CompanyHeader = () => {
         >
             {isScreenSizeUpMd ? (
                 <Stack direction={"row"} sx={{ gap: { xs: "30px", lg: "93px" } }}>
-                    <Logo />
+                    <img src={logo} alt="logo" height={"100px"} />
                     <Typography variant="h1" textAlign={"center"}>
                         <Grid container item height={"100%"} alignItems={"center"}>
                             <Link to={"/orders/create"} style={{ textDecoration: "none", color: "#000000" }}>
@@ -59,10 +59,7 @@ const CompanyHeader = () => {
                     ))}
                 </SpeedDial>
             )}
-            <Stack
-                direction={"row"}
-                sx={{ marginRight: { xs: "10px", lg: "50px" }, gap: { xs: "20px", lg: "50px" } }}
-            >
+            <Stack direction={"row"} sx={{ marginRight: { xs: "10px", lg: "50px" }, gap: { xs: "20px", lg: "50px" } }}>
                 {isScreenSizeUpMd && (
                     <Typography variant="h1" textAlign={"center"}>
                         <Grid container item height={"100%"} alignItems={"center"}>

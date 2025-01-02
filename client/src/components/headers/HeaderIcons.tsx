@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import SupportRequestModal from "../modals/SupportRequestModal";
 import NotificationList from "../modals/NotificationsModal/NotificationList";
 import { useNotifications } from "@toolpad/core/useNotifications";
+import useAuthApi from "../../hooks/useAuthApi";
 
 const HeaderIcons = () => {
     const [requestModalOpen, setRequestModalOpen] = useState(false);
@@ -15,6 +16,8 @@ const HeaderIcons = () => {
     const [notificationAnchorEl, setNotificationAnchorEl] = useState<Element | null>(null);
 
     const navigate = useNavigate();
+
+    const { logout } = useAuthApi();
 
     const notifications = useNotifications();
 
@@ -24,6 +27,10 @@ const HeaderIcons = () => {
 
     const handleMenuClose = () => {
         setNotificationAnchorEl(null);
+    };
+
+    const handleLogout = async () => {
+        await logout();
     };
 
     const displayError = (message: string) => {
@@ -55,14 +62,7 @@ const HeaderIcons = () => {
                 <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setRequestModalOpen(true)}>
                     <SupportIcon sx={{ fontSize: { xs: 30, md: 40, lg: 60 } }} />
                 </IconButton>
-                <IconButton
-                    onClick={(e) => {
-                        localStorage.removeItem("accessToken");
-                        localStorage.removeItem("role");
-                        window.location.reload();
-                    }}
-                    style={{ padding: 0, color: "#000000" }}
-                >
+                <IconButton onClick={handleLogout} style={{ padding: 0, color: "#000000" }}>
                     <LogoutIcon sx={{ fontSize: { xs: 30, md: 40, lg: 60 } }} />
                 </IconButton>
             </Stack>

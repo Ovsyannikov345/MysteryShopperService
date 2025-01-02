@@ -10,12 +10,10 @@ const AppRouter = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const handleStorageChange = () => {
+        window.addEventListener("auth", () => {
             setJwt(localStorage.getItem("accessToken"));
             navigate("/");
-        };
-
-        window.addEventListener("storage", handleStorageChange);
+        });
     }, [navigate]);
 
     if (jwt && localStorage.getItem("role") === "user") {

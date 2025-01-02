@@ -22,8 +22,9 @@ import backgroundImage from "../images/background.jpg";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "@toolpad/core";
 import { Apartment, ArrowBack, Person } from "@mui/icons-material";
-import { checkEmail } from "../api/authApi";
 import getRegistrationValidationSchema from "./../utils/getRegistrationValidationSchema";
+import useAuthApi, { CompanyRegistrationData, UserRegistrationData } from "../hooks/useAuthApi";
+import { Genders } from "../utils/enums/genders";
 
 const RegistrationPage = () => {
     const theme = useTheme();
@@ -31,6 +32,8 @@ const RegistrationPage = () => {
     const navigate = useNavigate();
 
     const notifications = useNotifications();
+
+    const { checkEmailAvailability, registerUser, registerCompany } = useAuthApi();
 
     const [loading, setLoading] = useState(false);
 
@@ -47,11 +50,10 @@ const RegistrationPage = () => {
         name: "",
         surname: "",
         birthDate: "",
-        gender: "Male",
+        gender: Genders.Male,
         workingExperience: "",
         city: "",
         phone: "",
-        description: "",
         companyName: "",
         contactPersonName: "",
         contactPersonSurname: "",
@@ -63,11 +65,16 @@ const RegistrationPage = () => {
     const handleFirstStep = async (values: typeof initialValues, setErrors: Function) => {
         setLoading(true);
 
-        let response = await checkEmail(values!.email);
+        const response = await checkEmailAvailability(values.email);
 
         setLoading(false);
 
-        if (!response.data.available) {
+        if ("error" in response) {
+            notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
+            return;
+        }
+
+        if (!response.available) {
             setErrors({
                 email: "Email is taken",
             });
@@ -83,8 +90,56 @@ const RegistrationPage = () => {
         setActiveStep((prevStep) => prevStep + 1);
     };
 
-    const handleThirdStep = (values: typeof initialValues) => {
-        console.log(values);
+    const handleThirdStep = async (values: typeof initialValues) => {
+        if (userType === "user") {
+            setLoading(true);
+
+            let user: UserRegistrationData = {
+                name: values.name.trim(),
+                surname: values.surname.trim(),
+                birthDate: values.birthDate.trim() ? new Date(values.birthDate) : null,
+                gender: values.gender,
+                workingExperience: values.workingExperience.trim() ? values.workingExperience.trim() : null,
+                city: values.city.trim() ? values.city.trim() : null,
+                phone: values.phone,
+                description: null,
+                email: values.email.trim(),
+                password: values.password,
+            };
+
+            const response = await registerUser(user);
+
+            setLoading(false);
+
+            if (response) {
+                notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
+                return;
+            }
+        } else if (userType === "company") {
+            setLoading(true);
+
+            let company: CompanyRegistrationData = {
+                name: values.companyName.trim(),
+                email: values.email.trim(),
+                password: values.password,
+                companyContactPerson: {
+                    name: values.contactPersonName.trim(),
+                    surname: values.contactPersonSurname.trim(),
+                    patronymic: values.contactPersonPatronymic.trim() ? values.contactPersonPatronymic.trim() : null,
+                    email: values.contactPersonEmail.trim(),
+                    phone: values.contactPersonPhone,
+                },
+            };
+
+            const response = await registerCompany(company);
+
+            setLoading(false);
+
+            if (response) {
+                notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
+                return;
+            }
+        }
     };
 
     const handleBack = () => {
@@ -138,7 +193,7 @@ const RegistrationPage = () => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={getRegistrationValidationSchema(userType)}
-                        onSubmit={(values, { setErrors }) => {
+                        onSubmit={(values, { setErrors, setTouched }) => {
                             console.log(values);
 
                             if (activeStep === 0) {
@@ -147,6 +202,8 @@ const RegistrationPage = () => {
                                 console.log(123123);
                                 handleThirdStep(values);
                             }
+
+                            setTouched({}, true);
                         }}
                     >
                         {({ values, handleChange, handleBlur, touched, errors, setFieldValue }) => (
@@ -268,7 +325,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Patronymic"
+                                                    label="Patronymic (Optional)"
                                                     fullWidth
                                                     name="contactPersonPatronymic"
                                                     value={values.contactPersonPatronymic}
@@ -281,17 +338,28 @@ const RegistrationPage = () => {
                                                 />
                                             </Grid>
                                             <Grid size={{ xs: 12 }}>
-                                                <Field
-                                                    as={TextField}
-                                                    label="Phone"
-                                                    fullWidth
-                                                    name="contactPersonPhone"
+                                                <InputMask
+                                                    mask="+375(99)999-99-99"
                                                     value={values.contactPersonPhone}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                    helperText={<ErrorMessage name="contactPersonPhone" />}
-                                                    error={touched.contactPersonPhone && Boolean(errors.contactPersonPhone)}
-                                                />
+                                                >
+                                                    {
+                                                        <Field
+                                                            as={TextField}
+                                                            label="Phone"
+                                                            fullWidth
+                                                            name="contactPersonPhone"
+                                                            value={values.contactPersonPhone}
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            helperText={<ErrorMessage name="contactPersonPhone" />}
+                                                            error={
+                                                                touched.contactPersonPhone && Boolean(errors.contactPersonPhone)
+                                                            }
+                                                        />
+                                                    }
+                                                </InputMask>
                                             </Grid>
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
@@ -363,8 +431,12 @@ const RegistrationPage = () => {
                                                         value={values.gender}
                                                         onChange={(e) => setFieldValue("gender", e.target.value)}
                                                     >
-                                                        <FormControlLabel value="Male" control={<Radio />} label="Male" />
-                                                        <FormControlLabel value="Female" control={<Radio />} label="Female" />
+                                                        <FormControlLabel value={Genders.Male} control={<Radio />} label="Male" />
+                                                        <FormControlLabel
+                                                            value={Genders.Female}
+                                                            control={<Radio />}
+                                                            label="Female"
+                                                        />
                                                     </RadioGroup>
                                                 </FormControl>
                                             </Grid>

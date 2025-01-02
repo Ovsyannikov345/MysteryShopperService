@@ -1,5 +1,5 @@
 import { ApiError, host } from ".";
-import { Genders } from "./enums";
+import { Genders } from "../utils/enums/genders";
 
 interface ContactPerson {
     id: string;
