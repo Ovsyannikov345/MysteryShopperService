@@ -48,7 +48,11 @@ const login = async (loginData: LoginData): Promise<AuthCredentials | ApiError> 
 };
 
 const checkEmail = async (email: string) => {
-    const response = await host.post("/auth/register", email);
+    const response = await host.post("/auth/register", JSON.stringify(email), {
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
 
     return response;
 };
