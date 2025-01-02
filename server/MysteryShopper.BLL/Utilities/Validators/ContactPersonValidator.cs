@@ -24,8 +24,7 @@ namespace MysteryShopper.BLL.Utilities.Validators
 
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("Contact person email should not be empty")
-                .Matches("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
-                    .WithMessage("Contact person email has invalid format");
+                .EmailAddress().WithMessage("Contact person email has invalid format");
         }
     }
 }

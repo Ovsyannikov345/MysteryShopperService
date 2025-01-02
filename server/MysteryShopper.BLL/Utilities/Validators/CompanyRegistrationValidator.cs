@@ -14,8 +14,7 @@ namespace MysteryShopper.BLL.Utilities.Validators
 
             RuleFor(c => c.Email)
                 .NotEmpty().WithMessage("Company email should not be empty")
-                .Matches("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
-                    .WithMessage("Company email has invalid format");
+                .EmailAddress().WithMessage("Company email has invalid format");
 
             RuleFor(c => c.Password)
                 .NotEmpty().WithMessage("Password should not be empty")

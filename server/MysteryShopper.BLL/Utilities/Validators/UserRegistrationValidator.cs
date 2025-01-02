@@ -31,7 +31,7 @@ namespace MysteryShopper.BLL.Utilities.Validators
 
             RuleFor(u => u.Phone)
                 .NotEmpty().WithMessage("Phone should not be empty")
-                .Matches("^\\+?[1-9][0-9]{7,14}$").WithMessage("Invalid phone format");
+                .Matches(@"^\+?375\([1-9]{2}\)[0-9\-]{7,14}$").WithMessage("Invalid phone format");
 
             RuleFor(u => u.Description)
                 .MaximumLength(255).WithMessage("Description should be from 3 to 255 symbols")
@@ -40,8 +40,7 @@ namespace MysteryShopper.BLL.Utilities.Validators
 
             RuleFor(u => u.Email)
                 .NotEmpty().WithMessage("Email should not be empty")
-                .Matches("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
-                    .WithMessage("Email has invalid format");
+                .EmailAddress().WithMessage("Email has invalid format");
 
             RuleFor(u => u.Password)
                 .NotEmpty().WithMessage("Password should not be empty")
