@@ -4,34 +4,39 @@ import { publicRoutes } from "./publicRoutes";
 import { userRoutes } from "./userRoutes";
 import { companyRoutes } from "./companyRoutes";
 import { COMPANY_PROFILE_ROUTE, LOGIN_ROUTE, USER_PROFILE_ROUTE } from "../utils/consts";
+import { Roles } from "../utils/enums/roles";
 
 const AppRouter = () => {
     const [jwt, setJwt] = useState(localStorage.getItem("accessToken"));
+
+    const [role, setRole] = useState(Number(localStorage.getItem("role")) as Roles);
+
     const navigate = useNavigate();
 
     useEffect(() => {
         window.addEventListener("auth", () => {
             setJwt(localStorage.getItem("accessToken"));
+            setRole(Number(localStorage.getItem("role")) as Roles);
             navigate("/");
         });
     }, [navigate]);
 
-    if (jwt && localStorage.getItem("role") === "user") {
+    if (jwt && role === Roles.User) {
         return (
             <Routes>
                 {userRoutes.map(({ path, Component }) => (
-                    <Route key={path} path={path} element={<Component />} exact />
+                    <Route key={path} path={path} element={<Component />} />
                 ))}
                 <Route key="*" path="*" element={<Navigate to={USER_PROFILE_ROUTE} />} />
             </Routes>
         );
     }
 
-    if (jwt && localStorage.getItem("role") === "company") {
+    if (jwt && role === Roles.Company) {
         return (
             <Routes>
                 {companyRoutes.map(({ path, Component }) => (
-                    <Route key={path} path={path} element={<Component />} exact />
+                    <Route key={path} path={path} element={<Component />} />
                 ))}
                 <Route key="*" path="*" element={<Navigate to={COMPANY_PROFILE_ROUTE} />} />
             </Routes>
@@ -42,7 +47,7 @@ const AppRouter = () => {
         return (
             <Routes>
                 {publicRoutes.map(({ path, Component }) => (
-                    <Route key={path} path={path} element={<Component />} exact />
+                    <Route key={path} path={path} element={<Component />} />
                 ))}
                 <Route key="*" path="*" element={<Navigate to={LOGIN_ROUTE} />} />
             </Routes>

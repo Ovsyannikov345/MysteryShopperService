@@ -1,4 +1,3 @@
-import CompanyProfilePage from "../pages/Company/CompanyProfilePage";
 import AvailableOrdersPage from "../pages/User/AvailableOrdersPage";
 import OrdersInProgressPage from "../pages/User/OrdersInProgressPage";
 import UserOrderDetails from "../pages/User/UserOrderDetails";
@@ -17,10 +16,10 @@ export const userRoutes = [
         path: "/my-orders",
         Component: OrdersInProgressPage,
     },
-    {
-        path: "/company/:id",
-        Component: CompanyProfilePage,
-    },
+    // {
+    //     path: "/company/:id",
+    //     Component: CompanyProfilePage,
+    // },
     {
         path: "/user/:id",
         Component: UserProfilePage,
