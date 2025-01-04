@@ -1,7 +1,7 @@
-import axios from "axios";
 import { Roles } from "../utils/enums/roles";
 import { Genders } from "../utils/enums/genders";
 import { ApiResponse } from "./responses";
+import AxiosFactory from "./axiosFactory";
 
 export interface EmailAvailability {
     available: Boolean;
@@ -42,18 +42,12 @@ interface AuthData {
 }
 
 const useAuthApi = () => {
-    const createAxiosInstance = async () => {
-        const instance = axios.create({
-            baseURL: process.env.REACT_APP_API_URL,
-        });
-
-        return instance;
-    };
+    const baseURL = process.env.REACT_APP_AUTH_API_URL!;
 
     const saveAuthData = (data: AuthData) => {
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
-        localStorage.setItem("role", data.role === Roles.User ? "user" : "company");
+        localStorage.setItem("role", data.role.toString());
         window.dispatchEvent(new Event("auth"));
     };
 
@@ -65,10 +59,10 @@ const useAuthApi = () => {
     };
 
     const login = async (email: string, password: string): Promise<ApiResponse<null>> => {
-        const client = await createAxiosInstance();
+        const client = await AxiosFactory.createAxiosInstance(baseURL, false);
 
         try {
-            const response = await client.post("auth/login", { email, password });
+            const response = await client.post("login", { email, password });
 
             saveAuthData(response.data);
 
@@ -84,13 +78,13 @@ const useAuthApi = () => {
     };
 
     const logout = async (): Promise<ApiResponse<null>> => {
-        const client = await createAxiosInstance();
+        const client = await AxiosFactory.createAxiosInstance(baseURL, false);
 
         try {
             const refreshToken = localStorage.getItem("refreshToken");
 
             if (refreshToken) {
-                await client.post("auth/logout", null, { params: { refreshToken: refreshToken } });
+                await client.post("logout", null, { params: { refreshToken: refreshToken } });
             }
         } catch (error: any) {
         } finally {
@@ -100,10 +94,10 @@ const useAuthApi = () => {
     };
 
     const checkEmailAvailability = async (email: string): Promise<ApiResponse<EmailAvailability>> => {
-        const client = await createAxiosInstance();
+        const client = await AxiosFactory.createAxiosInstance(baseURL, false);
 
         try {
-            const response = await client.post("auth/check-email", JSON.stringify(email), {
+            const response = await client.post("check-email", JSON.stringify(email), {
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -121,10 +115,10 @@ const useAuthApi = () => {
     };
 
     const registerUser = async (userData: UserRegistrationData): Promise<ApiResponse<null>> => {
-        const client = await createAxiosInstance();
+        const client = await AxiosFactory.createAxiosInstance(baseURL, false);
 
         try {
-            const response = await client.post("auth/register/user", userData);
+            const response = await client.post("register/user", userData);
 
             saveAuthData(response.data);
 
@@ -140,10 +134,10 @@ const useAuthApi = () => {
     };
 
     const registerCompany = async (companyData: CompanyRegistrationData): Promise<ApiResponse<null>> => {
-        const client = await createAxiosInstance();
+        const client = await AxiosFactory.createAxiosInstance(baseURL, false);
 
         try {
-            const response = await client.post("auth/register/company", companyData);
+            const response = await client.post("register/company", companyData);
 
             saveAuthData(response.data);
 
