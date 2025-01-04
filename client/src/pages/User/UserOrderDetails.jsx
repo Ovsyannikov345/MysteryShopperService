@@ -13,7 +13,7 @@ import { createReport } from "../../api/reportApi";
 import CompanyReviewForm from "../../components/forms/CompanyReviewForm";
 import { createCompanyReview } from "../../api/companyReviewApi.ts";
 import OrderDetailsMap from "../../components/maps/OrderDetailsMap";
-import OrderAnalyzer from "../../components/orderAnalyzer/OrderAnalyzer";
+// import OrderAnalyzer from "../../components/orderAnalyzer/OrderAnalyzer";
 
 const UserOrderDetails = () => {
     const theme = useTheme();
@@ -343,7 +343,7 @@ const UserOrderDetails = () => {
                                     },
                                 }}
                             />
-                            <OrderAnalyzer orderText={order.description} errorHandler={displayError} />
+                            {/* <OrderAnalyzer orderText={order.description} errorHandler={displayError} /> */}
                             <TextField
                                 fullWidth
                                 variant="standard"
