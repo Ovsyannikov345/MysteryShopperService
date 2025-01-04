@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Container, Grid2, TextField, Typography, Button, CircularProgress } from "@mui/material";
+import { Container, Grid2, TextField, Typography, Button, CircularProgress, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useNotifications } from "@toolpad/core/useNotifications";
@@ -70,7 +70,7 @@ const LoginPage = () => {
                     <TextField
                         fullWidth
                         variant="outlined"
-                        label="Эл. почта"
+                        label="Email"
                         type="email"
                         value={loginData.email}
                         onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
@@ -81,7 +81,7 @@ const LoginPage = () => {
                         fullWidth
                         variant="outlined"
                         type="password"
-                        label="Пароль"
+                        label="Password"
                         value={loginData.password}
                         onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                         sx={{ mb: 2 }}
@@ -98,17 +98,25 @@ const LoginPage = () => {
                                 onClick={submit}
                                 sx={{ height: 48, borderRadius: 2, mb: 1 }}
                             >
-                                Войти
+                                Log in
                             </Button>
-                            <Typography sx={{ mb: 1 }}>или</Typography>
+                            <Divider
+                                sx={{
+                                    width: "100%",
+                                    "&::after": { borderTop: "1px solid black" },
+                                    "&::before": { borderTop: "1px solid black" },
+                                }}
+                            >
+                                <Typography variant="subtitle2">or</Typography>
+                            </Divider>
                             <Button
                                 variant="outlined"
                                 color="inherit"
                                 fullWidth
                                 onClick={() => navigate("/register")}
-                                sx={{ height: 48, borderRadius: 2 }}
+                                sx={{ height: 48, borderRadius: 2, mt: 1 }}
                             >
-                                Регистрация
+                                Sign up
                             </Button>
                         </>
                     )}
