@@ -1,15 +1,14 @@
 ﻿using MysteryShopper.DAL.Entities.Enums;
 
-namespace MysteryShopper.API.ViewModels
+namespace MysteryShopper.API.ViewModels;
+
+public class UserOrderViewModel
 {
-    public class UserOrderViewModel
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public virtual OrderViewModel Order { get; set; } = null!;
+    public required OrderViewModel Order { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
-        public UserOrderStatus Status { get; set; } = UserOrderStatus.Requested;
-    }
+    public UserOrderStatus Status { get; set; } = UserOrderStatus.Requested;
 }

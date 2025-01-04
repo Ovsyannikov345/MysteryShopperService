@@ -1,17 +1,16 @@
-﻿namespace MysteryShopper.API.ViewModels
+﻿namespace MysteryShopper.API.ViewModels;
+
+public class ContactPersonViewModel
 {
-    public class ContactPersonViewModel
-    {
-        public Guid Id { get; set; }
+    public required Guid Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
-        public string Surname { get; set; } = string.Empty;
+    public required string Surname { get; set; }
 
-        public string? Patronymic { get; set; }
+    public string? Patronymic { get; set; }
 
-        public string Phone { get; set; } = string.Empty;
+    public required string Phone { get; set; }
 
-        public string Email { get; set; } = string.Empty;
-    }
+    public required string Email { get; set; }
 }

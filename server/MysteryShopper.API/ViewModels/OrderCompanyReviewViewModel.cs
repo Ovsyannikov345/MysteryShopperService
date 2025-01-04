@@ -1,11 +1,10 @@
-﻿namespace MysteryShopper.API.ViewModels
+﻿namespace MysteryShopper.API.ViewModels;
+
+public class OrderCompanyReviewViewModel
 {
-    public class OrderCompanyReviewViewModel
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string? Text { get; set; }
+    public string? Text { get; set; }
 
-        public short Grade { get; set; }
-    }
+    public short Grade { get; set; }
 }

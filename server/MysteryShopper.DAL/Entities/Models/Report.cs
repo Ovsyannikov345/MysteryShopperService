@@ -6,20 +6,20 @@ namespace MysteryShopper.DAL.Entities.Models;
 public partial class Report : EntityBase
 {
     [MaxLength(100)]
-    public string Title { get; set; } = null!;
+    public required string Title { get; set; }
 
     [Column(TypeName = "text")]
-    public string Description { get; set; } = null!;
+    public required string Description { get; set; }
 
     public short Grade { get; set; }
 
     public Guid UserId { get; set; }
 
-    public virtual User User { get; set; } = null!;
+    public required virtual User User { get; set; }
 
     public Guid OrderId { get; set; }
 
-    public virtual Order Order { get; set; } = null!;
+    public required virtual Order Order { get; set; }
 
-    public virtual ReportCorrection? ReportCorrection { get; set; } = null!;
+    public required virtual ReportCorrection? ReportCorrection { get; set; }
 }

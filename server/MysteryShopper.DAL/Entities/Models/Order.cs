@@ -6,13 +6,13 @@ namespace MysteryShopper.DAL.Entities.Models;
 public partial class Order : EntityBase
 {
     [MaxLength(100)]
-    public string Title { get; set; } = string.Empty;
+    public required string Title { get; set; }
 
     [Column(TypeName = "text")]
     public string? Description { get; set; }
 
     [MaxLength(255)]
-    public string Place { get; set; } = string.Empty;
+    public required string Place { get; set; }
 
     public TimeSpan? TimeToComplete { get; set; }
 
@@ -26,7 +26,7 @@ public partial class Order : EntityBase
 
     public Guid CompanyId { get; set; }
 
-    public virtual Company Company { get; set; } = null!;
+    public required virtual Company Company { get; set; }
 
     public virtual ICollection<UserOrder> Users { get; set; } = [];
 

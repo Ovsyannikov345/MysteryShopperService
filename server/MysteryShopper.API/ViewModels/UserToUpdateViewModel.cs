@@ -1,25 +1,24 @@
 ﻿using MysteryShopper.DAL.Entities.Enums;
 
-namespace MysteryShopper.API.ViewModels
+namespace MysteryShopper.API.ViewModels;
+
+public class UserToUpdateViewModel
 {
-    public class UserToUpdateViewModel
-    {
-        public Guid Id { get; set; }
+    public required Guid Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
-        public string Surname { get; set; } = string.Empty;
+    public required string Surname { get; set; }
 
-        public DateTime? BirthDate { get; set; }
+    public DateTime? BirthDate { get; set; }
 
-        public GenderType Gender { get; set; }
+    public required GenderType Gender { get; set; }
 
-        public string? WorkingExperience { get; set; }
+    public string? WorkingExperience { get; set; }
 
-        public string? City { get; set; }
+    public string? City { get; set; }
 
-        public string Phone { get; set; } = string.Empty;
+    public required string Phone { get; set; }
 
-        public string? Description { get; set; }
-    }
+    public string? Description { get; set; }
 }

@@ -1,19 +1,18 @@
-﻿namespace MysteryShopper.API.ViewModels
+﻿namespace MysteryShopper.API.ViewModels;
+
+public class OrderToCreateViewModel
 {
-    public class OrderToCreateViewModel
-    {
-        public string Title { get; set; } = string.Empty;
+    public required string Title { get; set; }
 
-        public string? Description { get; set; }
+    public string? Description { get; set; }
 
-        public string Place { get; set; } = string.Empty;
+    public required string Place { get; set; }
 
-        public TimeSpan? TimeToComplete { get; set; }
+    public TimeSpan? TimeToComplete { get; set; }
 
-        public int? Price { get; set; }
+    public int? Price { get; set; }
 
-        public double? Lat { get; set; }
+    public double? Lat { get; set; }
 
-        public double? Lng { get; set; }
-    }
+    public double? Lng { get; set; }
 }

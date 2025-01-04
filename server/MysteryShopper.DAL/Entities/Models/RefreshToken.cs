@@ -1,7 +1,6 @@
-﻿namespace MysteryShopper.DAL.Entities.Models
+﻿namespace MysteryShopper.DAL.Entities.Models;
+
+public partial class RefreshToken : EntityBase
 {
-    public partial class RefreshToken : EntityBase
-    {
-        public string Token { get; set; } = string.Empty;
-    }
+    public required string Token { get; set; }
 }

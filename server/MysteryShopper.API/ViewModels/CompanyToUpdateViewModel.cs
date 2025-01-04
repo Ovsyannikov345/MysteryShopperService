@@ -1,11 +1,10 @@
-﻿namespace MysteryShopper.API.ViewModels
+﻿namespace MysteryShopper.API.ViewModels;
+
+public class CompanyToUpdateViewModel
 {
-    public class CompanyToUpdateViewModel
-    {
-        public Guid Id { get; set; }
+    public required Guid Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
-        public ContactPersonToUpdateViewModel ContactPerson { get; set; } = null!;
-    }
+    public required ContactPersonToUpdateViewModel ContactPerson { get; set; }
 }

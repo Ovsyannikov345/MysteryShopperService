@@ -1,12 +1,11 @@
 ﻿
-namespace MysteryShopper.BLL.Dto
+namespace MysteryShopper.BLL.Dto;
+
+public class CompanyToUpdateModel
 {
-    public class CompanyToUpdateModel
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
-        public ContactPersonToUpdateModel ContactPerson { get; set; } = null!;
-    }
+    public required ContactPersonToUpdateModel ContactPerson { get; set; }
 }

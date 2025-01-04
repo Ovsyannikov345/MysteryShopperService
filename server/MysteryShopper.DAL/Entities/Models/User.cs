@@ -6,10 +6,10 @@ namespace MysteryShopper.DAL.Entities.Models;
 public partial class User : EntityBase
 {
     [MaxLength(50)]
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
     [MaxLength(50)]
-    public string Surname { get; set; } = string.Empty;
+    public required string Surname { get; set; }
 
     public DateTime? BirthDate { get; set; }
 
@@ -21,16 +21,16 @@ public partial class User : EntityBase
     public string? City { get; set; }
 
     [MaxLength(30)]
-    public string Phone { get; set; } = string.Empty;
+    public required string Phone { get; set; }
 
     [MaxLength(255)]
-    public string Email { get; set; } = string.Empty;
+    public required string Email { get; set; }
 
     [MaxLength(500)]
     public string? Description { get; set; }
 
     [MaxLength(255)]
-    public string Password { get; set; } = string.Empty;
+    public required string Password { get; set; }
 
     public virtual ICollection<UserOrder> Orders { get; set; } = [];
 

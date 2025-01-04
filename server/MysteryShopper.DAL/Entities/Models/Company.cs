@@ -5,15 +5,15 @@ namespace MysteryShopper.DAL.Entities.Models;
 public partial class Company : EntityBase
 {
     [MaxLength(255)]
-    public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
     [MaxLength(255)]
-    public string Email { get; set; } = string.Empty;
+    public required string Email { get; set; }
 
     [MaxLength(255)]
-    public string Password { get; set; } = string.Empty;
+    public required string Password { get; set; }
 
-    public virtual ContactPerson ContactPerson { get; set; } = null!;
+    public required virtual ContactPerson ContactPerson { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = [];
 

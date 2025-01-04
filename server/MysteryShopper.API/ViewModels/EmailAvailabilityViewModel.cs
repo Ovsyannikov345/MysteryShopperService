@@ -1,7 +1,6 @@
-﻿namespace MysteryShopper.API.ViewModels
+﻿namespace MysteryShopper.API.ViewModels;
+
+public class EmailAvailabilityViewModel
 {
-    public class EmailAvailabilityViewModel
-    {
-        public bool Available { get; set; }
-    }
+    public bool Available { get; set; }
 }

@@ -1,18 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MysteryShopper.DAL.Entities.Models
+namespace MysteryShopper.DAL.Entities.Models;
+
+public partial class ReportCorrection : EntityBase
 {
-    public partial class ReportCorrection : EntityBase
-    {
-        [Column(TypeName = "text")]
-        public string Description { get; set; } = string.Empty;
+    [Column(TypeName = "text")]
+    public required string Description { get; set; }
 
-        public Guid CompanyId { get; set; }
+    public Guid CompanyId { get; set; }
 
-        public virtual Company Company { get; set; } = null!;
+    public required virtual Company Company { get; set; }
 
-        public Guid ReportId { get; set; }
+    public Guid ReportId { get; set; }
 
-        public virtual Report Report { get; set; } = null!;
-    }
+    public required virtual Report Report { get; set; }
 }

@@ -1,21 +1,20 @@
 ﻿using MysteryShopper.DAL.Entities.Models;
 
-namespace MysteryShopper.API.ViewModels
+namespace MysteryShopper.API.ViewModels;
+
+public class CompanyProfileViewModel
 {
-    public class CompanyProfileViewModel
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
-        public string Email { get; set; } = string.Empty;
+    public required string Email { get; set; }
 
-        public DateTime? CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-        public ContactPersonViewModel ContactPerson { get; set; } = null!;
+    public required ContactPersonViewModel ContactPerson { get; set; }
 
-        public IEnumerable<Order> Orders { get; set; } = [];
+    public IEnumerable<Order> Orders { get; set; } = [];
 
-        public IEnumerable<CompanyReview> CompanyReviews { get; set; } = [];
-    }
+    public IEnumerable<CompanyReview> CompanyReviews { get; set; } = [];
 }

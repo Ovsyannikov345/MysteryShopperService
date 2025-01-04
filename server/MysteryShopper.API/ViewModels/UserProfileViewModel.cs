@@ -1,34 +1,33 @@
 ﻿using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
 
-namespace MysteryShopper.API.ViewModels
+namespace MysteryShopper.API.ViewModels;
+
+public class UserProfileViewModel
 {
-    public class UserProfileViewModel
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
-        public string Surname { get; set; } = string.Empty;
+    public required string Surname { get; set; }
 
-        public DateTime? BirthDate { get; set; }
+    public DateTime? BirthDate { get; set; }
 
-        public GenderType Gender { get; set; }
+    public GenderType Gender { get; set; }
 
-        public string? WorkingExperience { get; set; }
+    public string? WorkingExperience { get; set; }
 
-        public string? City { get; set; }
+    public string? City { get; set; }
 
-        public string Phone { get; set; } = string.Empty;
+    public required string Phone { get; set; }
 
-        public string Email { get; set; } = string.Empty;
+    public required string Email { get; set; }
 
-        public string? Description { get; set; }
+    public string? Description { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
-        public IEnumerable<UserOrder> Orders { get; set; } = [];
+    public IEnumerable<UserOrder> Orders { get; set; } = [];
 
-        public IEnumerable<UserReview> UserReviews { get; set; } = [];
-    }
+    public IEnumerable<UserReview> UserReviews { get; set; } = [];
 }

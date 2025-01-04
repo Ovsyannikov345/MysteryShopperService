@@ -1,15 +1,14 @@
-﻿namespace MysteryShopper.API.ViewModels
+﻿namespace MysteryShopper.API.ViewModels;
+
+public class OrderCompanyViewModel
 {
-    public class OrderCompanyViewModel
-    {
-        public Guid Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public required string Name { get; set; }
 
-        public string Email { get; set; } = string.Empty;
+    public required string Email { get; set; }
 
-        public DateTime? CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-        public IEnumerable<OrderCompanyReviewViewModel> CompanyReviews { get; set; } = [];
-    }
+    public IEnumerable<OrderCompanyReviewViewModel> CompanyReviews { get; set; } = [];
 }
