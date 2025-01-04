@@ -35,8 +35,6 @@ const CompanyOwnProfilePage = () => {
                 return;
             }
 
-            console.log(response);
-
             setCompanyData(response);
         };
 

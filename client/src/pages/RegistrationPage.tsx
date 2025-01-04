@@ -194,12 +194,9 @@ const RegistrationPage = () => {
                         initialValues={initialValues}
                         validationSchema={getRegistrationValidationSchema(userType)}
                         onSubmit={(values, { setErrors, setTouched }) => {
-                            console.log(values);
-
                             if (activeStep === 0) {
                                 handleFirstStep(values, setErrors);
                             } else if (activeStep === 2) {
-                                console.log(123123);
                                 handleThirdStep(values);
                             }
 

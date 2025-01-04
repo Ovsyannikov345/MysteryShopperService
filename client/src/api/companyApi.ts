@@ -87,8 +87,6 @@ const getCompany = async (id: string): Promise<Company | ApiError> => {
 };
 
 const updateCompany = async (id: string, companyData: CompanyToUpdate): Promise<UpdatedCompanyData | ApiError> => {
-    console.log(companyData)
-
     const response = await host.put(`/api/Company/${id}`, companyData);
 
     return response.data;
