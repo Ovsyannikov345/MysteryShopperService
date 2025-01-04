@@ -14,6 +14,7 @@ namespace MysteryShopper.BLL.Services
     public class OrderService(
         INotificationService notificationService,
         IOrderRepository orderRepository,
+        IUserRepository userRepository,
         IUserOrderRepository userOrderRepository,
         ICategoryRepository categoryRepository,
         IOrderTagRepository orderTagRepository,
@@ -123,10 +124,11 @@ namespace MysteryShopper.BLL.Services
 
         public async Task<UserOrder> GetOrderDetailsForUserAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
         {
-            if (!await orderRepository.ExistsAsync(o => o.Id == orderId, cancellationToken))
-            {
-                throw new NotFoundException("Order is not found");
-            }
+            var order = await orderRepository.GetByItemAsync(o => o.Id == orderId, cancellationToken)
+                ?? throw new NotFoundException("Order is not found");
+
+            var user = await userRepository.GetByItemAsync(u => u.Id == userId, cancellationToken)
+                ?? throw new NotFoundException("User is not found");
 
             var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken);
 
@@ -135,7 +137,14 @@ namespace MysteryShopper.BLL.Services
                 return userOrder;
             }
 
-            await userOrderRepository.AddAsync(new UserOrder { UserId = userId, OrderId = orderId, Status = UserOrderStatus.None }, cancellationToken);
+            await userOrderRepository.AddAsync(new UserOrder
+            {
+                User = user,
+                UserId = userId,
+                Order = order,
+                OrderId = orderId,
+                Status = UserOrderStatus.None
+            }, cancellationToken);
 
             return (await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken))!;
         }
