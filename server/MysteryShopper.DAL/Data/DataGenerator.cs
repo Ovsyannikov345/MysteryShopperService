@@ -30,12 +30,20 @@ public static class DataGenerator
 
     public static List<Company> GenerateCompanies(int count)
     {
+        var contactPersonFaker = new Faker<ContactPerson>()
+            .RuleFor(c => c.Name, f => f.Person.FirstName)
+            .RuleFor(c => c.Surname, f => f.Person.LastName)
+            .RuleFor(c => c.Patronymic, f => f.Person.Random.Word().OrNull(f))
+            .RuleFor(c => c.Phone, f => f.Person.Phone)
+            .RuleFor(c => c.Email, f => f.Person.Email);
+
         var companyFaker = new Faker<Company>()
             .RuleFor(c => c.Id, f => Guid.NewGuid())
             .RuleFor(c => c.Name, f => f.Company.CompanyName())
             .RuleFor(c => c.Email, f => f.Internet.Email())
             .RuleFor(c => c.Password, f => BCrypt.Net.BCrypt.HashPassword("qweqweqwe"))
-            .RuleFor(c => c.CreatedAt, f => f.Date.Past(5));
+            .RuleFor(c => c.CreatedAt, f => f.Date.Past(5))
+            .RuleFor(c => c.ContactPerson, f => contactPersonFaker.Generate(1)[0]);
 
         return companyFaker.Generate(count);
     }
@@ -72,6 +80,20 @@ public static class DataGenerator
         return reviewFaker.Generate(count);
     }
 
+    public static List<CompanyReview> GenerateCompanyReviews(int count, List<Guid> userIds, List<Guid> companyIds, List<Guid> orderIds)
+    {
+        var reviewFaker = new Faker<CompanyReview>()
+            .RuleFor(r => r.Id, f => Guid.NewGuid())
+            .RuleFor(r => r.Text, f => f.Lorem.Sentence(10))
+            .RuleFor(r => r.Grade, f => f.Random.Short(1, 5))
+            .RuleFor(r => r.CreatedAt, f => f.Date.Past(1))
+            .RuleFor(r => r.UserId, f => f.PickRandom(userIds))
+            .RuleFor(r => r.CompanyId, f => f.PickRandom(companyIds))
+            .RuleFor(r => r.OrderId, f => f.PickRandom(orderIds));
+
+        return reviewFaker.Generate(count);
+    }
+
     public static List<Notification> GenerateNotifications(int count, List<Guid> userIds, List<Guid> companyIds)
     {
         var notificationFaker = new Faker<Notification>()
@@ -88,7 +110,7 @@ public static class DataGenerator
     public static void GenerateAndSeedDatabase(MysteryShopperDbContext context)
     {
         // Generate Users
-        var users = GenerateUsers(50);
+        var users = GenerateUsers(20);
         context.Users.AddRange(users);
         context.SaveChanges();
         // Generate Companies
@@ -100,15 +122,27 @@ public static class DataGenerator
         var orders = GenerateOrders(100, companies.Select(c => c.Id).ToList());
         context.Orders.AddRange(orders);
         context.SaveChanges();
+
         // Generate User Reviews
-        var reviews = GenerateUserReviews(
+        var userReviews = GenerateUserReviews(
             200,
             users.Select(u => u.Id).ToList(),
             companies.Select(c => c.Id).ToList(),
             orders.Select(o => o.Id).ToList()
         );
-        context.UserReviews.AddRange(reviews);
+        context.UserReviews.AddRange(userReviews);
         context.SaveChanges();
+
+        // Generate Company Reviews
+        var companyReviews = GenerateCompanyReviews(
+            200,
+            users.Select(u => u.Id).ToList(),
+            companies.Select(c => c.Id).ToList(),
+            orders.Select(o => o.Id).ToList()
+        );
+        context.CompanyReviews.AddRange(companyReviews);
+        context.SaveChanges();
+
         // Generate Notifications
         var notifications = GenerateNotifications(
             150,
@@ -116,8 +150,6 @@ public static class DataGenerator
             companies.Select(c => c.Id).ToList()
         );
         context.Notifications.AddRange(notifications);
-
-        // Save all changes to the database
         context.SaveChanges();
     }
 }
