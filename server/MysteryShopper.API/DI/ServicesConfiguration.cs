@@ -25,7 +25,7 @@ public static class ServicesConfiguration
                 ValidAudiences = configuration.GetSection("Jwt:Audiences").Get<string[]>(),
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:AccessSecretKey"]!))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:AccessSecretKey"]!)),
             };
         });
     }

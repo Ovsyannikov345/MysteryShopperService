@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
@@ -9,7 +10,7 @@ namespace MysteryShopper.API.Controllers
 {
     [ApiController]
     [Route("auth")]
-    public class AuthController(IAuthService authService) : ControllerBase
+    public class AuthController(IAuthService authService, IMapper mapper) : ControllerBase
     {
         private readonly IAuthService _authService = authService;
 
@@ -52,6 +53,15 @@ namespace MysteryShopper.API.Controllers
         public async Task LogoutAsync([FromQuery] string refreshToken, CancellationToken cancellationToken = default)
         {
             await _authService.LogoutAsync(refreshToken, cancellationToken);
+        }
+
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public async Task<TokenPairViewModel> RefreshTokensAsync([FromQuery] string refreshToken, CancellationToken cancellationToken = default)
+        {
+            var tokens = await _authService.RefreshTokensAsync(refreshToken, cancellationToken);
+
+            return mapper.Map<TokenPairViewModel>(tokens);
         }
     }
 }

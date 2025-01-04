@@ -8,6 +8,8 @@ namespace MysteryShopper.BLL.Services.IServices
 
         Task LogoutAsync(string refreshToken, CancellationToken cancellationToken = default);
 
+        Task<TokenPair> RefreshTokensAsync(string refreshToken, CancellationToken cancellationToken = default);
+
         Task<AuthCredentials> RegisterCompany(CompanyRegistrationCredentials companyData, CancellationToken cancellationToken = default);
 
         Task<AuthCredentials> RegisterUser(UserRegistrationCredentials userData, CancellationToken cancellationToken = default);

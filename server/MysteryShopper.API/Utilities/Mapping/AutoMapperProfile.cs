@@ -40,6 +40,8 @@ namespace MysteryShopper.API.Utilities.Mapping
             CreateMap<UserReviewToCreateViewModel, UserReviewModel>();
             CreateMap<CompanyReviewModel, ReviewViewModel>();
             CreateMap<UserReviewModel, ReviewViewModel>();
+
+            CreateMap<TokenPair, TokenPairViewModel>();
         }
     }
 }

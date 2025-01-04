@@ -74,11 +74,11 @@ namespace MysteryShopper.BLL.Services
             }
 
             string newAccessToken = GenerateToken(validationResult.ClaimsIdentity.Claims,
-                DateTime.Now.AddMinutes(int.Parse(_configuration["Jwt:AccessMinutesExpire"]!)),
+                DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:AccessMinutesExpire"]!)),
                 _configuration["Jwt:AccessSecretKey"]!);
 
             string newRefreshToken = GenerateToken(validationResult.ClaimsIdentity.Claims,
-                DateTime.Now.AddDays(int.Parse(_configuration["Jwt:RefreshDaysExpire"]!)),
+                DateTime.UtcNow.AddDays(int.Parse(_configuration["Jwt:RefreshDaysExpire"]!)),
                 _configuration["Jwt:RefreshSecretKey"]!);
 
             try
@@ -115,11 +115,11 @@ namespace MysteryShopper.BLL.Services
         private async Task<TokenPair> CreateTokensAsync(List<Claim> claims, CancellationToken cancellationToken = default)
         {
             var accessToken = GenerateToken(claims,
-                DateTime.Now.AddMinutes(int.Parse(_configuration["Jwt:AccessMinutesExpire"]!)),
+                DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:AccessMinutesExpire"]!)),
                 _configuration["Jwt:AccessSecretKey"]!);
 
             var refreshToken = GenerateToken(claims,
-                DateTime.Now.AddDays(int.Parse(_configuration["Jwt:RefreshDaysExpire"]!)),
+                DateTime.UtcNow.AddDays(int.Parse(_configuration["Jwt:RefreshDaysExpire"]!)),
                 _configuration["Jwt:RefreshSecretKey"]!);
 
             try

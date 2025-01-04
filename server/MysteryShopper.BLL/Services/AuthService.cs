@@ -92,6 +92,15 @@ namespace MysteryShopper.BLL.Services
             _logger.Information("User or company logged out successfully. RefreshToken: {0}", refreshToken);
         }
 
+        public async Task<TokenPair> RefreshTokensAsync(string refreshToken, CancellationToken cancellationToken = default)
+        {
+            var tokens = await _tokenService.RefreshTokensAsync(refreshToken, cancellationToken);
+
+            _logger.Information("User or company successfully refreshed tokens");
+
+            return tokens;
+        }
+
         public async Task<AuthCredentials> RegisterUser(UserRegistrationCredentials userData, CancellationToken cancellationToken = default)
         {
             var validationResult = _userRegistrationValidator.Validate(userData);
