@@ -338,10 +338,11 @@ const RegistrationPage = () => {
                                                 <InputMask
                                                     mask="+375(99)999-99-99"
                                                     value={values.contactPersonPhone}
+                                                    disabled={false}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 >
-                                                    {
+                                                    {() => (
                                                         <Field
                                                             as={TextField}
                                                             label="Phone"
@@ -355,7 +356,7 @@ const RegistrationPage = () => {
                                                                 touched.contactPersonPhone && Boolean(errors.contactPersonPhone)
                                                             }
                                                         />
-                                                    }
+                                                    )}
                                                 </InputMask>
                                             </Grid>
                                             <Grid size={{ xs: 12 }}>
@@ -441,10 +442,11 @@ const RegistrationPage = () => {
                                                 <InputMask
                                                     mask="+375(99)999-99-99"
                                                     value={values.phone}
+                                                    disabled={false}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 >
-                                                    {
+                                                    {() => (
                                                         <Field
                                                             as={TextField}
                                                             label="Phone"
@@ -456,7 +458,7 @@ const RegistrationPage = () => {
                                                             helperText={<ErrorMessage name="phone" />}
                                                             error={touched.phone && Boolean(errors.phone)}
                                                         />
-                                                    }
+                                                    )}
                                                 </InputMask>
                                             </Grid>
                                             <Grid size={{ xs: 12 }}>
