@@ -1,0 +1,66 @@
+services:
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: ed-dep-nginx
+    restart: always
+    ports:
+      - "5001:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - ms-network
+    depends_on:
+      - back-end
+      - front-end
+
+  back-end:
+    build:
+      context: ./server
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      Jwt__Issuer: ${Jwt__Issuer}
+      Jwt__Audiences__0: ${Jwt__Audiences__0}
+      Jwt__Audiences__1: ${Jwt__Audiences__1}
+      Jwt__Audiences__2: ${Jwt__Audiences__2}
+      Jwt__AccessSecretKey: ${Jwt__AccessSecretKey}
+      Jwt__RefreshSecretKey: ${Jwt__RefreshSecretKey}
+      Jwt__AccessMinutesExpire: ${Jwt__AccessMinutesExpire}
+      Jwt__RefreshDaysExpire: ${Jwt__RefreshDaysExpire}
+      Email__From: ${Email__From}
+      Email__Address: ${Email__Address}
+      Email__Password: ${Email__Password}
+      Cors__Origins__0: ${Cors__Origins__0}
+    container_name: ms-api
+    restart: always
+    networks:
+      - ms-network
+    depends_on:
+       - db
+
+  front-end:
+    build:
+      context: ./client
+      args:
+        REACT_APP_API_URL: ${REACT_APP_API_URL}
+        REACT_APP_AUTH_API_URL: ${REACT_APP_AUTH_API_URL}
+    container_name: ms-front
+    restart: always
+    networks:
+      - ms-network
+
+  db:
+    image: postgres:latest
+    container_name: db
+    restart: always
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=admin
+    networks: 
+      - ms-network
+  
+networks: 
+  ms-network:
+    driver: bridge
+   
