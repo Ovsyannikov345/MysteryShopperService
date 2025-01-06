@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import AuthDataManager from "./utils/authDataManager";
 
 interface TokenPair {
     accessToken: string;
@@ -69,8 +70,10 @@ class AxiosFactory {
                             originalRequest.headers.Authorization = `Bearer ${tokenPair.accessToken}`;
                             return axios(originalRequest);
                         } catch (refreshError) {
-                            AxiosFactory.failedRequestsQueue.forEach((req) => req.reject(refreshError));
+                            AxiosFactory.failedRequestsQueue.forEach((req) => req.resolve);
                             AxiosFactory.failedRequestsQueue = [];
+
+                            AuthDataManager.clearAuthData();
 
                             return Promise.reject(refreshError);
                         } finally {
