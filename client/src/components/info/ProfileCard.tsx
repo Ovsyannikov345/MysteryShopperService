@@ -10,7 +10,17 @@ const ProfileCard = ({ title, value }: ProfileCardProps) => {
 
     return (
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Card sx={{ display: "flex", justifyContent: "center", alignItems: "center", p: 1 }} elevation={3}>
+            <Card
+                variant="outlined"
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    p: 1,
+                    borderWidth: "2px",
+                    borderColor: theme.palette.primary.dark,
+                }}
+            >
                 <CardContent sx={{ p: 1 }}>
                     <Typography variant="h6" textAlign={"center"}>
                         {title}
