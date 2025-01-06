@@ -1,7 +1,7 @@
-import { Roles } from "../utils/enums/roles";
 import { Genders } from "../utils/enums/genders";
 import { ApiResponse } from "./responses";
 import AxiosFactory from "./axiosFactory";
+import AuthDataManager from "./utils/authDataManager";
 
 export interface EmailAvailability {
     available: Boolean;
@@ -35,28 +35,8 @@ export interface CompanyRegistrationData {
     companyContactPerson: ContactPersonData;
 }
 
-interface AuthData {
-    accessToken: string;
-    refreshToken: string;
-    role: Roles;
-}
-
 const useAuthApi = () => {
     const baseURL = process.env.REACT_APP_AUTH_API_URL!;
-
-    const saveAuthData = (data: AuthData) => {
-        localStorage.setItem("accessToken", data.accessToken);
-        localStorage.setItem("refreshToken", data.refreshToken);
-        localStorage.setItem("role", data.role.toString());
-        window.dispatchEvent(new Event("auth"));
-    };
-
-    const clearAuthData = () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("role");
-        window.dispatchEvent(new Event("auth"));
-    };
 
     const login = async (email: string, password: string): Promise<ApiResponse<null>> => {
         const client = await AxiosFactory.createAxiosInstance(baseURL, false);
@@ -64,7 +44,7 @@ const useAuthApi = () => {
         try {
             const response = await client.post("login", { email, password });
 
-            saveAuthData(response.data);
+            AuthDataManager.saveAuthData(response.data);
 
             return null;
         } catch (error: any) {
@@ -88,7 +68,7 @@ const useAuthApi = () => {
             }
         } catch (error: any) {
         } finally {
-            clearAuthData();
+            AuthDataManager.clearAuthData();
             return null;
         }
     };
@@ -120,7 +100,7 @@ const useAuthApi = () => {
         try {
             const response = await client.post("register/user", userData);
 
-            saveAuthData(response.data);
+            AuthDataManager.saveAuthData(response.data);
 
             return null;
         } catch (error: any) {
@@ -139,7 +119,7 @@ const useAuthApi = () => {
         try {
             const response = await client.post("register/company", companyData);
 
-            saveAuthData(response.data);
+            AuthDataManager.saveAuthData(response.data);
 
             return null;
         } catch (error: any) {
