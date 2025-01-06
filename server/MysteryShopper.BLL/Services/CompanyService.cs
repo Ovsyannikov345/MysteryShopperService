@@ -49,7 +49,12 @@ namespace MysteryShopper.BLL.Services
 
             company.ContactPerson = mapper.Map<ContactPerson>(companyData.ContactPerson);
 
-            return await companyRepository.UpdateAsync(company, cancellationToken);
+            await companyRepository.UpdateAsync(company, cancellationToken);
+
+            var updatedCompany = await companyRepository.GetCompanyWithReviewsAsync(c => c.Id == company.Id, cancellationToken)
+                ?? throw new NotFoundException("Company is not found");
+
+            return updatedCompany;
         }
     }
 }
