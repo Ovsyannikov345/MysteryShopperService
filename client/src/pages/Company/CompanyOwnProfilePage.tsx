@@ -21,6 +21,9 @@ import NavigateBack from "../../components/NavigateBack";
 import CompanyOwnProfilePageSkeleton from "../../components/skeletons/CompanyOwnProfilePageSkeleton";
 import CompanyEditForm, { CompanyEditData } from "../../components/forms/CompanyEditForm";
 
+// TODO add image display
+// TODO add image updating
+
 const CompanyOwnProfilePage = () => {
     const theme = useTheme();
 

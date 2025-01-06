@@ -10,6 +10,7 @@ import NavigateBack from "../../components/NavigateBack";
 import CompanyOwnProfilePageSkeleton from "../../components/skeletons/CompanyOwnProfilePageSkeleton";
 import { useNavigate, useParams } from "react-router-dom";
 
+// TODO add image display
 // TODO add navigation to user profile on avatar click.
 
 const CompanyOwnProfilePage = () => {
