@@ -1,31 +1,31 @@
-import AvailableOrdersPage from "../pages/User/AvailableOrdersPage";
-import OrdersInProgressPage from "../pages/User/OrdersInProgressPage";
-import UserOrderDetails from "../pages/User/UserOrderDetails";
-import UserProfilePage from "../pages/User/UserProfilePage";
+import CompanyProfilePage from "../pages/Company/CompanyProfilePage";
+import { COMPANY_PROFILE_ROUTE } from "./consts";
+
+// TODO remove commented code.
 
 export const userRoutes = [
-    {
-        path: "/orders",
-        Component: AvailableOrdersPage,
-    },
-    {
-        path: "/orders/:id",
-        Component: UserOrderDetails,
-    },
-    {
-        path: "/my-orders",
-        Component: OrdersInProgressPage,
-    },
     // {
-    //     path: "/company/:id",
-    //     Component: CompanyProfilePage,
+    //     path: "/orders",
+    //     Component: AvailableOrdersPage,
+    // },
+    // {
+    //     path: "/orders/:id",
+    //     Component: UserOrderDetails,
+    // },
+    // {
+    //     path: "/my-orders",
+    //     Component: OrdersInProgressPage,
     // },
     {
-        path: "/user/:id",
-        Component: UserProfilePage,
+        path: COMPANY_PROFILE_ROUTE,
+        Component: CompanyProfilePage,
     },
-    {
-        path: "/user",
-        Component: UserProfilePage,
-    },
+    // {
+    //     path: "/user/:id",
+    //     Component: UserProfilePage,
+    // },
+    // {
+    //     path: "/profile",
+    //     Component: UserProfilePage,
+    // },
 ];

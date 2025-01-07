@@ -25,6 +25,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import AddIcon from "@mui/icons-material/Add";
 import MenuIcon from "@mui/icons-material/Menu";
 import useAuthApi from "../../hooks/useAuthApi";
+import { OWN_PROFILE_ROUTE } from "../../router/consts";
 
 const CompanyHeader = () => {
     const theme = useTheme();
@@ -44,6 +45,8 @@ const CompanyHeader = () => {
     const onLogout = async () => {
         await logout();
     };
+
+    // TODO use these instead of inline handlers.
 
     const onProfileMenuClick = (destinationRoute: string) => {
         setProfileMenuAnchorEl(null);
@@ -145,7 +148,7 @@ const CompanyHeader = () => {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-                <MenuItem key={1}>
+                <MenuItem key={1} onClick={() => navigate(OWN_PROFILE_ROUTE)}>
                     <ListItemIcon sx={{ mr: "5px" }}>
                         <ProfileIcon fontSize="small" />
                     </ListItemIcon>

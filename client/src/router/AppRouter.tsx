@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { publicRoutes } from "./publicRoutes";
 import { userRoutes } from "./userRoutes";
 import { companyRoutes } from "./companyRoutes";
-import { COMPANY_PROFILE_ROUTE, LOGIN_ROUTE, USER_PROFILE_ROUTE } from "../utils/consts";
+import { LOGIN_ROUTE, OWN_PROFILE_ROUTE } from "./consts";
 import { Roles } from "../utils/enums/roles";
 
 const AppRouter = () => {
@@ -27,7 +27,7 @@ const AppRouter = () => {
                 {userRoutes.map(({ path, Component }) => (
                     <Route key={path} path={path} element={<Component />} />
                 ))}
-                <Route key="*" path="*" element={<Navigate to={USER_PROFILE_ROUTE} />} />
+                <Route key="*" path="*" element={<Navigate to={OWN_PROFILE_ROUTE} />} />
             </Routes>
         );
     }
@@ -38,7 +38,7 @@ const AppRouter = () => {
                 {companyRoutes.map(({ path, Component }) => (
                     <Route key={path} path={path} element={<Component />} />
                 ))}
-                <Route key="*" path="*" element={<Navigate to={COMPANY_PROFILE_ROUTE} />} />
+                <Route key="*" path="*" element={<Navigate to={OWN_PROFILE_ROUTE} />} />
             </Routes>
         );
     }
