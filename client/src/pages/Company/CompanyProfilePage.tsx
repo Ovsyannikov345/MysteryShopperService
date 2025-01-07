@@ -24,9 +24,11 @@ const CompanyOwnProfilePage = () => {
 
     const navigate = useNavigate();
 
-    const { getCompanyData } = useCompanyApi();
+    const { getCompanyData, getProfileImage } = useCompanyApi();
 
     const [companyData, setCompanyData] = useState<Company>();
+
+    const [imageSrc, setImageSrc] = useState("");
 
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -49,6 +51,14 @@ const CompanyOwnProfilePage = () => {
             }
 
             setCompanyData(response);
+
+            const imageResponse = await getProfileImage(response.id);
+
+            if ("error" in imageResponse) {
+                return;
+            }
+
+            setImageSrc(URL.createObjectURL(imageResponse.blob));
         };
 
         loadProfile();
@@ -59,7 +69,8 @@ const CompanyOwnProfilePage = () => {
             return 0;
         }
 
-        let rating = companyData.companyReviews.map((c) => c.grade).reduce((acc, val) => (acc += val)) / companyData.companyReviews.length;
+        let rating =
+            companyData.companyReviews.map((c) => c.grade).reduce((acc, val) => (acc += val)) / companyData.companyReviews.length;
 
         return parseFloat(rating.toFixed(2));
     }, [companyData]);
@@ -125,9 +136,15 @@ const CompanyOwnProfilePage = () => {
                         <CompanyOwnProfilePageSkeleton />
                     ) : (
                         <>
-                            <Grid container spacing={4} alignItems="center" sx={{ p: isMediumScreen ? 1 : 4 }} mt={isMediumScreen ? 2 : 0}>
+                            <Grid
+                                container
+                                spacing={4}
+                                alignItems="center"
+                                sx={{ p: isMediumScreen ? 1 : 4 }}
+                                mt={isMediumScreen ? 2 : 0}
+                            >
                                 <Grid container>
-                                    <Avatar sx={{ width: 120, height: 120 }} />
+                                    <Avatar sx={{ width: 150, height: 150 }} alt={companyData.name + " avatar"} src={imageSrc} />
                                 </Grid>
                                 <Grid>
                                     <Typography variant="h4" fontWeight="bold">
@@ -144,7 +161,10 @@ const CompanyOwnProfilePage = () => {
                                 <ProfileCard title="Member for" value={moment(companyData.createdAt).fromNow(true)} />
                                 <ProfileCard title="Orders" value={companyData.orders.length} />
                                 <ProfileCard title="Reviews" value={companyData.companyReviews.length} />
-                                <ProfileCard title="Rating" value={<Rating value={rating} precision={0.5} size="large" readOnly />} />
+                                <ProfileCard
+                                    title="Rating"
+                                    value={<Rating value={rating} precision={0.5} size="large" readOnly />}
+                                />
                             </Grid>
                             <Typography variant="h5" mt={4} ref={reviewHeaderRef}>
                                 User Reviews
@@ -165,8 +185,15 @@ const CompanyOwnProfilePage = () => {
                                                 <Grid container>
                                                     <Avatar sx={{ width: 56, height: 56 }} />
                                                     <Grid container direction={"column"} spacing={0} mt={"-5px"}>
-                                                        <Typography variant="h6">{review.user.name + " " + review.user.surname}</Typography>
-                                                        <Rating value={review.grade} precision={0.5} readOnly sx={{ ml: "-2px" }} />
+                                                        <Typography variant="h6">
+                                                            {review.user.name + " " + review.user.surname}
+                                                        </Typography>
+                                                        <Rating
+                                                            value={review.grade}
+                                                            precision={0.5}
+                                                            readOnly
+                                                            sx={{ ml: "-2px" }}
+                                                        />
                                                     </Grid>
                                                 </Grid>
                                                 <Grid mt={"-5px"}>

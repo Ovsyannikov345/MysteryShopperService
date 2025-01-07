@@ -20,9 +20,7 @@ import backgroundImage from "../../images/background.jpg";
 import NavigateBack from "../../components/NavigateBack";
 import CompanyOwnProfilePageSkeleton from "../../components/skeletons/CompanyOwnProfilePageSkeleton";
 import CompanyEditForm, { CompanyEditData } from "../../components/forms/CompanyEditForm";
-
-// TODO add image display
-// TODO add image updating
+import UpdateProfileImageModal from "../../components/modals/UpdateProfileImageModal";
 
 const CompanyOwnProfilePage = () => {
     const theme = useTheme();
@@ -31,9 +29,11 @@ const CompanyOwnProfilePage = () => {
 
     const notifications = useNotifications();
 
-    const { getMyCompanyData, updateCompanyData } = useCompanyApi();
+    const { getMyCompanyData, getProfileImage, updateCompanyData, updateProfileImage } = useCompanyApi();
 
     const [companyData, setCompanyData] = useState<Company>();
+
+    const [imageSrc, setImageSrc] = useState("");
 
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -42,6 +42,8 @@ const CompanyOwnProfilePage = () => {
     const reviewsPerPage = 5;
 
     const reviewHeaderRef = useRef<HTMLDivElement>(null);
+
+    const [isChangingImage, setIsChangingImage] = useState(false);
 
     useEffect(() => {
         const loadProfile = async () => {
@@ -53,6 +55,14 @@ const CompanyOwnProfilePage = () => {
             }
 
             setCompanyData(response);
+
+            const imageResponse = await getProfileImage(response.id);
+
+            if ("error" in imageResponse) {
+                return;
+            }
+
+            setImageSrc(URL.createObjectURL(imageResponse.blob));
         };
 
         loadProfile();
@@ -63,7 +73,8 @@ const CompanyOwnProfilePage = () => {
             return 0;
         }
 
-        let rating = companyData.companyReviews.map((c) => c.grade).reduce((acc, val) => (acc += val)) / companyData.companyReviews.length;
+        let rating =
+            companyData.companyReviews.map((c) => c.grade).reduce((acc, val) => (acc += val)) / companyData.companyReviews.length;
 
         return parseFloat(rating.toFixed(2));
     }, [companyData]);
@@ -109,121 +120,170 @@ const CompanyOwnProfilePage = () => {
         notifications.show("Changes saved", { severity: "success", autoHideDuration: 3000 });
     };
 
+    const handleImageSave = async (file: File): Promise<boolean> => {
+        const response = await updateProfileImage(file);
+
+        if (response) {
+            notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
+
+            return false;
+        }
+
+        notifications.show("Image saved", { severity: "success", autoHideDuration: 3000 });
+
+        const imageResponse = await getProfileImage(companyData!.id);
+
+        if ("error" in imageResponse) {
+            return true;
+        }
+
+        setImageSrc(URL.createObjectURL(imageResponse.blob));
+
+        return true;
+    };
+
     return (
-        <Grid container minHeight={"100%"} flexDirection={"column"}>
-            <CompanyHeader />
-            <Grid
-                container
-                flexDirection={"column"}
-                flexGrow={1}
-                sx={{
-                    backgroundImage: `url(${backgroundImage})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundAttachment: "fixed",
-                    backdropFilter: "blur(8px)",
-                }}
-            >
-                {!isMediumScreen && (
-                    <Container
-                        maxWidth="md"
-                        style={{ paddingLeft: 0 }}
-                        sx={{
-                            mt: isMediumScreen ? 0 : 2,
-                        }}
-                    >
-                        <NavigateBack to={-1} label="Back" />
-                    </Container>
-                )}
-                <Container
-                    maxWidth="md"
+        <>
+            <Grid container minHeight={"100%"} flexDirection={"column"}>
+                <CompanyHeader />
+                <Grid
+                    container
+                    flexDirection={"column"}
+                    flexGrow={1}
                     sx={{
-                        mt: isMediumScreen ? 0 : 2,
-                        mb: isMediumScreen ? 0 : 2,
-                        bgcolor: "white",
-                        borderRadius: isMediumScreen ? 0 : "10px",
+                        backgroundImage: `url(${backgroundImage})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundAttachment: "fixed",
+                        backdropFilter: "blur(8px)",
                     }}
                 >
-                    {isMediumScreen && (
-                        <Grid mt={3}>
+                    {!isMediumScreen && (
+                        <Container
+                            maxWidth="md"
+                            style={{ paddingLeft: 0 }}
+                            sx={{
+                                mt: isMediumScreen ? 0 : 2,
+                            }}
+                        >
                             <NavigateBack to={-1} label="Back" />
-                        </Grid>
+                        </Container>
                     )}
-                    {!companyData ? (
-                        <CompanyOwnProfilePageSkeleton />
-                    ) : (
-                        <>
-                            <Grid container spacing={4} alignItems="center" sx={{ p: isMediumScreen ? 1 : 4 }} mt={isMediumScreen ? 2 : 0}>
-                                <Grid container>
-                                    <Avatar sx={{ width: 120, height: 120 }} />
-                                </Grid>
-                                <Grid>
-                                    <Typography variant="h4" fontWeight="bold">
-                                        {companyData.name}
-                                    </Typography>
-                                    <Typography variant="subtitle1">
-                                        Contact Person: {companyData.contactPerson.name} {companyData.contactPerson.surname}
-                                    </Typography>
-                                    <Typography variant="subtitle1">Phone: {companyData.contactPerson.phone}</Typography>
-                                    <Typography variant="subtitle1">Email: {companyData.contactPerson.email}</Typography>
-                                </Grid>
+                    <Container
+                        maxWidth="md"
+                        sx={{
+                            mt: isMediumScreen ? 0 : 2,
+                            mb: isMediumScreen ? 0 : 2,
+                            bgcolor: "white",
+                            borderRadius: isMediumScreen ? 0 : "10px",
+                        }}
+                    >
+                        {isMediumScreen && (
+                            <Grid mt={3}>
+                                <NavigateBack to={-1} label="Back" />
                             </Grid>
-                            <Typography variant="h5" mt={4} ref={reviewHeaderRef}>
-                                Rating
-                            </Typography>
-                            <Rating value={rating} precision={0.5} size="large" readOnly sx={{ mt: 1 }} />
-                            <Grid container mt={1} mb={2}>
-                                <Button variant="contained" startIcon={<Reviews />} onClick={() => setDisplayReviews(!displayReviews)}>
-                                    {displayReviews ? "Hide Reviews" : `Show Reviews (${companyData.companyReviews.length})`}
-                                </Button>
-                            </Grid>
-                            <Collapse in={displayReviews}>
-                                <Grid container spacing={3} mt={1} mb={3}>
-                                    {paginatedReviews.map((review, index) => (
-                                        <Grid size={12} key={index} sx={{}}>
-                                            <Paper
-                                                elevation={0}
-                                                sx={{
-                                                    p: isMediumScreen ? 1 : 3,
-                                                    border: "2px solid",
-                                                    borderColor: theme.palette.primary.dark,
-                                                    borderRadius: "20px",
-                                                }}
-                                            >
-                                                <Grid container direction={"column"} spacing={2}>
-                                                    <Grid container>
-                                                        <Avatar sx={{ width: 56, height: 56 }} />
-                                                        <Grid container direction={"column"} spacing={0} mt={"-5px"}>
-                                                            <Typography variant="h6">{review.user.name + " " + review.user.surname}</Typography>
-                                                            <Rating value={review.grade} precision={0.5} readOnly sx={{ ml: "-2px" }} />
+                        )}
+                        {!companyData ? (
+                            <CompanyOwnProfilePageSkeleton />
+                        ) : (
+                            <>
+                                <Grid
+                                    container
+                                    spacing={4}
+                                    alignItems="flex-start"
+                                    sx={{ p: isMediumScreen ? 1 : 4 }}
+                                    mt={isMediumScreen ? 2 : 0}
+                                >
+                                    <Grid container direction="column" alignItems={"center"}>
+                                        <Avatar
+                                            sx={{ width: 150, height: 150 }}
+                                            alt={companyData.name + " avatar"}
+                                            src={imageSrc}
+                                        />
+                                        <Button variant="contained" onClick={() => setIsChangingImage(true)}>
+                                            Choose image
+                                        </Button>
+                                    </Grid>
+                                    <Grid>
+                                        <Typography variant="h4" fontWeight="bold">
+                                            {companyData.name}
+                                        </Typography>
+                                        <Typography variant="subtitle1">
+                                            Contact Person: {companyData.contactPerson.name} {companyData.contactPerson.surname}
+                                        </Typography>
+                                        <Typography variant="subtitle1">Phone: {companyData.contactPerson.phone}</Typography>
+                                        <Typography variant="subtitle1">Email: {companyData.contactPerson.email}</Typography>
+                                    </Grid>
+                                </Grid>
+                                <Typography variant="h5" ref={reviewHeaderRef}>
+                                    Rating
+                                </Typography>
+                                <Rating value={rating} precision={0.5} size="large" readOnly sx={{ mt: 1 }} />
+                                <Grid container mt={1} mb={2}>
+                                    <Button
+                                        variant="contained"
+                                        startIcon={<Reviews />}
+                                        onClick={() => setDisplayReviews(!displayReviews)}
+                                    >
+                                        {displayReviews ? "Hide Reviews" : `Show Reviews (${companyData.companyReviews.length})`}
+                                    </Button>
+                                </Grid>
+                                <Collapse in={displayReviews}>
+                                    <Grid container spacing={3} mt={1} mb={3}>
+                                        {paginatedReviews.map((review, index) => (
+                                            <Grid size={12} key={index} sx={{}}>
+                                                <Paper
+                                                    elevation={0}
+                                                    sx={{
+                                                        p: isMediumScreen ? 1 : 3,
+                                                        border: "2px solid",
+                                                        borderColor: theme.palette.primary.dark,
+                                                        borderRadius: "20px",
+                                                    }}
+                                                >
+                                                    <Grid container direction={"column"} spacing={2}>
+                                                        <Grid container>
+                                                            <Avatar sx={{ width: 56, height: 56 }} />
+                                                            <Grid container direction={"column"} spacing={0} mt={"-5px"}>
+                                                                <Typography variant="h6">
+                                                                    {review.user.name + " " + review.user.surname}
+                                                                </Typography>
+                                                                <Rating
+                                                                    value={review.grade}
+                                                                    precision={0.5}
+                                                                    readOnly
+                                                                    sx={{ ml: "-2px" }}
+                                                                />
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid mt={"-5px"}>
+                                                            <Typography variant="body1" sx={{ mt: 1 }}>
+                                                                {review.text}
+                                                            </Typography>
                                                         </Grid>
                                                     </Grid>
-                                                    <Grid mt={"-5px"}>
-                                                        <Typography variant="body1" sx={{ mt: 1 }}>
-                                                            {review.text}
-                                                        </Typography>
-                                                    </Grid>
-                                                </Grid>
-                                            </Paper>
-                                        </Grid>
-                                    ))}
-                                </Grid>
-                                <Grid container justifyContent="center" mb={3}>
-                                    <Pagination
-                                        count={Math.ceil((companyData?.companyReviews.length || 0) / reviewsPerPage)}
-                                        page={currentPage}
-                                        onChange={handlePageChange}
-                                        color="primary"
-                                    />
-                                </Grid>
-                            </Collapse>
-                            <Typography variant="h5">Edit information</Typography>
-                            <CompanyEditForm initialValues={companyData} onSubmit={handleDataUpdate} />
-                        </>
-                    )}
-                </Container>
+                                                </Paper>
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                    <Grid container justifyContent="center" mb={3}>
+                                        <Pagination
+                                            count={Math.ceil((companyData?.companyReviews.length || 0) / reviewsPerPage)}
+                                            page={currentPage}
+                                            onChange={handlePageChange}
+                                            color="primary"
+                                        />
+                                    </Grid>
+                                </Collapse>
+                                <Typography variant="h5">Edit information</Typography>
+                                <CompanyEditForm initialValues={companyData} onSubmit={handleDataUpdate} />
+                            </>
+                        )}
+                    </Container>
+                </Grid>
             </Grid>
-        </Grid>
+            <UpdateProfileImageModal open={isChangingImage} onClose={() => setIsChangingImage(false)} onSave={handleImageSave} />
+        </>
     );
 };
 
