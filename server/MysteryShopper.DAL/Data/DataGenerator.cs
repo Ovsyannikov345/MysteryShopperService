@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
 using System;
+using System.Collections.Generic;
 
 namespace MysteryShopper.DAL.Data;
 
@@ -66,6 +67,30 @@ public static class DataGenerator
         return orderFaker.Generate(count);
     }
 
+    public static List<UserOrder> GenerateUserOrders(List<Guid> userIds, List<Guid> orderIds)
+    {
+        var userOrderFaker = new Faker<UserOrder>()
+            .RuleFor(u => u.Status, f => f.PickRandom<UserOrderStatus>());
+
+        List<UserOrder> userOrders = new List<UserOrder>();
+
+        userIds = [.. userIds.OrderBy(_ => Guid.NewGuid())];
+        orderIds = [.. orderIds.OrderBy(_ => Guid.NewGuid())];
+
+        int count = Math.Min(userIds.Count, orderIds.Count);
+
+        for (int i = 0; i < count; i++)
+        {
+            var userOrder = userOrderFaker.Generate();
+
+            userOrder.UserId = userIds[i];
+            userOrder.OrderId = orderIds[i];
+            userOrders.Add(userOrder);
+        }
+
+        return userOrders;
+    }
+
     public static List<UserReview> GenerateUserReviews(int count, List<Guid> userIds, List<Guid> companyIds, List<Guid> orderIds)
     {
         var reviewFaker = new Faker<UserReview>()
@@ -121,6 +146,11 @@ public static class DataGenerator
         // Generate Orders
         var orders = GenerateOrders(100, companies.Select(c => c.Id).ToList());
         context.Orders.AddRange(orders);
+        context.SaveChanges();
+
+        // Generate UserOrders
+        var userOrders = GenerateUserOrders(users.Select(u => u.Id).ToList(), orders.Select(o => o.Id).ToList());
+        context.UserOrders.AddRange(userOrders);
         context.SaveChanges();
 
         // Generate User Reviews
