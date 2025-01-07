@@ -41,8 +41,14 @@ export interface CompanyToUpdate {
     };
 }
 
+export interface ProfileImage {
+    blob: Blob;
+}
+
 const useCompanyApi = () => {
     const baseURL = process.env.REACT_APP_API_URL + "/Company";
+
+    const baseImageURL = process.env.REACT_APP_API_URL + "/CompanyImage";
 
     const getMyCompanyData = async (): Promise<ApiResponse<Company>> => {
         const client = await AxiosFactory.createAxiosInstance(baseURL);
@@ -78,6 +84,25 @@ const useCompanyApi = () => {
         }
     };
 
+    const getProfileImage = async (id: string): Promise<ApiResponse<ProfileImage>> => {
+        const client = await AxiosFactory.createAxiosInstance(baseImageURL);
+
+        try {
+            const response = await client.get(id, {
+                responseType: "blob",
+            });
+
+            return { blob: response.data };
+        } catch (error: any) {
+            if (error.response) {
+                const { status, data } = error.response;
+                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+            } else {
+                return { error: true, message: "An unexpected error occurred." };
+            }
+        }
+    };
+
     const updateCompanyData = async (updatedCompany: CompanyToUpdate): Promise<ApiResponse<Company>> => {
         const client = await AxiosFactory.createAxiosInstance(baseURL);
 
@@ -95,7 +120,30 @@ const useCompanyApi = () => {
         }
     };
 
-    return { getMyCompanyData, getCompanyData, updateCompanyData };
+    const updateProfileImage = async (file: File): Promise<ApiResponse<null>> => {
+        const client = await AxiosFactory.createAxiosInstance(baseImageURL);
+
+        const formData = new FormData();
+
+        formData.append("file", file);
+
+        try {
+            await client.post("", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            return null;
+        } catch (error: any) {
+            if (error.response) {
+                const { status, data } = error.response;
+                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+            } else {
+                return { error: true, message: "An unexpected error occurred." };
+            }
+        }
+    };
+
+    return { getMyCompanyData, getCompanyData, getProfileImage, updateCompanyData, updateProfileImage };
 };
 
 export default useCompanyApi;
