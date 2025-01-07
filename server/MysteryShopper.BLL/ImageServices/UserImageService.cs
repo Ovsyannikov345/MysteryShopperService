@@ -7,7 +7,7 @@ using SixLabors.ImageSharp;
 
 namespace MysteryShopper.BLL.ImageServices;
 
-public class CompanyImageService(ICompanyAvatarStorage companyAvatarStorage, ICompanyRepository companyRepository) : ICompanyImageService
+public class UserImageService(IUserAvatarStorage userAvatarStorage, IUserRepository userRepository) : IUserImageService
 {
     private static readonly int _maxFileSizeInMBytes = 2;
 
@@ -21,7 +21,7 @@ public class CompanyImageService(ICompanyAvatarStorage companyAvatarStorage, ICo
     {
         string fileName = entityId.ToString();
 
-        var stream = await companyAvatarStorage.GetAsync(fileName, ImageExtension, cancellationToken)
+        var stream = await userAvatarStorage.GetAsync(fileName, ImageExtension, cancellationToken)
             ?? throw new NotFoundException("Image not found");
 
         return stream;
@@ -46,16 +46,16 @@ public class CompanyImageService(ICompanyAvatarStorage companyAvatarStorage, ICo
             throw new BadRequestException($"Max file size is {_maxFileSizeInMBytes} Mb");
         }
 
-        var company = await companyRepository.GetByItemAsync(c => c.Id == entityId)
-            ?? throw new NotFoundException("Company is not found");
+        var user = await userRepository.GetByItemAsync(u => u.Id == entityId)
+            ?? throw new NotFoundException("User is not found");
 
-        var imageName = company.Id.ToString();
+        var imageName = user.Id.ToString();
 
         using var fileStream = file.OpenReadStream();
 
         using var jpegStream = await ConvertToJpegStream(fileStream, cancellationToken);
 
-        await companyAvatarStorage.SaveAsync(jpegStream, imageName, ImageExtension, cancellationToken: cancellationToken);
+        await userAvatarStorage.SaveAsync(jpegStream, imageName, ImageExtension, cancellationToken: cancellationToken);
     }
 
     private static async Task<MemoryStream> ConvertToJpegStream(Stream fileStream, CancellationToken cancellationToken = default)

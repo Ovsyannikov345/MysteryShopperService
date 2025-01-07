@@ -44,7 +44,8 @@ namespace MysteryShopper.BLL.DI
                     .AddScoped<INotificationService, NotificationService>()
                     .AddScoped<IMistralService, MistralService>();
 
-            services.AddScoped<ICompanyImageService, CompanyImageService>();
+            services.AddScoped<ICompanyImageService, CompanyImageService>()
+                    .AddScoped<IUserImageService, UserImageService>();
         }
     }
 }

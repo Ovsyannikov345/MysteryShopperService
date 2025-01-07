@@ -1,3 +1,3 @@
 ﻿namespace MysteryShopper.BLL.ImageServices.IImageServices;
 
-public interface ICompanyImageService : IImageService;
+public interface IUserImageService : IImageService;

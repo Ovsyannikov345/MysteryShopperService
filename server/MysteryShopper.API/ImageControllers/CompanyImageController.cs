@@ -15,7 +15,7 @@ namespace MysteryShopper.API.ImageControllers
         {
             var stream = await companyImageService.GetImageAsync(companyId, cancellationToken);
 
-            return File(stream, $"image/jpeg");
+            return File(stream, $"image/{companyImageService.ImageExtension}");
         }
 
         [HttpPost]
