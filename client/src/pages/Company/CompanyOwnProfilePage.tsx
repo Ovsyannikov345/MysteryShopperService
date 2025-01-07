@@ -9,7 +9,6 @@ import {
     Container,
     Grid2 as Grid,
     Pagination,
-    Paper,
     Rating,
     Typography,
     useMediaQuery,
@@ -18,9 +17,10 @@ import {
 import { Reviews } from "@mui/icons-material";
 import backgroundImage from "../../images/background.jpg";
 import NavigateBack from "../../components/NavigateBack";
-import CompanyOwnProfilePageSkeleton from "../../components/skeletons/CompanyOwnProfilePageSkeleton";
+import ProfilePageSkeleton from "../../components/skeletons/ProfilePageSkeleton";
 import CompanyEditForm, { CompanyEditData } from "../../components/forms/CompanyEditForm";
 import UpdateProfileImageModal from "../../components/modals/UpdateProfileImageModal";
+import ReviewCard from "../../components/info/ReviewCard";
 
 const CompanyOwnProfilePage = () => {
     const theme = useTheme();
@@ -184,7 +184,7 @@ const CompanyOwnProfilePage = () => {
                             </Grid>
                         )}
                         {!companyData ? (
-                            <CompanyOwnProfilePageSkeleton />
+                            <ProfilePageSkeleton />
                         ) : (
                             <>
                                 <Grid
@@ -231,44 +231,17 @@ const CompanyOwnProfilePage = () => {
                                 <Collapse in={displayReviews}>
                                     <Grid container spacing={3} mt={1} mb={3}>
                                         {paginatedReviews.map((review, index) => (
-                                            <Grid size={12} key={index} sx={{}}>
-                                                <Paper
-                                                    elevation={0}
-                                                    sx={{
-                                                        p: isMediumScreen ? 1 : 3,
-                                                        border: "2px solid",
-                                                        borderColor: theme.palette.primary.dark,
-                                                        borderRadius: "20px",
-                                                    }}
-                                                >
-                                                    <Grid container direction={"column"} spacing={2}>
-                                                        <Grid container>
-                                                            <Avatar sx={{ width: 56, height: 56 }} />
-                                                            <Grid container direction={"column"} spacing={0} mt={"-5px"}>
-                                                                <Typography variant="h6">
-                                                                    {review.user.name + " " + review.user.surname}
-                                                                </Typography>
-                                                                <Rating
-                                                                    value={review.grade}
-                                                                    precision={0.5}
-                                                                    readOnly
-                                                                    sx={{ ml: "-2px" }}
-                                                                />
-                                                            </Grid>
-                                                        </Grid>
-                                                        <Grid mt={"-5px"}>
-                                                            <Typography variant="body1" sx={{ mt: 1 }}>
-                                                                {review.text}
-                                                            </Typography>
-                                                        </Grid>
-                                                    </Grid>
-                                                </Paper>
-                                            </Grid>
+                                            <ReviewCard
+                                                key={index}
+                                                senderName={review.user.name + " " + review.user.surname}
+                                                grade={review.grade}
+                                                text={review.text}
+                                            />
                                         ))}
                                     </Grid>
                                     <Grid container justifyContent="center" mb={3}>
                                         <Pagination
-                                            count={Math.ceil((companyData?.companyReviews.length || 0) / reviewsPerPage)}
+                                            count={Math.ceil((companyData.companyReviews.length || 0) / reviewsPerPage)}
                                             page={currentPage}
                                             onChange={handlePageChange}
                                             color="primary"

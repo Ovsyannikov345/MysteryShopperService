@@ -7,10 +7,10 @@ import backgroundImage from "../../images/background.jpg";
 import moment from "moment";
 import ProfileCard from "../../components/info/ProfileCard";
 import NavigateBack from "../../components/NavigateBack";
-import CompanyOwnProfilePageSkeleton from "../../components/skeletons/CompanyOwnProfilePageSkeleton";
+import ProfilePageSkeleton from "../../components/skeletons/ProfilePageSkeleton";
 import { useNavigate, useParams } from "react-router-dom";
+import ReviewCard from "../../components/info/ReviewCard";
 
-// TODO add image display
 // TODO add navigation to user profile on avatar click.
 
 const CompanyOwnProfilePage = () => {
@@ -133,7 +133,7 @@ const CompanyOwnProfilePage = () => {
                         </Grid>
                     )}
                     {!companyData ? (
-                        <CompanyOwnProfilePageSkeleton />
+                        <ProfilePageSkeleton />
                     ) : (
                         <>
                             <Grid
@@ -171,39 +171,12 @@ const CompanyOwnProfilePage = () => {
                             </Typography>
                             <Grid container spacing={3} mt={2} mb={3}>
                                 {paginatedReviews.map((review, index) => (
-                                    <Grid size={12} key={index} sx={{}}>
-                                        <Paper
-                                            elevation={0}
-                                            sx={{
-                                                p: isMediumScreen ? 1 : 3,
-                                                border: "2px solid",
-                                                borderColor: theme.palette.primary.dark,
-                                                borderRadius: "20px",
-                                            }}
-                                        >
-                                            <Grid container direction={"column"} spacing={2}>
-                                                <Grid container>
-                                                    <Avatar sx={{ width: 56, height: 56 }} />
-                                                    <Grid container direction={"column"} spacing={0} mt={"-5px"}>
-                                                        <Typography variant="h6">
-                                                            {review.user.name + " " + review.user.surname}
-                                                        </Typography>
-                                                        <Rating
-                                                            value={review.grade}
-                                                            precision={0.5}
-                                                            readOnly
-                                                            sx={{ ml: "-2px" }}
-                                                        />
-                                                    </Grid>
-                                                </Grid>
-                                                <Grid mt={"-5px"}>
-                                                    <Typography variant="body1" sx={{ mt: 1 }}>
-                                                        {review.text}
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
-                                        </Paper>
-                                    </Grid>
+                                    <ReviewCard
+                                        key={index}
+                                        senderName={review.user.name + " " + review.user.surname}
+                                        grade={review.grade}
+                                        text={review.text}
+                                    />
                                 ))}
                             </Grid>
                             <Grid container justifyContent="center" mb={3}>

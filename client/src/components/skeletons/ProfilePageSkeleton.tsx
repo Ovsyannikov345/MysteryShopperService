@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid2 as Grid, Paper, Skeleton, Typography, useMediaQuery, useTheme } from "@mui/material";
 
-const CompanyOwnProfilePageSkeleton = () => {
+const ProfilePageSkeleton = () => {
     const theme = useTheme();
     const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -82,4 +82,4 @@ const CompanyOwnProfilePageSkeleton = () => {
     );
 };
 
-export default CompanyOwnProfilePageSkeleton;
+export default ProfilePageSkeleton;
