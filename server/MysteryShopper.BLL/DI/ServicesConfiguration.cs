@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MysteryShopper.BLL.ImageServices;
+using MysteryShopper.BLL.ImageServices.IImageServices;
 using MysteryShopper.BLL.Services;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Mapping;
@@ -41,6 +43,8 @@ namespace MysteryShopper.BLL.DI
                     .AddScoped<IReviewService, ReviewService>()
                     .AddScoped<INotificationService, NotificationService>()
                     .AddScoped<IMistralService, MistralService>();
+
+            services.AddScoped<ICompanyImageService, CompanyImageService>();
         }
     }
 }
