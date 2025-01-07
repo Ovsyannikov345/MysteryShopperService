@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Minio;
+using MysteryShopper.DAL.BlobStorages;
+using MysteryShopper.DAL.BlobStorages.IBlobStorages;
 using MysteryShopper.DAL.Data;
 using MysteryShopper.DAL.Repositories;
 using MysteryShopper.DAL.Repositories.IRepositories;
@@ -28,6 +31,15 @@ namespace MysteryShopper.DAL.DI
                     .AddScoped<INotificationRepository, NotificationRepository>()
                     .AddScoped<ICategoryRepository, CategoryRepository>()
                     .AddScoped<IOrderTagRepository, OrderTagRepository>();
+
+            services.AddMinio(configureClient => configureClient
+                .WithEndpoint(configuration["Minio:Endpoint"])
+                .WithCredentials(configuration["Minio:AccessKey"], configuration["Minio:SecretKey"])
+                .WithSSL(false)
+                .Build());
+
+            services.AddScoped<IUserAvatarStorage, UserAvatarMinioStorage>();
+            services.AddScoped<ICompanyAvatarStorage, CompanyAvatarMinioStorage>();
         }
 
         private static void AddDbContext(this IServiceCollection services, IConfiguration configuration) =>
