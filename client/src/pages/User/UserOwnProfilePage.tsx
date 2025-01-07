@@ -21,6 +21,7 @@ import { Reviews } from "@mui/icons-material";
 import ReviewCard from "../../components/info/ReviewCard";
 import UpdateProfileImageModal from "../../components/modals/UpdateProfileImageModal";
 import moment from "moment";
+import { Roles } from "../../utils/enums/roles";
 
 const UserOwnProfilePage = () => {
     const theme = useTheme();
@@ -239,7 +240,11 @@ const UserOwnProfilePage = () => {
                                         {paginatedReviews.map((review, index) => (
                                             <ReviewCard
                                                 key={index}
-                                                senderName={review.company.name}
+                                                sender={{
+                                                    id: review.company.id,
+                                                    name: review.company.name,
+                                                    role: Roles.Company,
+                                                }}
                                                 grade={review.grade}
                                                 text={review.text}
                                             />

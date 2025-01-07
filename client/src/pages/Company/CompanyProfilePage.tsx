@@ -10,8 +10,7 @@ import NavigateBack from "../../components/NavigateBack";
 import ProfilePageSkeleton from "../../components/skeletons/ProfilePageSkeleton";
 import { useNavigate, useParams } from "react-router-dom";
 import ReviewCard from "../../components/info/ReviewCard";
-
-// TODO add navigation to user profile on avatar click.
+import { Roles } from "../../utils/enums/roles";
 
 const CompanyOwnProfilePage = () => {
     const theme = useTheme();
@@ -173,7 +172,11 @@ const CompanyOwnProfilePage = () => {
                                 {paginatedReviews.map((review, index) => (
                                     <ReviewCard
                                         key={index}
-                                        senderName={review.user.name + " " + review.user.surname}
+                                        sender={{
+                                            id: review.user.id,
+                                            name: review.user.name + " " + review.user.surname,
+                                            role: Roles.User,
+                                        }}
                                         grade={review.grade}
                                         text={review.text}
                                     />

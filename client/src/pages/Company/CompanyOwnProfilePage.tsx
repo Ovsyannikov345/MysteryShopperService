@@ -21,6 +21,7 @@ import ProfilePageSkeleton from "../../components/skeletons/ProfilePageSkeleton"
 import CompanyEditForm, { CompanyEditData } from "../../components/forms/CompanyEditForm";
 import UpdateProfileImageModal from "../../components/modals/UpdateProfileImageModal";
 import ReviewCard from "../../components/info/ReviewCard";
+import { Roles } from "../../utils/enums/roles";
 
 const CompanyOwnProfilePage = () => {
     const theme = useTheme();
@@ -233,7 +234,11 @@ const CompanyOwnProfilePage = () => {
                                         {paginatedReviews.map((review, index) => (
                                             <ReviewCard
                                                 key={index}
-                                                senderName={review.user.name + " " + review.user.surname}
+                                                sender={{
+                                                    id: review.user.id,
+                                                    name: review.user.name + " " + review.user.surname,
+                                                    role: Roles.User,
+                                                }}
                                                 grade={review.grade}
                                                 text={review.text}
                                             />
