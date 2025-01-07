@@ -4,4 +4,8 @@ interface ApiError {
     message: string;
 }
 
+export interface ProfileImage {
+    blob: Blob;
+}
+
 export type ApiResponse<T> = T | ApiError;

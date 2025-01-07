@@ -1,52 +1,39 @@
 import { ApiResponse, ProfileImage } from "./responses";
 import AxiosFactory from "./axiosFactory";
+import { Genders } from "../utils/enums/genders";
 
-export interface Company {
+export interface User {
     id: string;
-    name: string;
     email: string;
+    name: string;
+    surname: string;
+    birthDate?: Date;
+    gender: Genders;
+    workingExperience?: string;
+    city?: string;
+    phone: string;
+    description?: string;
     createdAt: Date;
-    contactPerson: {
+    orders: {
         id: string;
-        name: string;
-        surname: string;
-        patronymic: string;
-        email: string;
-        phone: string;
-    };
-    orders: { id: string }[];
-    companyReviews: {
+    }[];
+    userReviews: {
         id: string;
         text: string;
         grade: number;
-        user: {
+        company: {
             id: string;
             name: string;
-            surname: string;
-            patronymic: string;
         };
     }[];
 }
 
-export interface CompanyToUpdate {
-    id: string;
-    name: string;
-    contactPerson: {
-        id: string;
-        name: string;
-        surname: string;
-        patronymic: string | null;
-        phone: string;
-        email: string;
-    };
-}
+const useUserApi = () => {
+    const baseURL = process.env.REACT_APP_API_URL + "/User";
 
-const useCompanyApi = () => {
-    const baseURL = process.env.REACT_APP_API_URL + "/Company";
+    const baseImageURL = process.env.REACT_APP_API_URL + "/UserImage";
 
-    const baseImageURL = process.env.REACT_APP_API_URL + "/CompanyImage";
-
-    const getMyCompanyData = async (): Promise<ApiResponse<Company>> => {
+    const getMyUserData = async (): Promise<ApiResponse<User>> => {
         const client = await AxiosFactory.createAxiosInstance(baseURL);
 
         try {
@@ -63,7 +50,7 @@ const useCompanyApi = () => {
         }
     };
 
-    const getCompanyData = async (id: string): Promise<ApiResponse<Company>> => {
+    const getUserData = async (id: string): Promise<ApiResponse<User>> => {
         const client = await AxiosFactory.createAxiosInstance(baseURL);
 
         try {
@@ -80,22 +67,22 @@ const useCompanyApi = () => {
         }
     };
 
-    const updateCompanyData = async (updatedCompany: CompanyToUpdate): Promise<ApiResponse<Company>> => {
-        const client = await AxiosFactory.createAxiosInstance(baseURL);
+    // const updateCompanyData = async (updatedCompany: CompanyToUpdate): Promise<ApiResponse<Company>> => {
+    //     const client = await AxiosFactory.createAxiosInstance(baseURL);
 
-        try {
-            const response = await client.put(updatedCompany.id, updatedCompany);
+    //     try {
+    //         const response = await client.put(updatedCompany.id, updatedCompany);
 
-            return response.data;
-        } catch (error: any) {
-            if (error.response) {
-                const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-            } else {
-                return { error: true, message: "An unexpected error occurred." };
-            }
-        }
-    };
+    //         return response.data;
+    //     } catch (error: any) {
+    //         if (error.response) {
+    //             const { status, data } = error.response;
+    //             return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+    //         } else {
+    //             return { error: true, message: "An unexpected error occurred." };
+    //         }
+    //     }
+    // };
 
     const getProfileImage = async (id: string): Promise<ApiResponse<ProfileImage>> => {
         const client = await AxiosFactory.createAxiosInstance(baseImageURL);
@@ -139,7 +126,7 @@ const useCompanyApi = () => {
         }
     };
 
-    return { getMyCompanyData, getCompanyData, getProfileImage, updateCompanyData, updateProfileImage };
+    return { getMyUserData, getUserData, getProfileImage, updateProfileImage };
 };
 
-export default useCompanyApi;
+export default useUserApi;
