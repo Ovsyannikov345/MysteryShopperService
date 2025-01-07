@@ -1,5 +1,6 @@
 import CompanyProfilePage from "../pages/Company/CompanyProfilePage";
-import { COMPANY_PROFILE_ROUTE } from "./consts";
+import UserOwnProfilePage from "../pages/User/UserOwnProfilePage";
+import { COMPANY_PROFILE_ROUTE, OWN_PROFILE_ROUTE } from "./consts";
 
 // TODO remove commented code.
 
@@ -24,8 +25,8 @@ export const userRoutes = [
     //     path: "/user/:id",
     //     Component: UserProfilePage,
     // },
-    // {
-    //     path: "/profile",
-    //     Component: UserProfilePage,
-    // },
+    {
+        path: OWN_PROFILE_ROUTE,
+        Component: UserOwnProfilePage,
+    },
 ];
