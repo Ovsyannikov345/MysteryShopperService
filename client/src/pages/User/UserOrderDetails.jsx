@@ -71,8 +71,6 @@ const UserOrderDetails = () => {
                 return;
             }
 
-            // TODO remove
-            // TODO fetch user data from profile
             setOrder({
                 ...response.data,
                 description:

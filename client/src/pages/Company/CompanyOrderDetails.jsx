@@ -22,9 +22,6 @@ import Request from "../../components/Request";
 import Report from "../../components/Report";
 import addNoun from "../../utils/fieldsParser";
 
-// TODO implement order editing with permission check.
-// TODO implement order finishing.
-
 const CompanyOrderDetails = () => {
     const theme = useTheme();
 
