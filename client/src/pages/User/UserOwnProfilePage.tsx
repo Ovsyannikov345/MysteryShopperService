@@ -1,15 +1,4 @@
-import {
-    Avatar,
-    Button,
-    Collapse,
-    Container,
-    Grid2 as Grid,
-    Pagination,
-    Rating,
-    Typography,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material";
+import { Avatar, Button, Collapse, Container, Grid2 as Grid, Pagination, Rating, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useNotifications } from "@toolpad/core";
 import useUserApi, { User } from "../../hooks/useUserApi";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -22,6 +11,7 @@ import ReviewCard from "../../components/info/ReviewCard";
 import UpdateProfileImageModal from "../../components/modals/UpdateProfileImageModal";
 import moment from "moment";
 import { Roles } from "../../utils/enums/roles";
+import UserEditForm, { UserEditData } from "../../components/forms/UserEditForm";
 
 const UserOwnProfilePage = () => {
     const theme = useTheme();
@@ -30,7 +20,7 @@ const UserOwnProfilePage = () => {
 
     const notifications = useNotifications();
 
-    const { getMyUserData, getProfileImage, updateProfileImage } = useUserApi();
+    const { getMyUserData, getProfileImage, updateUserData, updateProfileImage } = useUserApi();
 
     const [userData, setUserData] = useState<User>();
 
@@ -98,31 +88,28 @@ const UserOwnProfilePage = () => {
         reviewHeaderRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
 
-    // TODO implement data updating.
+    const handleDataUpdate = async (updatedData: UserEditData) => {
+        if (!userData) {
+            return;
+        }
 
-    // const handleDataUpdate = async (updatedData: CompanyEditData) => {
-    //     if (!companyData) {
-    //         return;
-    //     }
+        const response = await updateUserData({
+            ...updatedData,
+            id: userData.id,
+            birthDate: updatedData.birthDate ? moment(updatedData.birthDate).toDate() : undefined,
+            workingExperience: updatedData.workingExperience ? updatedData.workingExperience : undefined,
+            city: updatedData.city ? updatedData.city : undefined,
+            description: updatedData.description ? updatedData.description : undefined,
+        });
 
-    //     const response = await updateCompanyData({
-    //         ...updatedData,
-    //         id: companyData.id,
-    //         contactPerson: {
-    //             ...updatedData.contactPerson,
-    //             id: companyData.contactPerson.id,
-    //             patronymic: updatedData.contactPerson.patronymic ? updatedData.contactPerson.patronymic : null,
-    //         },
-    //     });
+        if ("error" in response) {
+            notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
+            return;
+        }
 
-    //     if ("error" in response) {
-    //         notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
-    //         return;
-    //     }
-
-    //     setCompanyData(response);
-    //     notifications.show("Changes saved", { severity: "success", autoHideDuration: 3000 });
-    // };
+        setUserData(response);
+        notifications.show("Changes saved", { severity: "success", autoHideDuration: 3000 });
+    };
 
     const handleImageSave = async (file: File): Promise<boolean> => {
         const response = await updateProfileImage(file);
@@ -213,9 +200,7 @@ const UserOwnProfilePage = () => {
                                             {`${userData.name} ${userData.surname}`}
                                         </Typography>
                                         <Typography variant="subtitle1">
-                                            {userData.birthDate
-                                                ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o."
-                                                : ""}
+                                            {userData.birthDate ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o." : ""}
                                             {userData.birthDate && userData.city && ", "}
                                             {userData.city ? userData.city : ""}
                                         </Typography>
@@ -227,11 +212,7 @@ const UserOwnProfilePage = () => {
                                 </Typography>
                                 <Rating value={rating} precision={0.5} size="large" readOnly sx={{ mt: 1 }} />
                                 <Grid container mt={1} mb={2}>
-                                    <Button
-                                        variant="contained"
-                                        startIcon={<Reviews />}
-                                        onClick={() => setDisplayReviews(!displayReviews)}
-                                    >
+                                    <Button variant="contained" startIcon={<Reviews />} onClick={() => setDisplayReviews(!displayReviews)}>
                                         {displayReviews ? "Hide Reviews" : `Show Reviews (${userData.userReviews.length})`}
                                     </Button>
                                 </Grid>
@@ -260,7 +241,7 @@ const UserOwnProfilePage = () => {
                                     </Grid>
                                 </Collapse>
                                 <Typography variant="h5">Edit information</Typography>
-                                {/* <CompanyEditForm initialValues={companyData} onSubmit={handleDataUpdate} /> */}
+                                <UserEditForm initialValues={userData} onSubmit={handleDataUpdate} />
                             </>
                         )}
                     </Container>

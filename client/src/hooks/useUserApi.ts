@@ -28,6 +28,18 @@ export interface User {
     }[];
 }
 
+export interface UserToUpdate {
+    id: string;
+    name: string;
+    surname: string;
+    birthDate?: Date;
+    gender: Genders;
+    workingExperience?: string;
+    city?: string;
+    phone: string;
+    description?: string;
+}
+
 const useUserApi = () => {
     const baseURL = process.env.REACT_APP_API_URL + "/User";
 
@@ -67,22 +79,22 @@ const useUserApi = () => {
         }
     };
 
-    // const updateCompanyData = async (updatedCompany: CompanyToUpdate): Promise<ApiResponse<Company>> => {
-    //     const client = await AxiosFactory.createAxiosInstance(baseURL);
+    const updateUserData = async (updatedUser: UserToUpdate): Promise<ApiResponse<User>> => {
+        const client = await AxiosFactory.createAxiosInstance(baseURL);
 
-    //     try {
-    //         const response = await client.put(updatedCompany.id, updatedCompany);
+        try {
+            const response = await client.put(updatedUser.id, updatedUser);
 
-    //         return response.data;
-    //     } catch (error: any) {
-    //         if (error.response) {
-    //             const { status, data } = error.response;
-    //             return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-    //         } else {
-    //             return { error: true, message: "An unexpected error occurred." };
-    //         }
-    //     }
-    // };
+            return response.data;
+        } catch (error: any) {
+            if (error.response) {
+                const { status, data } = error.response;
+                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+            } else {
+                return { error: true, message: "An unexpected error occurred." };
+            }
+        }
+    };
 
     const getProfileImage = async (id: string): Promise<ApiResponse<ProfileImage>> => {
         const client = await AxiosFactory.createAxiosInstance(baseImageURL);
@@ -126,7 +138,7 @@ const useUserApi = () => {
         }
     };
 
-    return { getMyUserData, getUserData, getProfileImage, updateProfileImage };
+    return { getMyUserData, getUserData, getProfileImage, updateUserData, updateProfileImage };
 };
 
 export default useUserApi;
