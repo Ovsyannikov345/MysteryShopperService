@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 
-const CompanyEditFormValidationSchema = Yup.object().shape({
+const companyEditFormValidationSchema = Yup.object().shape({
     companyName: Yup.string()
         .min(3, "Company name should be between 3 and 255 characters")
         .max(255, "Company name should be between 3 and 255 characters")
@@ -23,4 +23,4 @@ const CompanyEditFormValidationSchema = Yup.object().shape({
     contactPersonEmail: Yup.string().email("Invalid email format").required("Email is required"),
 });
 
-export default CompanyEditFormValidationSchema;
+export default companyEditFormValidationSchema;

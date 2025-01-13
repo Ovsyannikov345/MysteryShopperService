@@ -11,7 +11,8 @@ namespace MysteryShopper.BLL.Services
     {
         public async Task<Company> GetProfileAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await companyRepository.GetCompanyWithReviewsAsync(c => c.Id == id, cancellationToken) ?? throw new NotFoundException("Company is not found");
+            return await companyRepository.GetCompanyWithReviewsAsync(c => c.Id == id, cancellationToken)
+                ?? throw new NotFoundException("Company is not found");
         }
 
         public async Task<Company> UpdateProfileInfoAsync(Guid currentCompanyId, CompanyToUpdateModel companyData, CancellationToken cancellationToken = default)
@@ -38,6 +39,8 @@ namespace MysteryShopper.BLL.Services
                 {
                     var value = modelProperty.GetValue(companyData);
 
+                    // TODO fix and user too. (add empty check)
+
                     if (value is string stringValue && string.IsNullOrWhiteSpace(stringValue))
                     {
                         companyProperty.SetValue(company, null);
@@ -51,10 +54,7 @@ namespace MysteryShopper.BLL.Services
 
             await companyRepository.UpdateAsync(company, cancellationToken);
 
-            var updatedCompany = await companyRepository.GetCompanyWithReviewsAsync(c => c.Id == company.Id, cancellationToken)
-                ?? throw new NotFoundException("Company is not found");
-
-            return updatedCompany;
+            return await GetProfileAsync(company.Id, cancellationToken);
         }
     }
 }

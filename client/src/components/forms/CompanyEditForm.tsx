@@ -1,7 +1,7 @@
 import { Box, Button, Grid2 as Grid, LinearProgress, TextField, Typography } from "@mui/material";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import InputMask from "react-input-mask";
-import CompanyEditFormValidationSchema from "./validation/companyEditValidationSchema";
+import companyEditFormValidationSchema from "./validation/companyEditValidationSchema";
 import { useState } from "react";
 
 export interface CompanyEditData {
@@ -20,7 +20,7 @@ interface CompanyEditFormProps {
     onSubmit: (updatedData: CompanyEditData) => Promise<void>;
 }
 
-// TODO fix form reset
+// TODO fix form reset (as in user edit form).
 
 const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
     const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
     return (
         <Formik
             initialValues={initialFormValues}
-            validationSchema={CompanyEditFormValidationSchema}
+            validationSchema={companyEditFormValidationSchema}
             onSubmit={async (values) => {
                 setLoading(true);
                 await onSubmit({
