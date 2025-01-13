@@ -10,7 +10,8 @@ public class UserService(IUserRepository userRepository) : IUserService
 {
     public async Task<User> GetProfileAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var user = await userRepository.GetUserWithReviewsAsync(u => u.Id == id, cancellationToken) ?? throw new NotFoundException("User is not found");
+        var user = await userRepository.GetUserWithReviewsAsync(u => u.Id == id, cancellationToken)
+            ?? throw new NotFoundException("User is not found");
 
         return user;
     }
@@ -43,7 +44,9 @@ public class UserService(IUserRepository userRepository) : IUserService
             }
         }
 
-        return await userRepository.UpdateAsync(user, cancellationToken);
+        await userRepository.UpdateAsync(user, cancellationToken);
+
+        return await GetProfileAsync(user.Id, cancellationToken);
     }
 }
 

@@ -34,8 +34,8 @@ namespace MysteryShopper.BLL.Utilities.Validators
                 .Matches(@"^\+?375\([1-9]{2}\)[0-9\-]{7,14}$").WithMessage("Invalid phone format");
 
             RuleFor(u => u.Description)
-                .MaximumLength(255).WithMessage("Description should be from 3 to 255 symbols")
-                .MinimumLength(3).WithMessage("Description should be from 3 to 50 symbols")
+                .MaximumLength(500).WithMessage("Description should be from 3 to 500 symbols")
+                .MinimumLength(3).WithMessage("Description should be from 3 to 500 symbols")
                 .When(u => u.Description != null);
 
             RuleFor(u => u.Email)
