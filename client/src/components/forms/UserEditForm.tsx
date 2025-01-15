@@ -35,7 +35,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                 setLoading(false);
             }}
         >
-            {({ values, handleChange, setFieldValue, handleBlur, touched, errors, resetForm, dirty }) => (
+            {({ values, handleChange, setFieldValue, handleBlur, touched, errors }) => (
                 <Form>
                     <Grid container spacing={2} mt={2} mb={2}>
                         {/* Name Field */}
