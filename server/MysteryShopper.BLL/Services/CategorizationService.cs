@@ -35,11 +35,10 @@ public class CategorizationService(
                 if (tag is not null)
                 {
                     order.Tags.Add(tag);
+                    continue;
                 }
-                else
-                {
-                    tagData.NewTags.Add(tagText);
-                }
+
+                tagData.NewTags.Add(tagText);
             }
 
             foreach (var tagText in tagData.NewTags)
@@ -49,18 +48,17 @@ public class CategorizationService(
                 if (existingTag is not null)
                 {
                     order.Tags.Add(existingTag);
+                    continue;
                 }
-                else
-                {
-                    var tag = await orderTagRepository.AddAsync(new OrderTag
-                    {
-                        Text = tagText,
-                        Category = category,
-                        CategoryId = category.Id
-                    }, cancellationToken);
 
-                    order.Tags.Add(tag);
-                }
+                var tag = await orderTagRepository.AddAsync(new OrderTag
+                {
+                    Text = tagText,
+                    Category = category,
+                    CategoryId = category.Id
+                }, cancellationToken);
+
+                order.Tags.Add(tag);
             }
         }
     }
