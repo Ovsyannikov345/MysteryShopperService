@@ -35,7 +35,7 @@ export interface CompanyToUpdate {
         id: string;
         name: string;
         surname: string;
-        patronymic: string | null;
+        patronymic: string | undefined;
         phone: string;
         email: string;
     };

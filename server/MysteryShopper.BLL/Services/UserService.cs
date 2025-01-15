@@ -23,7 +23,8 @@ public class UserService(IUserRepository userRepository) : IUserService
             throw new ForbiddenException("You can't update other person's profile");
         }
 
-        var user = await userRepository.GetByItemAsync(u => u.Id == userData.Id, cancellationToken) ?? throw new NotFoundException("User is not found");
+        var user = await userRepository.GetByItemAsync(u => u.Id == userData.Id, cancellationToken)
+            ?? throw new NotFoundException("User is not found");
 
         var userProperties = typeof(User).GetProperties();
 
@@ -38,6 +39,7 @@ public class UserService(IUserRepository userRepository) : IUserService
                 if (value is string stringValue && string.IsNullOrWhiteSpace(stringValue))
                 {
                     userProperty.SetValue(user, null);
+                    continue;
                 }
 
                 userProperty.SetValue(user, value);

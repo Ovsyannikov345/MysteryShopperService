@@ -108,7 +108,7 @@ const CompanyOwnProfilePage = () => {
             contactPerson: {
                 ...updatedData.contactPerson,
                 id: companyData.contactPerson.id,
-                patronymic: updatedData.contactPerson.patronymic ? updatedData.contactPerson.patronymic : null,
+                patronymic: updatedData.contactPerson.patronymic,
             },
         });
 

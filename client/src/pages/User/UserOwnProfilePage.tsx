@@ -96,10 +96,6 @@ const UserOwnProfilePage = () => {
         const response = await updateUserData({
             ...updatedData,
             id: userData.id,
-            birthDate: updatedData.birthDate ? moment(updatedData.birthDate).toDate() : undefined,
-            workingExperience: updatedData.workingExperience ? updatedData.workingExperience : undefined,
-            city: updatedData.city ? updatedData.city : undefined,
-            description: updatedData.description ? updatedData.description : undefined,
         });
 
         if ("error" in response) {

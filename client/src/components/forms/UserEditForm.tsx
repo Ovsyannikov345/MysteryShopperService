@@ -62,6 +62,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             />
                         </Grid>
 
+                        {/* TODO Add null option */}
                         {/* Birthdate Field */}
                         <Grid size={12}>
                             <TextField

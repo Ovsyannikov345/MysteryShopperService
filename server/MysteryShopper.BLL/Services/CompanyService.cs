@@ -22,7 +22,8 @@ namespace MysteryShopper.BLL.Services
                 throw new ForbiddenException("You can't update other company's profile");
             }
 
-            var company = await companyRepository.GetByItemAsync(c => c.Id == companyData.Id, cancellationToken) ?? throw new NotFoundException("Company is not found");
+            var company = await companyRepository.GetByItemAsync(c => c.Id == companyData.Id, cancellationToken)
+                ?? throw new NotFoundException("Company is not found");
 
             var companyProperties = typeof(Company).GetProperties();
 
@@ -39,11 +40,10 @@ namespace MysteryShopper.BLL.Services
                 {
                     var value = modelProperty.GetValue(companyData);
 
-                    // TODO fix and user too. (add empty check)
-
                     if (value is string stringValue && string.IsNullOrWhiteSpace(stringValue))
                     {
                         companyProperty.SetValue(company, null);
+                        continue;
                     }
 
                     companyProperty.SetValue(company, value);
