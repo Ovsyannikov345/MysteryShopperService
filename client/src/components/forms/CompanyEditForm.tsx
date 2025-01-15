@@ -20,8 +20,6 @@ interface CompanyEditFormProps {
     onSubmit: (updatedData: CompanyEditData) => Promise<void>;
 }
 
-// TODO fix form reset (as in user edit form).
-
 const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
     const [loading, setLoading] = useState(false);
 
@@ -53,7 +51,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                 setLoading(false);
             }}
         >
-            {({ values, handleChange, handleBlur, touched, errors, resetForm, dirty }) => (
+            {({ values, handleChange, handleBlur, touched, errors, setFieldValue }) => (
                 <Form>
                     <Grid container spacing={2} mt={2} mb={2}>
                         <Grid size={{ xs: 12 }}>
@@ -147,20 +145,24 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                                 error={touched.contactPersonEmail && Boolean(errors.contactPersonEmail)}
                             />
                         </Grid>
-                        {loading ? (
+                        {loading && (
                             <Box sx={{ width: "100%" }}>
                                 <LinearProgress />
                             </Box>
-                        ) : (
-                            <Grid container>
-                                <Button variant="contained" type="submit">
-                                    Save
-                                </Button>
-                                <Button variant="outlined" onClick={() => resetForm()}>
-                                    Cancel
-                                </Button>
-                            </Grid>
                         )}
+                        <Grid container>
+                            <Button variant="contained" type="submit" disabled={loading}>
+                                Save
+                            </Button>
+                            <Button
+                                type="reset"
+                                variant="outlined"
+                                disabled={loading}
+                                onClick={() => setFieldValue("initialValues", initialValues)}
+                            >
+                                Cancel
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Form>
             )}
