@@ -1,6 +1,6 @@
-import CompanyProfilePage from "../pages/Company/CompanyProfilePage";
+import CompanyProfilePage from "../pages/Common/CompanyProfilePage";
 import UserOwnProfilePage from "../pages/User/UserOwnProfilePage";
-import UserProfilePage from "../pages/User/UserProfilePage";
+import UserProfilePage from "../pages/Common/UserProfilePage";
 import { COMPANY_PROFILE_ROUTE, OWN_PROFILE_ROUTE } from "./consts";
 
 // TODO remove commented code.

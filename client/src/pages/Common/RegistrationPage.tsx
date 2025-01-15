@@ -18,13 +18,13 @@ import {
 } from "@mui/material";
 import InputMask from "react-input-mask";
 import { Formik, Field, Form, ErrorMessage } from "formik";
-import backgroundImage from "../images/background.jpg";
+import backgroundImage from "../../images/background.jpg";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "@toolpad/core";
 import { Apartment, ArrowBack, Person } from "@mui/icons-material";
-import getRegistrationValidationSchema from "../components/forms/validation/getRegistrationValidationSchema";
-import useAuthApi, { CompanyRegistrationData, UserRegistrationData } from "../hooks/useAuthApi";
-import { Genders } from "../utils/enums/genders";
+import getRegistrationValidationSchema from "../../components/forms/validation/getRegistrationValidationSchema";
+import useAuthApi, { CompanyRegistrationData, UserRegistrationData } from "../../hooks/useAuthApi";
+import { Genders } from "../../utils/enums/genders";
 
 const RegistrationPage = () => {
     const theme = useTheme();

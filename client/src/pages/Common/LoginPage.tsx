@@ -3,9 +3,9 @@ import { Container, Grid2, TextField, Typography, Button, CircularProgress, Divi
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import { useNotifications } from "@toolpad/core/useNotifications";
-import backgroundImage from "../images/background.jpg";
-import logo from "../images/logo-cropped.png";
-import useAuthApi from "../hooks/useAuthApi";
+import backgroundImage from "../../images/background.jpg";
+import logo from "../../images/logo-cropped.png";
+import useAuthApi from "../../hooks/useAuthApi";
 
 const LoginPage = () => {
     const notifications = useNotifications();
