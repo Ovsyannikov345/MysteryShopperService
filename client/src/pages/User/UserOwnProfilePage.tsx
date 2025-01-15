@@ -1,4 +1,15 @@
-import { Avatar, Button, Collapse, Container, Grid2 as Grid, Pagination, Rating, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+    Avatar,
+    Button,
+    Collapse,
+    Container,
+    Grid2 as Grid,
+    Pagination,
+    Rating,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
 import { useNotifications } from "@toolpad/core";
 import useUserApi, { User } from "../../hooks/useUserApi";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -36,6 +47,8 @@ const UserOwnProfilePage = () => {
 
     const [isChangingImage, setIsChangingImage] = useState(false);
 
+    // TODO add experience display
+
     useEffect(() => {
         const loadProfile = async () => {
             const response = await getMyUserData();
@@ -59,7 +72,7 @@ const UserOwnProfilePage = () => {
         };
 
         loadProfile();
-    }, []);
+    }, [getMyUserData, getProfileImage, notifications]);
 
     const rating = useMemo(() => {
         if (!userData || userData.userReviews.length === 0) {
@@ -196,7 +209,9 @@ const UserOwnProfilePage = () => {
                                             {`${userData.name} ${userData.surname}`}
                                         </Typography>
                                         <Typography variant="subtitle1">
-                                            {userData.birthDate ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o." : ""}
+                                            {userData.birthDate
+                                                ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o."
+                                                : ""}
                                             {userData.birthDate && userData.city && ", "}
                                             {userData.city ? userData.city : ""}
                                         </Typography>
@@ -208,7 +223,11 @@ const UserOwnProfilePage = () => {
                                 </Typography>
                                 <Rating value={rating} precision={0.5} size="large" readOnly sx={{ mt: 1 }} />
                                 <Grid container mt={1} mb={2}>
-                                    <Button variant="contained" startIcon={<Reviews />} onClick={() => setDisplayReviews(!displayReviews)}>
+                                    <Button
+                                        variant="contained"
+                                        startIcon={<Reviews />}
+                                        onClick={() => setDisplayReviews(!displayReviews)}
+                                    >
                                         {displayReviews ? "Hide Reviews" : `Show Reviews (${userData.userReviews.length})`}
                                     </Button>
                                 </Grid>
