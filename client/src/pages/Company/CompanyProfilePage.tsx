@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import useCompanyApi, { Company } from "../../hooks/useCompanyApi";
 import { useNotifications } from "@toolpad/core";
 import CompanyHeader from "../../components/headers/CompanyHeader";
-import { Avatar, Container, Grid2 as Grid, Pagination, Paper, Rating, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Container, Grid2 as Grid, Pagination, Rating, Typography, useMediaQuery, useTheme } from "@mui/material";
 import backgroundImage from "../../images/background.jpg";
 import moment from "moment";
 import ProfileCard from "../../components/info/ProfileCard";
