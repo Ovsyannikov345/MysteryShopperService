@@ -47,8 +47,6 @@ const UserOwnProfilePage = () => {
 
     const [isChangingImage, setIsChangingImage] = useState(false);
 
-    // TODO add experience display
-
     useEffect(() => {
         const loadProfile = async () => {
             const response = await getMyUserData();
@@ -215,7 +213,16 @@ const UserOwnProfilePage = () => {
                                             {userData.birthDate && userData.city && ", "}
                                             {userData.city ? userData.city : ""}
                                         </Typography>
-                                        <Typography variant="subtitle1">{userData.description}</Typography>
+                                        <Typography variant="subtitle1">{userData.workingExperience}</Typography>
+                                        <Typography
+                                            variant="subtitle1"
+                                            bgcolor={theme.palette.divider}
+                                            borderRadius={"10px"}
+                                            p={"5px 10px"}
+                                            mt={1}
+                                        >
+                                            {userData.description}
+                                        </Typography>
                                     </Grid>
                                 </Grid>
                                 <Typography variant="h5" ref={reviewHeaderRef}>
