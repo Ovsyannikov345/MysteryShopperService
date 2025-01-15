@@ -3,7 +3,6 @@ using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.BLL.Utilities.Messages;
-using MysteryShopper.BLL.Utilities.Mistral.Services.IServices;
 using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
@@ -16,10 +15,8 @@ namespace MysteryShopper.BLL.Services
         IOrderRepository orderRepository,
         IUserRepository userRepository,
         IUserOrderRepository userOrderRepository,
-        ICategoryRepository categoryRepository,
-        IOrderTagRepository orderTagRepository,
+        ICategorizationService categorizationService,
         IMapper mapper,
-        IMistralService mistralService,
         OrderCreationValidator orderValidator) : IOrderService
     {
         public async Task<IEnumerable<Order>> GetOrderListAsync(CancellationToken cancellationToken = default)
@@ -43,53 +40,7 @@ namespace MysteryShopper.BLL.Services
                 return mapper.Map<OrderModel>(createdOrder);
             }
 
-            var categories = await categoryRepository.GetCategoriesWithTags(cancellationToken);
-
-            foreach (var category in categories)
-            {
-                if (category.Name != "Business Type")
-                {
-                    continue;
-                }
-
-                var tagData = await mistralService.GetOrderTagsAsync(
-                    createdOrder.Description, category.Name, category.Tags.Select(t => t.Text), cancellationToken);
-
-                foreach (var tagText in tagData.Tags)
-                {
-                    var tag = await orderTagRepository.GetByItemAsync(t => t.Text == tagText, cancellationToken);
-
-                    if (tag is not null)
-                    {
-                        createdOrder.Tags.Add(tag);
-                    }
-                    else
-                    {
-                        tagData.NewTags.Add(tagText);
-                    }
-                }
-
-                foreach (var tagText in tagData.NewTags)
-                {
-                    var existingTag = await orderTagRepository.GetByItemAsync(t => t.Text == tagText, cancellationToken);
-
-                    if (existingTag is not null)
-                    {
-                        createdOrder.Tags.Add(existingTag);
-                    }
-                    else
-                    {
-                        var tag = await orderTagRepository.AddAsync(new OrderTag
-                        {
-                            Text = tagText,
-                            Category = category,
-                            CategoryId = category.Id
-                        }, cancellationToken);
-
-                        createdOrder.Tags.Add(tag);
-                    }
-                }
-            }
+            await categorizationService.CategorizeOrder(createdOrder, cancellationToken);
 
             var updatedOrder = await orderRepository.UpdateAsync(createdOrder, cancellationToken);
 
