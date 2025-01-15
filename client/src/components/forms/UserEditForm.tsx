@@ -1,15 +1,27 @@
-import { Box, Button, FormControl, Grid2 as Grid, InputLabel, LinearProgress, MenuItem, Select, TextField } from "@mui/material";
+import {
+    Box,
+    Button,
+    FormControl,
+    Grid2 as Grid,
+    InputLabel,
+    LinearProgress,
+    MenuItem,
+    Select,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import InputMask from "react-input-mask";
 import { useState } from "react";
 import { Genders } from "../../utils/enums/genders";
 import userEditValidationSchema from "./validation/userEditValidationSchema";
-import moment from "moment";
+import moment, { Moment } from "moment";
+import { DatePicker } from "@mui/x-date-pickers";
 
 export interface UserEditData {
     name: string;
     surname: string;
-    birthDate?: Date;
+    birthDate?: Moment;
     gender: Genders;
     workingExperience?: string;
     city?: string;
@@ -35,7 +47,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                 setLoading(false);
             }}
         >
-            {({ values, handleChange, setFieldValue, handleBlur, touched, errors }) => (
+            {({ values, handleChange, setFieldValue, handleBlur, validateField, touched, errors }) => (
                 <Form>
                     <Grid container spacing={2} mt={2} mb={2}>
                         {/* Name Field */}
@@ -62,35 +74,29 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             />
                         </Grid>
 
-                        {/* TODO Add null option */}
                         {/* Birthdate Field */}
-                        <Grid size={12}>
-                            <TextField
-                                label="Birth Date (Optional)"
-                                type="date"
+                        <Grid size={{ xs: 12, sm: 6 }}>
+                            <DatePicker
+                                sx={{ width: "100%" }}
                                 name="birthDate"
-                                fullWidth
-                                value={values.birthDate ? moment(values.birthDate).format("YYYY-MM-DD") : ""}
-                                onChange={handleChange}
-                                error={touched.birthDate && Boolean(errors.birthDate)}
-                                helperText={touched.birthDate && errors.birthDate}
-                            />
-                        </Grid>
-
-                        {/* City Field */}
-                        <Grid size={12}>
-                            <Field
-                                name="city"
-                                as={TextField}
-                                label="City (Optional)"
-                                fullWidth
-                                error={touched.city && Boolean(errors.city)}
-                                helperText={<ErrorMessage name="city" />}
+                                label="Birth Date (Optional)"
+                                value={values.birthDate ? moment(values.birthDate) : null}
+                                disableFuture
+                                minDate={moment().subtract(100, "years")}
+                                onChange={(value: Moment | null) => {
+                                    setFieldValue("birthDate", value);
+                                    validateField("birthDate");
+                                }}
+                                slotProps={{
+                                    textField: {
+                                        helperText: errors.birthDate,
+                                    },
+                                }}
                             />
                         </Grid>
 
                         {/* Gender Field */}
-                        <Grid size={12}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <FormControl fullWidth error={touched.gender && Boolean(errors.gender)}>
                                 <InputLabel id="gender-select-label">Gender</InputLabel>
                                 <Field
@@ -115,20 +121,20 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             </FormControl>
                         </Grid>
 
-                        {/* Working Experience Field */}
-                        <Grid size={12}>
+                        {/* City Field */}
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <Field
-                                name="workingExperience"
+                                name="city"
                                 as={TextField}
-                                label="Working Experience (Optional)"
+                                label="City (Optional)"
                                 fullWidth
-                                error={touched.workingExperience && Boolean(errors.workingExperience)}
-                                helperText={<ErrorMessage name="workingExperience" />}
+                                error={touched.city && Boolean(errors.city)}
+                                helperText={<ErrorMessage name="city" />}
                             />
                         </Grid>
 
                         {/* Phone Field */}
-                        <Grid size={12}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <InputMask mask="+375(99)999-99-99" value={values.phone} disabled={false} onChange={handleChange}>
                                 {() => (
                                     <TextField
@@ -142,6 +148,18 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             </InputMask>
                         </Grid>
 
+                        {/* Working Experience Field */}
+                        <Grid size={12}>
+                            <Field
+                                name="workingExperience"
+                                as={TextField}
+                                label="Working Experience (Optional)"
+                                fullWidth
+                                error={touched.workingExperience && Boolean(errors.workingExperience)}
+                                helperText={<ErrorMessage name="workingExperience" />}
+                            />
+                        </Grid>
+
                         {/* Description Field */}
                         <Grid size={12}>
                             <Field
@@ -149,10 +167,23 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                                 as={TextField}
                                 label="Description (Optional)"
                                 multiline
-                                rows={4}
+                                minRows={3}
                                 fullWidth
                                 error={touched.description && Boolean(errors.description)}
-                                helperText={<ErrorMessage name="description" />}
+                                helperText={
+                                    errors.description ? (
+                                        <ErrorMessage name="description" />
+                                    ) : (
+                                        <Typography
+                                            variant="subtitle2"
+                                            color="textSecondary"
+                                            textAlign={"end"}
+                                            sx={{ mt: "-30px" }}
+                                        >
+                                            {values.description?.length}/500
+                                        </Typography>
+                                    )
+                                }
                             />
                         </Grid>
 

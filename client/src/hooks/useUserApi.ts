@@ -2,13 +2,14 @@ import { ApiResponse, ProfileImage } from "./responses";
 import AxiosFactory from "./axiosFactory";
 import { Genders } from "../utils/enums/genders";
 import { useCallback } from "react";
+import { Moment } from "moment";
 
 export interface User {
     id: string;
     email: string;
     name: string;
     surname: string;
-    birthDate?: Date;
+    birthDate?: Moment;
     gender: Genders;
     workingExperience?: string;
     city?: string;
@@ -33,7 +34,7 @@ export interface UserToUpdate {
     id: string;
     name: string;
     surname: string;
-    birthDate?: Date;
+    birthDate?: Moment;
     gender: Genders;
     workingExperience?: string;
     city?: string;
