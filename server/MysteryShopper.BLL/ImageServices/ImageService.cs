@@ -20,7 +20,7 @@ public class ImageService(IBlobStorage imageStorage) : IImageService
     {
         string fileName = entityId.ToString();
 
-        var stream = await imageStorage.GetAsync(fileName, ImageExtension, cancellationToken)
+        var stream = await imageStorage.GetObjectAsync(fileName, cancellationToken)
             ?? throw new NotFoundException("Image not found");
 
         return stream;
@@ -51,7 +51,7 @@ public class ImageService(IBlobStorage imageStorage) : IImageService
 
         using var jpegStream = await ConvertToJpegStream(fileStream, cancellationToken);
 
-        await imageStorage.SaveAsync(jpegStream, imageName, ImageExtension, cancellationToken: cancellationToken);
+        await imageStorage.SaveObjectAsync(jpegStream, imageName, cancellationToken: cancellationToken);
     }
 
     private static async Task<MemoryStream> ConvertToJpegStream(Stream fileStream, CancellationToken cancellationToken = default)
