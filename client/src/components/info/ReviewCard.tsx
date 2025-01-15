@@ -2,6 +2,9 @@ import { Avatar, Grid2 as Grid, IconButton, Paper, Rating, Typography, useMediaQ
 import { useNavigate } from "react-router-dom";
 import { Roles } from "../../utils/enums/roles";
 import { COMPANY_PROFILE_ROUTE, USER_PROFILE_ROUTE } from "../../router/consts";
+import useCompanyApi from "../../hooks/useCompanyApi";
+import useUserApi from "../../hooks/useUserApi";
+import { useEffect, useState } from "react";
 
 interface ReviewCardProps {
     sender: {
@@ -13,14 +16,33 @@ interface ReviewCardProps {
     text: string;
 }
 
-// TODO Add avatars.
-
 const ReviewCard = ({ sender, grade, text }: ReviewCardProps) => {
     const theme = useTheme();
 
     const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const navigate = useNavigate();
+
+    const { getProfileImage: getCompanyProfileImage } = useCompanyApi();
+
+    const { getProfileImage: getUserProfileImage } = useUserApi();
+
+    const [imageSrc, setImageSrc] = useState("");
+
+    useEffect(() => {
+        const loadImage = async () => {
+            const imageResponse =
+                sender.role === Roles.Company ? await getCompanyProfileImage(sender.id) : await getUserProfileImage(sender.id);
+
+            if ("error" in imageResponse) {
+                return;
+            }
+
+            setImageSrc(URL.createObjectURL(imageResponse.blob));
+        };
+
+        loadImage();
+    }, [getCompanyProfileImage, getUserProfileImage, sender.id, sender.role]);
 
     const handleOpenProfile = () => {
         let route = sender.role === Roles.Company ? COMPANY_PROFILE_ROUTE : USER_PROFILE_ROUTE;
@@ -42,7 +64,7 @@ const ReviewCard = ({ sender, grade, text }: ReviewCardProps) => {
                 <Grid container direction={"column"} spacing={2}>
                     <Grid container>
                         <IconButton sx={{ p: 0 }} onClick={handleOpenProfile}>
-                            <Avatar sx={{ width: 56, height: 56 }} />
+                            <Avatar sx={{ width: 56, height: 56 }} src={imageSrc} alt={`${sender.name}'s avatar`} />
                         </IconButton>
                         <Grid container direction={"column"} spacing={0} mt={"-5px"}>
                             <Typography variant="h6">{sender.name}</Typography>
