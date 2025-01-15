@@ -67,7 +67,7 @@ const CompanyOwnProfilePage = () => {
         };
 
         loadProfile();
-    }, []);
+    }, [getMyCompanyData, getProfileImage, notifications]);
 
     const rating = useMemo(() => {
         if (!companyData || companyData.companyReviews.length === 0) {

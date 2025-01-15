@@ -1,5 +1,6 @@
 import { ApiResponse, ProfileImage } from "./responses";
 import AxiosFactory from "./axiosFactory";
+import { useCallback } from "react";
 
 export interface Company {
     id: string;
@@ -46,7 +47,7 @@ const useCompanyApi = () => {
 
     const baseImageURL = process.env.REACT_APP_API_URL + "/CompanyImage";
 
-    const getMyCompanyData = async (): Promise<ApiResponse<Company>> => {
+    const getMyCompanyData = useCallback(async (): Promise<ApiResponse<Company>> => {
         const client = await AxiosFactory.createAxiosInstance(baseURL);
 
         try {
@@ -61,83 +62,95 @@ const useCompanyApi = () => {
                 return { error: true, message: "An unexpected error occurred." };
             }
         }
-    };
+    }, [baseURL]);
 
-    const getCompanyData = async (id: string): Promise<ApiResponse<Company>> => {
-        const client = await AxiosFactory.createAxiosInstance(baseURL);
+    const getCompanyData = useCallback(
+        async (id: string): Promise<ApiResponse<Company>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL);
 
-        try {
-            const response = await client.get(id);
+            try {
+                const response = await client.get(id);
 
-            return response.data;
-        } catch (error: any) {
-            if (error.response) {
-                const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-            } else {
-                return { error: true, message: "An unexpected error occurred." };
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
             }
-        }
-    };
+        },
+        [baseURL]
+    );
 
-    const updateCompanyData = async (updatedCompany: CompanyToUpdate): Promise<ApiResponse<Company>> => {
-        const client = await AxiosFactory.createAxiosInstance(baseURL);
+    const updateCompanyData = useCallback(
+        async (updatedCompany: CompanyToUpdate): Promise<ApiResponse<Company>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL);
 
-        try {
-            const response = await client.put(updatedCompany.id, updatedCompany);
+            try {
+                const response = await client.put(updatedCompany.id, updatedCompany);
 
-            return response.data;
-        } catch (error: any) {
-            if (error.response) {
-                const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-            } else {
-                return { error: true, message: "An unexpected error occurred." };
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
             }
-        }
-    };
+        },
+        [baseURL]
+    );
 
-    const getProfileImage = async (id: string): Promise<ApiResponse<ProfileImage>> => {
-        const client = await AxiosFactory.createAxiosInstance(baseImageURL);
+    const getProfileImage = useCallback(
+        async (id: string): Promise<ApiResponse<ProfileImage>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseImageURL);
 
-        try {
-            const response = await client.get(id, {
-                responseType: "blob",
-            });
+            try {
+                const response = await client.get(id, {
+                    responseType: "blob",
+                });
 
-            return { blob: response.data };
-        } catch (error: any) {
-            if (error.response) {
-                const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-            } else {
-                return { error: true, message: "An unexpected error occurred." };
+                return { blob: response.data };
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
             }
-        }
-    };
+        },
+        [baseImageURL]
+    );
 
-    const updateProfileImage = async (file: File): Promise<ApiResponse<null>> => {
-        const client = await AxiosFactory.createAxiosInstance(baseImageURL);
+    const updateProfileImage = useCallback(
+        async (file: File): Promise<ApiResponse<null>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseImageURL);
 
-        const formData = new FormData();
+            const formData = new FormData();
 
-        formData.append("file", file);
+            formData.append("file", file);
 
-        try {
-            await client.post("", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
+            try {
+                await client.post("", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
 
-            return null;
-        } catch (error: any) {
-            if (error.response) {
-                const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-            } else {
-                return { error: true, message: "An unexpected error occurred." };
+                return null;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
             }
-        }
-    };
+        },
+        [baseImageURL]
+    );
 
     return { getMyCompanyData, getCompanyData, getProfileImage, updateCompanyData, updateProfileImage };
 };

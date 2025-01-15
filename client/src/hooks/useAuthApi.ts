@@ -2,6 +2,7 @@ import { Genders } from "../utils/enums/genders";
 import { ApiResponse } from "./responses";
 import AxiosFactory from "./axiosFactory";
 import AuthDataManager from "./utils/authDataManager";
+import { useCallback } from "react";
 
 export interface EmailAvailability {
     available: Boolean;
@@ -38,26 +39,29 @@ export interface CompanyRegistrationData {
 const useAuthApi = () => {
     const baseURL = process.env.REACT_APP_AUTH_API_URL!;
 
-    const login = async (email: string, password: string): Promise<ApiResponse<null>> => {
-        const client = await AxiosFactory.createAxiosInstance(baseURL, false);
+    const login = useCallback(
+        async (email: string, password: string): Promise<ApiResponse<null>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL, false);
 
-        try {
-            const response = await client.post("login", { email, password });
+            try {
+                const response = await client.post("login", { email, password });
 
-            AuthDataManager.saveAuthData(response.data);
+                AuthDataManager.saveAuthData(response.data);
 
-            return null;
-        } catch (error: any) {
-            if (error.response) {
-                const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-            } else {
-                return { error: true, message: "An unexpected error occurred." };
+                return null;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
             }
-        }
-    };
+        },
+        [baseURL]
+    );
 
-    const logout = async (): Promise<ApiResponse<null>> => {
+    const logout = useCallback(async (): Promise<ApiResponse<null>> => {
         const client = await AxiosFactory.createAxiosInstance(baseURL, false);
 
         try {
@@ -71,66 +75,75 @@ const useAuthApi = () => {
             AuthDataManager.clearAuthData();
             return null;
         }
-    };
+    }, [baseURL]);
 
-    const checkEmailAvailability = async (email: string): Promise<ApiResponse<EmailAvailability>> => {
-        const client = await AxiosFactory.createAxiosInstance(baseURL, false);
+    const checkEmailAvailability = useCallback(
+        async (email: string): Promise<ApiResponse<EmailAvailability>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL, false);
 
-        try {
-            const response = await client.post("check-email", JSON.stringify(email), {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
+            try {
+                const response = await client.post("check-email", JSON.stringify(email), {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
 
-            return response.data;
-        } catch (error: any) {
-            if (error.response) {
-                const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-            } else {
-                return { error: true, message: "An unexpected error occurred." };
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
             }
-        }
-    };
+        },
+        [baseURL]
+    );
 
-    const registerUser = async (userData: UserRegistrationData): Promise<ApiResponse<null>> => {
-        const client = await AxiosFactory.createAxiosInstance(baseURL, false);
+    const registerUser = useCallback(
+        async (userData: UserRegistrationData): Promise<ApiResponse<null>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL, false);
 
-        try {
-            const response = await client.post("register/user", userData);
+            try {
+                const response = await client.post("register/user", userData);
 
-            AuthDataManager.saveAuthData(response.data);
+                AuthDataManager.saveAuthData(response.data);
 
-            return null;
-        } catch (error: any) {
-            if (error.response) {
-                const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-            } else {
-                return { error: true, message: "An unexpected error occurred." };
+                return null;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
             }
-        }
-    };
+        },
+        [baseURL]
+    );
 
-    const registerCompany = async (companyData: CompanyRegistrationData): Promise<ApiResponse<null>> => {
-        const client = await AxiosFactory.createAxiosInstance(baseURL, false);
+    const registerCompany = useCallback(
+        async (companyData: CompanyRegistrationData): Promise<ApiResponse<null>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL, false);
 
-        try {
-            const response = await client.post("register/company", companyData);
+            try {
+                const response = await client.post("register/company", companyData);
 
-            AuthDataManager.saveAuthData(response.data);
+                AuthDataManager.saveAuthData(response.data);
 
-            return null;
-        } catch (error: any) {
-            if (error.response) {
-                const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-            } else {
-                return { error: true, message: "An unexpected error occurred." };
+                return null;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
             }
-        }
-    };
+        },
+        [baseURL]
+    );
 
     return { login, logout, checkEmailAvailability, registerUser, registerCompany };
 };
