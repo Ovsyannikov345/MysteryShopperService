@@ -1,17 +1,16 @@
-import { Button, Grid2 as Grid, SelectChangeEvent } from "@mui/material";
+import { Button, Grid2 as Grid, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { OrderQueryFilter } from "../../hooks/useOrderApi";
 
 interface EstateFilterProps {
-    filter?: OrderQueryFilter;
-    onFilterChange: (filter?: OrderQueryFilter) => void;
+    filter: OrderQueryFilter;
+    onFilterChange: (filter: OrderQueryFilter) => void;
 }
 
 const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
-    const [filters, setFilters] = useState<OrderQueryFilter | undefined>(filter);
+    const [filters, setFilters] = useState<OrderQueryFilter>(filter);
 
-    const handleChange = (field: keyof OrderQueryFilter) => (event: React.ChangeEvent<any> | SelectChangeEvent<any>) => {
-        const value = event.target.value;
+    const handleChange = (field: keyof OrderQueryFilter, value: any) => {
         setFilters((prev) => ({
             ...prev,
             [field]: value === "" ? undefined : value,
@@ -23,52 +22,142 @@ const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
     };
 
     const handleClearFilters = () => {
-        setFilters(undefined);
-        onFilterChange(undefined);
+        setFilters({});
+        onFilterChange({});
+    };
+
+    const timeSpanToHours = (span: string) => {
+        const parts = span.split(".");
+
+        return Number(parts[0]) * 24 + Number(parts[1].split(":")[0]);
+    };
+
+    const hoursToTimeSpan = (hours: number) => {
+        if (hours === 0) {
+            return undefined;
+        }
+
+        return `${Math.floor(hours / 24)}.${hours % 24}:00:00`;
     };
 
     return (
-        <Grid container spacing={2} size={{ xs: 12, sm: 8, lg: 6 }}>
-            {/* TODO Add filter fields. */}
-            {/* <Grid size={{ xs: 12, sm: 6 }}>
-                <TextField label="Address" fullWidth value={filters.address || ""} onChange={handleChange("address")} />
-            </Grid>
-            <Grid size={{ xs: 6 }}>
-                <TextField label="Min Area" type="number" fullWidth value={filters.minArea || ""} onChange={handleChange("minArea")} />
-            </Grid>
-            <Grid size={{ xs: 6 }}>
-                <TextField label="Max Area" type="number" fullWidth value={filters.maxArea || ""} onChange={handleChange("maxArea")} />
-            </Grid>
-            <Grid size={{ xs: 6 }}>
+        <Grid container spacing={2} size={{ xs: 12, sm: 6 }}>
+            {/* Text Filter */}
+            <Grid size={12}>
                 <TextField
-                    label="Min Rooms"
-                    type="number"
+                    label="Search Text"
+                    placeholder="Title or address"
+                    variant="outlined"
+                    autoComplete="off"
                     fullWidth
-                    value={filters.minRoomsCount || ""}
-                    onChange={handleChange("minRoomsCount")}
+                    value={filters.text || ""}
+                    onChange={(e) => handleChange("text", e.target.value)}
                 />
             </Grid>
-            <Grid size={{ xs: 6 }}>
+
+            {/* Time to Complete */}
+            <Grid size={12}>
+                <Typography>Time to complete (hours)</Typography>
+            </Grid>
+            <Grid size={5.5}>
                 <TextField
-                    label="Max Rooms"
-                    type="number"
+                    label="From"
+                    variant="outlined"
                     fullWidth
-                    value={filters.maxRoomsCount || ""}
-                    onChange={handleChange("maxRoomsCount")}
+                    autoComplete="off"
+                    type="number"
+                    sx={{
+                        "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
+                            display: "none",
+                        },
+                        "& input[type=number]": {
+                            MozAppearance: "textfield",
+                        },
+                    }}
+                    value={filters.minTimeToComplete ? timeSpanToHours(filters.minTimeToComplete) : ""}
+                    onChange={(e) => {
+                        handleChange("minTimeToComplete", hoursToTimeSpan(Number(e.target.value)));
+                    }}
                 />
             </Grid>
-            <Grid size={{ xs: 6 }}>
-                <TextField label="Min Price" type="number" fullWidth value={filters.minPrice || ""} onChange={handleChange("minPrice")} />
+            <Grid container size={1} alignItems={"center"} justifyContent={"center"}>
+                <Typography>—</Typography>
             </Grid>
-            <Grid size={{ xs: 6 }}>
-                <TextField label="Max Price" type="number" fullWidth value={filters.maxPrice || ""} onChange={handleChange("maxPrice")} />
-            </Grid> */}
+            <Grid size={5.5}>
+                <TextField
+                    label="To"
+                    variant="outlined"
+                    autoComplete="off"
+                    fullWidth
+                    type="number"
+                    sx={{
+                        "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
+                            display: "none",
+                        },
+                        "& input[type=number]": {
+                            MozAppearance: "textfield",
+                        },
+                    }}
+                    value={filters.maxTimeToComplete ? timeSpanToHours(filters.maxTimeToComplete) : ""}
+                    onChange={(e) => {
+                        handleChange("maxTimeToComplete", hoursToTimeSpan(Number(e.target.value)));
+                    }}
+                />
+            </Grid>
+
+            {/* Price */}
+            <Grid size={12}>
+                <Typography>Price</Typography>
+            </Grid>
+            <Grid size={5.5}>
+                <TextField
+                    label="From"
+                    variant="outlined"
+                    autoComplete="off"
+                    fullWidth
+                    type="number"
+                    sx={{
+                        "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
+                            display: "none",
+                        },
+                        "& input[type=number]": {
+                            MozAppearance: "textfield",
+                        },
+                    }}
+                    value={filters.minPrice || ""}
+                    onChange={(e) => handleChange("minPrice", e.target.value)}
+                />
+            </Grid>
+            <Grid container size={1} alignItems={"center"} justifyContent={"center"}>
+                <Typography>—</Typography>
+            </Grid>
+            <Grid size={5.5}>
+                <TextField
+                    label="To"
+                    variant="outlined"
+                    autoComplete="off"
+                    fullWidth
+                    type="number"
+                    sx={{
+                        "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
+                            display: "none",
+                        },
+                        "& input[type=number]": {
+                            MozAppearance: "textfield",
+                        },
+                    }}
+                    value={filters.maxPrice || ""}
+                    onChange={(e) => handleChange("maxPrice", e.target.value)}
+                />
+            </Grid>
+
+            {/* Action Buttons */}
             <Grid container spacing={2}>
                 <Button variant="contained" color="primary" onClick={handleApplyFilters}>
-                    Apply Filters
+                    Apply
                 </Button>
                 <Button variant="outlined" onClick={handleClearFilters}>
-                    Clear filters
+                    Clear
                 </Button>
             </Grid>
         </Grid>
