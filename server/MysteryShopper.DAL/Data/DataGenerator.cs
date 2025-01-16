@@ -56,7 +56,7 @@ public static class DataGenerator
             .RuleFor(o => o.Title, f => f.Commerce.ProductName())
             .RuleFor(o => o.Description, f => f.Lorem.Sentence(10))
             .RuleFor(o => o.Place, f => f.Address.FullAddress())
-            .RuleFor(o => o.TimeToComplete, f => TimeSpan.FromMinutes(f.Random.Int(60, 1500)))
+            .RuleFor(o => o.TimeToComplete, f => TimeSpan.FromHours(f.Random.Int(12, 168)))
             .RuleFor(o => o.Price, f => f.Random.Int(100, 5000))
             .RuleFor(o => o.CreatedAt, f => f.Date.Past(1))
             .RuleFor(o => o.Lat, f => f.Address.Latitude())
