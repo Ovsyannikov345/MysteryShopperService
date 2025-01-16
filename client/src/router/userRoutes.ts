@@ -1,15 +1,16 @@
+import { AVAILABLE_ORDERS_ROUTE, COMPANY_PROFILE_ROUTE, OWN_PROFILE_ROUTE } from "./consts";
 import CompanyProfilePage from "../pages/Common/CompanyProfilePage";
 import UserOwnProfilePage from "../pages/User/UserOwnProfilePage";
 import UserProfilePage from "../pages/Common/UserProfilePage";
-import { COMPANY_PROFILE_ROUTE, OWN_PROFILE_ROUTE } from "./consts";
+import AvailableOrdersPage from "../pages/User/AvailableOrdersPage";
 
 // TODO remove commented code.
 
 export const userRoutes = [
-    // {
-    //     path: "/orders",
-    //     Component: AvailableOrdersPage,
-    // },
+    {
+        path: AVAILABLE_ORDERS_ROUTE,
+        Component: AvailableOrdersPage,
+    },
     // {
     //     path: "/orders/:id",
     //     Component: UserOrderDetails,
