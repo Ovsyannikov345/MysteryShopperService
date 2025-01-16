@@ -16,9 +16,16 @@ public class ImageService(IBlobStorage imageStorage) : IImageService
 
     public string ImageExtension => "jpeg";
 
+    public async Task<bool> ImageExistsAsync(Guid entityId, CancellationToken cancellationToken = default)
+    {
+        var fileName = entityId.ToString();
+
+        return await imageStorage.ObjectExistsAsync(fileName, cancellationToken: cancellationToken);
+    }
+
     public async Task<Stream> GetImageAsync(Guid entityId, CancellationToken cancellationToken = default)
     {
-        string fileName = entityId.ToString();
+        var fileName = entityId.ToString();
 
         var stream = await imageStorage.GetObjectAsync(fileName, cancellationToken)
             ?? throw new NotFoundException("Image not found");

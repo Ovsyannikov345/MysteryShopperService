@@ -1,6 +1,7 @@
 ﻿using Minio;
 using Minio.DataModel.Args;
 using MysteryShopper.DAL.BlobStorages.IBlobStorages;
+using System.Security.AccessControl;
 
 namespace MysteryShopper.DAL.BlobStorages
 {
@@ -10,6 +11,26 @@ namespace MysteryShopper.DAL.BlobStorages
 
         protected readonly string _bucketName = bucketName;
 
+        public async Task<bool> ObjectExistsAsync(string name, string? prefix = null, CancellationToken cancellationToken = default)
+        {
+            await EnsureBucketCreatedAsync(cancellationToken);
+
+            var objectName = string.IsNullOrEmpty(prefix) ? name : $"{prefix}/{name}";
+
+            try
+            {
+                await _minioClient.StatObjectAsync(new StatObjectArgs()
+                    .WithBucket(_bucketName)
+                    .WithObject(objectName), cancellationToken);
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task SaveObjectAsync(
             Stream fileStream,
             string name,
@@ -17,7 +38,7 @@ namespace MysteryShopper.DAL.BlobStorages
             string contentType = "image/jpeg",
             CancellationToken cancellationToken = default)
         {
-            await EnsureBucketCreated(cancellationToken);
+            await EnsureBucketCreatedAsync(cancellationToken);
 
             var objectName = string.IsNullOrEmpty(prefix) ? name : $"{prefix}/{name}";
 
@@ -58,7 +79,7 @@ namespace MysteryShopper.DAL.BlobStorages
 
         public async Task<List<string>> GetObjectNamesByPrefixAsync(string prefix, CancellationToken cancellationToken = default)
         {
-            await EnsureBucketCreated(cancellationToken);
+            await EnsureBucketCreatedAsync(cancellationToken);
 
             var keys = new List<string>();
 
@@ -74,14 +95,14 @@ namespace MysteryShopper.DAL.BlobStorages
 
         public async Task DeleteObjectAsync(string objectName, CancellationToken cancellationToken = default)
         {
-            await EnsureBucketCreated(cancellationToken);
+            await EnsureBucketCreatedAsync(cancellationToken);
 
             await _minioClient.RemoveObjectAsync(new RemoveObjectArgs()
                 .WithBucket(_bucketName)
                 .WithObject(objectName), cancellationToken);
         }
 
-        private async Task EnsureBucketCreated(CancellationToken cancellationToken = default)
+        private async Task EnsureBucketCreatedAsync(CancellationToken cancellationToken = default)
         {
             bool isBucketExists = await _minioClient.BucketExistsAsync(new BucketExistsArgs()
                 .WithBucket(_bucketName), cancellationToken);

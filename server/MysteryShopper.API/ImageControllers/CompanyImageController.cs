@@ -10,6 +10,12 @@ namespace MysteryShopper.API.ImageControllers
     [Authorize]
     public class CompanyImageController(ICompanyImageService companyImageService) : ControllerBase
     {
+        [HttpGet("{companyId}/exists")]
+        public async Task<bool> AvatarExists(Guid companyId, CancellationToken cancellationToken)
+        {
+            return await companyImageService.ImageExistsAsync(companyId, cancellationToken);
+        }
+
         [HttpGet("{companyId}")]
         public async Task<FileStreamResult> GetAvatar(Guid companyId, CancellationToken cancellationToken)
         {
