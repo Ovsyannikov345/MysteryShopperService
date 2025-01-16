@@ -15,7 +15,7 @@ namespace MysteryShopper.BLL.Services
         IOrderRepository orderRepository,
         IMapper mapper) : IReviewService
     {
-        public async Task<CompanyReviewModel> CreateCompanyReviewAsync(Guid userId, CompanyReviewModel reviewData, CancellationToken cancellationToken = default)
+        public async Task<ReviewModel> CreateCompanyReviewAsync(Guid userId, ReviewModel reviewData, CancellationToken cancellationToken = default)
         {
             if (userId != reviewData.UserId)
             {
@@ -36,10 +36,10 @@ namespace MysteryShopper.BLL.Services
 
             var createdReview = await companyReviewRepository.AddAsync(mapper.Map<CompanyReview>(reviewData), cancellationToken);
 
-            return mapper.Map<CompanyReviewModel>(createdReview);
+            return mapper.Map<ReviewModel>(createdReview);
         }
 
-        public async Task<UserReviewModel> CreateUserReviewAsync(Guid companyId, UserReviewModel reviewData, CancellationToken cancellationToken = default)
+        public async Task<ReviewModel> CreateUserReviewAsync(Guid companyId, ReviewModel reviewData, CancellationToken cancellationToken = default)
         {
             if (companyId != reviewData.CompanyId)
             {
@@ -68,7 +68,7 @@ namespace MysteryShopper.BLL.Services
 
             var createdReview = await userReviewRepository.AddAsync(mapper.Map<UserReview>(reviewData), cancellationToken);
 
-            return mapper.Map<UserReviewModel>(createdReview);
+            return mapper.Map<ReviewModel>(createdReview);
         }
     }
 }

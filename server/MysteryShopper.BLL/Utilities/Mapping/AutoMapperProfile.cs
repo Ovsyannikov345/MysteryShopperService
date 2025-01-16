@@ -21,8 +21,8 @@ namespace MysteryShopper.BLL.Utilities.Mapping
 
             CreateMap<Dispute, DisputeModel>().ReverseMap();
 
-            CreateMap<CompanyReview, CompanyReviewModel>().ReverseMap();
-            CreateMap<UserReview, UserReviewModel>().ReverseMap();
+            CreateMap<CompanyReview, ReviewModel>().ReverseMap();
+            CreateMap<UserReview, ReviewModel>().ReverseMap();
 
             CreateMap<NotificationModel, Notification>().ReverseMap();
 

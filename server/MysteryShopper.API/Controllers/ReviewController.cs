@@ -17,7 +17,7 @@ namespace MysteryShopper.API.Controllers
         [Authorize(Roles = "User")]
         public async Task<ReviewViewModel> CreateCompanyReview(Guid id, CompanyReviewToCreateViewModel reviewData, CancellationToken cancellationToken)
         {
-            var reviewToCreate = mapper.Map<CompanyReviewModel>(reviewData);
+            var reviewToCreate = mapper.Map<ReviewModel>(reviewData);
 
             reviewToCreate.CompanyId = id;
             reviewToCreate.UserId = HttpContext.GetIdFromContext();
@@ -31,7 +31,7 @@ namespace MysteryShopper.API.Controllers
         [Authorize(Roles = "Company")]
         public async Task<ReviewViewModel> CreateUserReview(Guid id, UserReviewToCreateViewModel reviewData, CancellationToken cancellationToken)
         {
-            var reviewToCreate = mapper.Map<UserReviewModel>(reviewData);
+            var reviewToCreate = mapper.Map<ReviewModel>(reviewData);
 
             reviewToCreate.UserId = id;
             reviewToCreate.CompanyId = HttpContext.GetIdFromContext();

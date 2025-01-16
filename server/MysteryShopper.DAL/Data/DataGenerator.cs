@@ -72,7 +72,7 @@ public static class DataGenerator
         var userOrderFaker = new Faker<UserOrder>()
             .RuleFor(u => u.Status, f => f.PickRandom<UserOrderStatus>());
 
-        List<UserOrder> userOrders = new List<UserOrder>();
+        List<UserOrder> userOrders = [];
 
         userIds = [.. userIds.OrderBy(_ => Guid.NewGuid())];
         orderIds = [.. orderIds.OrderBy(_ => Guid.NewGuid())];

@@ -49,14 +49,13 @@ public static class Program
 
         if (app.Environment.IsDevelopment())
         {
-            using (var scope = app.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<MysteryShopperDbContext>();
+            using var scope = app.Services.CreateScope();
 
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-                DataGenerator.GenerateAndSeedDatabase(context);
-            }
+            var context = scope.ServiceProvider.GetRequiredService<MysteryShopperDbContext>();
+
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+            DataGenerator.GenerateAndSeedDatabase(context);
         }
 
         // Configure the HTTP request pipeline.

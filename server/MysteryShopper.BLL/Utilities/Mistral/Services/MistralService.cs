@@ -32,15 +32,11 @@ namespace MysteryShopper.BLL.Utilities.Mistral.Services
 
             if (content.StartsWith("json"))
             {
-                content = content.Substring(4);
+                content = content[4..];
             }
 
-            var tagData = JsonSerializer.Deserialize<TagData>(content);
-
-            if (tagData is null)
-            {
-                throw new InternalServerErrorException("Tags can't be determined");
-            }
+            var tagData = JsonSerializer.Deserialize<TagData>(content)
+                ?? throw new InternalServerErrorException("Tags can't be determined");
 
             return tagData;
         }
