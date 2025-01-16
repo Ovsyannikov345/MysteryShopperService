@@ -109,7 +109,13 @@ const useCompanyApi = () => {
             const client = await AxiosFactory.createAxiosInstance(baseImageURL);
 
             try {
-                const response = await client.get(id, {
+                let response = await client.get(`${id}/exists`);
+
+                if (response.data === false) {
+                    return { error: true, statusCode: 404, message: "Image not found" };
+                }
+
+                response = await client.get(id, {
                     responseType: "blob",
                 });
 
