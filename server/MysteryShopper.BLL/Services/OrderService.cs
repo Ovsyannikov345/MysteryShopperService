@@ -3,11 +3,13 @@ using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.BLL.Utilities.Messages;
+using MysteryShopper.BLL.Utilities.Querying;
 using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
-using System.Linq;
+using MysteryShopper.DAL.Utilities.Pagination;
+using System.Linq.Expressions;
 
 namespace MysteryShopper.BLL.Services
 {
@@ -20,15 +22,45 @@ namespace MysteryShopper.BLL.Services
         IMapper mapper,
         OrderCreationValidator orderValidator) : IOrderService
     {
-        public async Task<IEnumerable<Order>> GetOrderListAsync(Guid currentUserId, CancellationToken cancellationToken = default)
+        public async Task<PagedResult<Order>> GetOrderListAsync(
+            Guid currentUserId,
+            OrderSortOptions sortOption,
+            OrderQueryFilter filter,
+            Pagination pagination,
+            CancellationToken cancellationToken = default)
         {
-            var orders = await orderRepository.GetActiveOrdersWithCompanies(cancellationToken);
+            var sortKeySelector = GetSortKeySelectorFromSortOption(sortOption);
 
-            var currentUserOrderIds = (await orderRepository.GetUserOrdersAsync(currentUserId, cancellationToken))
-                .Select(userOrder => userOrder.OrderId)
-                .ToHashSet();
+            var isDescending =
+                sortOption == OrderSortOptions.DateDescending ||
+                sortOption == OrderSortOptions.PriceDescending ||
+                sortOption == OrderSortOptions.TimeToCompleteDescending;
 
-            return orders.Where(order => !currentUserOrderIds.Contains(order.Id));
+            Expression<Func<Order, bool>> predicate = (order) =>
+                (string.IsNullOrEmpty(filter.Text) || order.Title.Contains(filter.Text, StringComparison.OrdinalIgnoreCase)
+                    || order.Place.Contains(filter.Text, StringComparison.OrdinalIgnoreCase)) &&
+                (!filter.MaxPrice.HasValue || order.Price <= filter.MaxPrice) &&
+                (!filter.MinPrice.HasValue || order.Price >= filter.MinPrice) &&
+                (!filter.MaxTimeToComplete.HasValue || order.TimeToComplete <= filter.MaxTimeToComplete) &&
+                (!filter.MinTimeToComplete.HasValue || order.TimeToComplete >= filter.MinTimeToComplete);
+
+            var orders = await orderRepository.GetAvailableOrdersForUserAsync(
+                currentUserId, sortKeySelector, predicate, isDescending, pagination.PageNumber, pagination.PageSize, cancellationToken);
+
+            return orders;
+
+            static Expression<Func<Order, object?>> GetSortKeySelectorFromSortOption(OrderSortOptions sortOption)
+            {
+                Expression<Func<Order, object?>> selector = sortOption switch
+                {
+                    OrderSortOptions.DateDescending or OrderSortOptions.DateAscending => (o) => o.CreatedAt,
+                    OrderSortOptions.PriceDescending or OrderSortOptions.PriceAscending => (o) => o.Price,
+                    OrderSortOptions.TimeToCompleteDescending or OrderSortOptions.TimeToCompleteAscending => (o) => o.TimeToComplete,
+                    _ => (o) => o.CreatedAt,
+                };
+
+                return selector;
+            }
         }
 
         public async Task<OrderModel> CreateOrderAsync(OrderModel orderData, CancellationToken cancellationToken = default)

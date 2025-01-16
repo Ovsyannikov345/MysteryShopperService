@@ -1,11 +1,18 @@
 ﻿using MysteryShopper.BLL.Dto;
+using MysteryShopper.BLL.Utilities.Querying;
 using MysteryShopper.DAL.Entities.Models;
+using MysteryShopper.DAL.Utilities.Pagination;
 
 namespace MysteryShopper.BLL.Services.IServices
 {
     public interface IOrderService
     {
-        Task<IEnumerable<Order>> GetOrderListAsync(Guid currentUserId, CancellationToken cancellationToken = default);
+        Task<PagedResult<Order>> GetOrderListAsync(
+            Guid currentUserId,
+            OrderSortOptions sortOption,
+            OrderQueryFilter filter,
+            Pagination pagination,
+            CancellationToken cancellationToken = default);
 
         Task<OrderModel> CreateOrderAsync(OrderModel orderData, CancellationToken cancellationToken = default);
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.DAL.Entities.Models;
+using MysteryShopper.DAL.Utilities.Pagination;
 
 namespace MysteryShopper.BLL.Utilities.Mapping
 {
@@ -24,6 +25,9 @@ namespace MysteryShopper.BLL.Utilities.Mapping
             CreateMap<UserReview, UserReviewModel>().ReverseMap();
 
             CreateMap<NotificationModel, Notification>().ReverseMap();
+
+            CreateMap(typeof(PagedResult<>), typeof(PagedResult<>))
+                .ForMember(nameof(PagedResult<object>.PageContent), opt => opt.MapFrom(nameof(PagedResult<object>.PageContent)));
         }
     }
 }

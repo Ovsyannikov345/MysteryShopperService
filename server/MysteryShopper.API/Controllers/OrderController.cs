@@ -5,7 +5,9 @@ using MysteryShopper.API.Extensions;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
+using MysteryShopper.BLL.Utilities.Querying;
 using MysteryShopper.DAL.Entities.Models;
+using MysteryShopper.DAL.Utilities.Pagination;
 
 namespace MysteryShopper.API.Controllers
 {
@@ -16,13 +18,15 @@ namespace MysteryShopper.API.Controllers
     {
         [HttpGet]
         [Authorize(Roles = "User")]
-        public async Task<IEnumerable<OrderViewModel>> GetOrderList(CancellationToken cancellationToken)
+        public async Task<PagedResult<OrderViewModel>> GetOrderList(
+            [FromQuery] OrderSortOptions sortOption,
+            [FromQuery] OrderQueryFilter queryFilter,
+            [FromQuery] Pagination pagination,
+            CancellationToken cancellationToken)
         {
-            // TODO add filtering, sorting and pagination.
+            var orders = await orderService.GetOrderListAsync(HttpContext.GetIdFromContext(), sortOption, queryFilter, pagination, cancellationToken);
 
-            var orderList = await orderService.GetOrderListAsync(HttpContext.GetIdFromContext(), cancellationToken);
-
-            return mapper.Map<IEnumerable<Order>, IEnumerable<OrderViewModel>>(orderList);
+            return mapper.Map<PagedResult<Order>, PagedResult<OrderViewModel>>(orders);
         }
 
         [HttpGet("my-orders")]
