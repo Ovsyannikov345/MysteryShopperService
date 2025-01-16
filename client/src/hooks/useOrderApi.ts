@@ -1,7 +1,9 @@
-import { ApiResponse } from "./utils/responses";
+import { ApiResponse, PagedResult } from "./utils/responses";
 import AxiosFactory from "./utils/axiosFactory";
 import { useCallback } from "react";
 import { Moment } from "moment";
+import { OrderSortOptions } from "../utils/enums/orderSortOptions";
+import QueryParamNames from "./utils/queryParamNames";
 
 export interface Order {
     id: string;
@@ -28,28 +30,49 @@ export interface Order {
     };
 }
 
-// TODO add fields
-export interface OrderQueryFilter {}
+export interface OrderQueryFilter {
+    text?: string;
+    maxTimeToComplete?: string;
+    minTimeToComplete?: string;
+    maxPrice?: string;
+    minPrice?: string;
+}
 
 const useOrderApi = () => {
     const baseURL = process.env.REACT_APP_API_URL + "/Order";
 
-    const getAvailableOrders = useCallback(async (): Promise<ApiResponse<Order>> => {
-        const client = await AxiosFactory.createAxiosInstance(baseURL);
+    const ordersPerPage = 10;
 
-        try {
-            const response = await client.get("");
+    const getAvailableOrders = useCallback(
+        async (
+            pageNumber: number,
+            sortOption: OrderSortOptions,
+            filter: OrderQueryFilter
+        ): Promise<ApiResponse<PagedResult<Order>>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL);
 
-            return response.data;
-        } catch (error: any) {
-            if (error.response) {
-                const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
-            } else {
-                return { error: true, message: "An unexpected error occurred." };
+            try {
+                const filterQuery = Object.entries(filter)
+                    .filter(([, value]) => value)
+                    .map(([key, value]) => `${key}=${value}`)
+                    .join("&");
+
+                const response = await client.get(
+                    `?${QueryParamNames.PAGE_NUMBER}=${pageNumber}&${QueryParamNames.PAGE_SIZE}=${ordersPerPage}&${QueryParamNames.SORT_OPTION}=${sortOption}&${filterQuery}`
+                );
+
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
             }
-        }
-    }, [baseURL]);
+        },
+        [baseURL]
+    );
 
     return { getAvailableOrders };
 };
