@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Grid, Typography, TextField, Button, Snackbar, Alert, Avatar, Rating } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import UserHeader from "../../components/headers/UserHeader";
-import NavigateBack from "../../components/NavigateBack";
+import NavigateBack from "../../components/buttons/NavigateBack";
 import { getOrder } from "../../api/ordersApi";
 import moment from "moment";
 import addNoun from "../../utils/fieldsParser";

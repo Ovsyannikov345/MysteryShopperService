@@ -6,7 +6,7 @@ import { Avatar, Container, Grid2 as Grid, Pagination, Rating, Typography, useMe
 import backgroundImage from "../../images/background.jpg";
 import moment from "moment";
 import ProfileCard from "../../components/info/ProfileCard";
-import NavigateBack from "../../components/NavigateBack";
+import NavigateBack from "../../components/buttons/NavigateBack";
 import ProfilePageSkeleton from "../../components/skeletons/ProfilePageSkeleton";
 import { useNavigate, useParams } from "react-router-dom";
 import ReviewCard from "../../components/info/ReviewCard";

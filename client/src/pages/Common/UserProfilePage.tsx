@@ -4,7 +4,7 @@ import useUserApi, { User } from "../../hooks/useUserApi";
 import { useEffect, useMemo, useRef, useState } from "react";
 import UserHeader from "../../components/headers/UserHeader";
 import backgroundImage from "../../images/background.jpg";
-import NavigateBack from "../../components/NavigateBack";
+import NavigateBack from "../../components/buttons/NavigateBack";
 import ProfilePageSkeleton from "../../components/skeletons/ProfilePageSkeleton";
 import ReviewCard from "../../components/info/ReviewCard";
 import moment from "moment";

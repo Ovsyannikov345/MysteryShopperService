@@ -11,7 +11,7 @@ import {
     Button,
 } from "@mui/material";
 import CompanyHeader from "./../../components/headers/CompanyHeader";
-import NavigateBack from "../../components/NavigateBack";
+import NavigateBack from "../../components/buttons/NavigateBack";
 import { useTheme } from "@emotion/react";
 import { useParams } from "react-router-dom";
 import { getOrder } from "../../api/ordersApi";
