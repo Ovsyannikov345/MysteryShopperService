@@ -18,6 +18,10 @@ namespace MysteryShopper.API.Controllers
         [Authorize(Roles = "User")]
         public async Task<IEnumerable<OrderViewModel>> GetOrderList(CancellationToken cancellationToken)
         {
+            // TODO filter orders where user is involved.
+
+            // TODO add filtering, sorting and pagination.
+
             var orderList = await orderService.GetOrderListAsync(cancellationToken);
 
             return mapper.Map<IEnumerable<Order>, IEnumerable<OrderViewModel>>(orderList);
