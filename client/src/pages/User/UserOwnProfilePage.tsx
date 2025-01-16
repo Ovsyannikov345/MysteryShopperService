@@ -1,21 +1,9 @@
-import {
-    Avatar,
-    Button,
-    Collapse,
-    Container,
-    Grid2 as Grid,
-    Pagination,
-    Rating,
-    Typography,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material";
+import { Avatar, Button, Collapse, Container, Grid2 as Grid, Pagination, Rating, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useNotifications } from "@toolpad/core";
 import useUserApi, { User } from "../../hooks/useUserApi";
 import { useEffect, useMemo, useRef, useState } from "react";
 import UserHeader from "../../components/headers/UserHeader";
 import backgroundImage from "../../images/background.jpg";
-import NavigateBack from "../../components/NavigateBack";
 import ProfilePageSkeleton from "../../components/skeletons/ProfilePageSkeleton";
 import { Reviews } from "@mui/icons-material";
 import ReviewCard from "../../components/info/ReviewCard";
@@ -46,6 +34,10 @@ const UserOwnProfilePage = () => {
     const reviewHeaderRef = useRef<HTMLDivElement>(null);
 
     const [isChangingImage, setIsChangingImage] = useState(false);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
 
     useEffect(() => {
         const loadProfile = async () => {
@@ -156,17 +148,6 @@ const UserOwnProfilePage = () => {
                         backdropFilter: "blur(8px)",
                     }}
                 >
-                    {!isMediumScreen && (
-                        <Container
-                            maxWidth="md"
-                            style={{ paddingLeft: 0 }}
-                            sx={{
-                                mt: isMediumScreen ? 0 : 2,
-                            }}
-                        >
-                            <NavigateBack to={-1} label="Back" />
-                        </Container>
-                    )}
                     <Container
                         maxWidth="md"
                         sx={{
@@ -176,11 +157,6 @@ const UserOwnProfilePage = () => {
                             borderRadius: isMediumScreen ? 0 : "10px",
                         }}
                     >
-                        {isMediumScreen && (
-                            <Grid mt={3}>
-                                <NavigateBack to={-1} label="Back" />
-                            </Grid>
-                        )}
                         {!userData ? (
                             <ProfilePageSkeleton />
                         ) : (
@@ -207,9 +183,7 @@ const UserOwnProfilePage = () => {
                                             {`${userData.name} ${userData.surname}`}
                                         </Typography>
                                         <Typography variant="subtitle1">
-                                            {userData.birthDate
-                                                ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o."
-                                                : ""}
+                                            {userData.birthDate ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o." : ""}
                                             {userData.birthDate && userData.city && ", "}
                                             {userData.city ? userData.city : ""}
                                         </Typography>
@@ -230,11 +204,7 @@ const UserOwnProfilePage = () => {
                                 </Typography>
                                 <Rating value={rating} precision={0.5} size="large" readOnly sx={{ mt: 1 }} />
                                 <Grid container mt={1} mb={2}>
-                                    <Button
-                                        variant="contained"
-                                        startIcon={<Reviews />}
-                                        onClick={() => setDisplayReviews(!displayReviews)}
-                                    >
+                                    <Button variant="contained" startIcon={<Reviews />} onClick={() => setDisplayReviews(!displayReviews)}>
                                         {displayReviews ? "Hide Reviews" : `Show Reviews (${userData.userReviews.length})`}
                                     </Button>
                                 </Grid>

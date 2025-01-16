@@ -36,6 +36,10 @@ const UserProfilePage = () => {
     const reviewHeaderRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+
+    useEffect(() => {
         const loadProfile = async () => {
             if (!id) {
                 navigate("/");
@@ -154,9 +158,7 @@ const UserProfilePage = () => {
                                             {`${userData.name} ${userData.surname}`}
                                         </Typography>
                                         <Typography variant="subtitle1">
-                                            {userData.birthDate
-                                                ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o."
-                                                : ""}
+                                            {userData.birthDate ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o." : ""}
                                             {userData.birthDate && userData.city && ", "}
                                             {userData.city ? userData.city : ""}
                                         </Typography>
@@ -177,10 +179,7 @@ const UserProfilePage = () => {
                                     <ProfileCard title="Member for" value={moment(userData.createdAt).fromNow(true)} />
                                     <ProfileCard title="Orders" value={userData.orders.length} />
                                     <ProfileCard title="Reviews" value={userData.userReviews.length} />
-                                    <ProfileCard
-                                        title="Rating"
-                                        value={<Rating value={rating} precision={0.5} size="large" readOnly />}
-                                    />
+                                    <ProfileCard title="Rating" value={<Rating value={rating} precision={0.5} size="large" readOnly />} />
                                 </Grid>
 
                                 <Typography variant="h5" mt={4} ref={reviewHeaderRef}>

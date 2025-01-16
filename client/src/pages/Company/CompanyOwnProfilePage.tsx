@@ -2,21 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import useCompanyApi, { Company } from "../../hooks/useCompanyApi";
 import { useNotifications } from "@toolpad/core";
 import CompanyHeader from "../../components/headers/CompanyHeader";
-import {
-    Avatar,
-    Button,
-    Collapse,
-    Container,
-    Grid2 as Grid,
-    Pagination,
-    Rating,
-    Typography,
-    useMediaQuery,
-    useTheme,
-} from "@mui/material";
+import { Avatar, Button, Collapse, Container, Grid2 as Grid, Pagination, Rating, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Reviews } from "@mui/icons-material";
 import backgroundImage from "../../images/background.jpg";
-import NavigateBack from "../../components/NavigateBack";
 import ProfilePageSkeleton from "../../components/skeletons/ProfilePageSkeleton";
 import CompanyEditForm, { CompanyEditData } from "../../components/forms/CompanyEditForm";
 import UpdateProfileImageModal from "../../components/modals/UpdateProfileImageModal";
@@ -47,6 +35,10 @@ const CompanyOwnProfilePage = () => {
     const [isChangingImage, setIsChangingImage] = useState(false);
 
     useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+
+    useEffect(() => {
         const loadProfile = async () => {
             const response = await getMyCompanyData();
 
@@ -74,8 +66,7 @@ const CompanyOwnProfilePage = () => {
             return 0;
         }
 
-        let rating =
-            companyData.companyReviews.map((c) => c.grade).reduce((acc, val) => (acc += val)) / companyData.companyReviews.length;
+        let rating = companyData.companyReviews.map((c) => c.grade).reduce((acc, val) => (acc += val)) / companyData.companyReviews.length;
 
         return parseFloat(rating.toFixed(2));
     }, [companyData]);
@@ -159,17 +150,6 @@ const CompanyOwnProfilePage = () => {
                         backdropFilter: "blur(8px)",
                     }}
                 >
-                    {!isMediumScreen && (
-                        <Container
-                            maxWidth="md"
-                            style={{ paddingLeft: 0 }}
-                            sx={{
-                                mt: isMediumScreen ? 0 : 2,
-                            }}
-                        >
-                            <NavigateBack to={-1} label="Back" />
-                        </Container>
-                    )}
                     <Container
                         maxWidth="md"
                         sx={{
@@ -179,11 +159,6 @@ const CompanyOwnProfilePage = () => {
                             borderRadius: isMediumScreen ? 0 : "10px",
                         }}
                     >
-                        {isMediumScreen && (
-                            <Grid mt={3}>
-                                <NavigateBack to={-1} label="Back" />
-                            </Grid>
-                        )}
                         {!companyData ? (
                             <ProfilePageSkeleton />
                         ) : (
@@ -196,11 +171,7 @@ const CompanyOwnProfilePage = () => {
                                     mt={isMediumScreen ? 2 : 0}
                                 >
                                     <Grid container direction="column" alignItems={"center"}>
-                                        <Avatar
-                                            sx={{ width: 150, height: 150 }}
-                                            alt={companyData.name + " avatar"}
-                                            src={imageSrc}
-                                        />
+                                        <Avatar sx={{ width: 150, height: 150 }} alt={companyData.name + " avatar"} src={imageSrc} />
                                         <Button variant="contained" onClick={() => setIsChangingImage(true)}>
                                             Choose image
                                         </Button>
@@ -221,11 +192,7 @@ const CompanyOwnProfilePage = () => {
                                 </Typography>
                                 <Rating value={rating} precision={0.5} size="large" readOnly sx={{ mt: 1 }} />
                                 <Grid container mt={1} mb={2}>
-                                    <Button
-                                        variant="contained"
-                                        startIcon={<Reviews />}
-                                        onClick={() => setDisplayReviews(!displayReviews)}
-                                    >
+                                    <Button variant="contained" startIcon={<Reviews />} onClick={() => setDisplayReviews(!displayReviews)}>
                                         {displayReviews ? "Hide Reviews" : `Show Reviews (${companyData.companyReviews.length})`}
                                     </Button>
                                 </Grid>
