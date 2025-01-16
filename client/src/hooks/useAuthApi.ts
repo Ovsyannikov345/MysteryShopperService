@@ -1,6 +1,6 @@
 import { Genders } from "../utils/enums/genders";
-import { ApiResponse } from "./responses";
-import AxiosFactory from "./axiosFactory";
+import { ApiResponse } from "./utils/responses";
+import AxiosFactory from "./utils/axiosFactory";
 import AuthDataManager from "./utils/authDataManager";
 import { useCallback } from "react";
 

@@ -1,5 +1,5 @@
-import { ApiResponse, ProfileImage } from "./responses";
-import AxiosFactory from "./axiosFactory";
+import { ApiResponse, ProfileImage } from "./utils/responses";
+import AxiosFactory from "./utils/axiosFactory";
 import { Genders } from "../utils/enums/genders";
 import { useCallback } from "react";
 import { Moment } from "moment";

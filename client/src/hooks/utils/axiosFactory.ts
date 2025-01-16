@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import AuthDataManager from "./utils/authDataManager";
+import AuthDataManager from "./authDataManager";
 
 interface TokenPair {
     accessToken: string;
