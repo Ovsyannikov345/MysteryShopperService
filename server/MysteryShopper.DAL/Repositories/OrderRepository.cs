@@ -23,6 +23,13 @@ namespace MysteryShopper.DAL.Repositories
         {
             return await _context.UserOrders.AsNoTracking()
                 .Where(x => x.UserId == userId)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<UserOrder>> GetUserOrdersWithCompanyDataAsync(Guid userId, CancellationToken cancellationToken = default)
+        {
+            return await _context.UserOrders.AsNoTracking()
+                .Where(x => x.UserId == userId)
                 .Include(u => u.Order)
                     .ThenInclude(o => o.Company)
                         .ThenInclude(c => c.CompanyReviews)

@@ -7,6 +7,7 @@ using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
+using System.Linq;
 
 namespace MysteryShopper.BLL.Services
 {
@@ -19,9 +20,15 @@ namespace MysteryShopper.BLL.Services
         IMapper mapper,
         OrderCreationValidator orderValidator) : IOrderService
     {
-        public async Task<IEnumerable<Order>> GetOrderListAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Order>> GetOrderListAsync(Guid currentUserId, CancellationToken cancellationToken = default)
         {
-            return await orderRepository.GetActiveOrdersWithCompanies(cancellationToken);
+            var orders = await orderRepository.GetActiveOrdersWithCompanies(cancellationToken);
+
+            var currentUserOrderIds = (await orderRepository.GetUserOrdersAsync(currentUserId, cancellationToken))
+                .Select(userOrder => userOrder.OrderId)
+                .ToHashSet();
+
+            return orders.Where(order => !currentUserOrderIds.Contains(order.Id));
         }
 
         public async Task<OrderModel> CreateOrderAsync(OrderModel orderData, CancellationToken cancellationToken = default)
@@ -49,7 +56,7 @@ namespace MysteryShopper.BLL.Services
 
         public async Task<IEnumerable<UserOrder>> GetUserOrdersAsync(Guid userId, CancellationToken cancellationToken = default)
         {
-            return await orderRepository.GetUserOrdersAsync(userId, cancellationToken);
+            return await orderRepository.GetUserOrdersWithCompanyDataAsync(userId, cancellationToken);
         }
 
         public async Task SendOrderRequestAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)

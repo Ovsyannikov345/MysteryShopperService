@@ -5,7 +5,7 @@ namespace MysteryShopper.BLL.Services.IServices
 {
     public interface IOrderService
     {
-        Task<IEnumerable<Order>> GetOrderListAsync(CancellationToken cancellationToken = default);
+        Task<IEnumerable<Order>> GetOrderListAsync(Guid currentUserId, CancellationToken cancellationToken = default);
 
         Task<OrderModel> CreateOrderAsync(OrderModel orderData, CancellationToken cancellationToken = default);
 
