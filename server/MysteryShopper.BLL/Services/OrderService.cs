@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
@@ -37,8 +38,8 @@ namespace MysteryShopper.BLL.Services
                 sortOption == OrderSortOptions.TimeToCompleteDescending;
 
             Expression<Func<Order, bool>> predicate = (order) =>
-                (string.IsNullOrEmpty(filter.Text) || order.Title.Contains(filter.Text, StringComparison.OrdinalIgnoreCase)
-                    || order.Place.Contains(filter.Text, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(filter.Text) || EF.Functions.ILike(order.Title, $"%{filter.Text}%")
+                    || EF.Functions.ILike(order.Place, $"%{filter.Text}%")) &&
                 (!filter.MaxPrice.HasValue || order.Price <= filter.MaxPrice) &&
                 (!filter.MinPrice.HasValue || order.Price >= filter.MinPrice) &&
                 (!filter.MaxTimeToComplete.HasValue || order.TimeToComplete <= filter.MaxTimeToComplete) &&
