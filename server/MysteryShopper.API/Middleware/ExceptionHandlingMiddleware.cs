@@ -33,7 +33,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, Serilog.ILogger l
             InternalServerErrorException => new(HttpStatusCode.InternalServerError, ex.Message),
             NotFoundException => new(HttpStatusCode.NotFound, ex.Message),
             UnauthorizedException => new(HttpStatusCode.Unauthorized, ex.Message),
-            _ => new(HttpStatusCode.InternalServerError, ex.Message),
+            _ => new(HttpStatusCode.InternalServerError, "Unexpected error occured."),
         };
 
         context.Response.ContentType = "application/json";
