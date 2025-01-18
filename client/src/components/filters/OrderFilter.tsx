@@ -1,6 +1,7 @@
 import { Button, Grid2 as Grid, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { OrderQueryFilter } from "../../hooks/useOrderApi";
+import { useNotifications } from "@toolpad/core";
 
 interface EstateFilterProps {
     filter: OrderQueryFilter;
@@ -8,6 +9,8 @@ interface EstateFilterProps {
 }
 
 const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
+    const notifications = useNotifications();
+
     const [filters, setFilters] = useState<OrderQueryFilter>(filter);
 
     const handleChange = (field: keyof OrderQueryFilter, value: any) => {
@@ -19,11 +22,13 @@ const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
 
     const handleApplyFilters = () => {
         onFilterChange(filters);
+        notifications.show("Filters applied", { severity: "info", autoHideDuration: 2000 });
     };
 
     const handleClearFilters = () => {
         setFilters({});
         onFilterChange({});
+        notifications.show("Filters cleared", { severity: "info", autoHideDuration: 2000 });
     };
 
     const timeSpanToHours = (span: string) => {
