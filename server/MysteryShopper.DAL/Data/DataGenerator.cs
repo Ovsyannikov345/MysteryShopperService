@@ -69,6 +69,11 @@ public static class DataGenerator
 
     public static List<UserOrder> GenerateUserOrders(List<Guid> userIds, List<Guid> orderIds)
     {
+        if (userIds.Count == 0)
+        {
+            return [];
+        }
+
         var userOrderFaker = new Faker<UserOrder>()
             .RuleFor(u => u.Status, f => f.PickRandom<UserOrderStatus>());
 
@@ -77,15 +82,22 @@ public static class DataGenerator
         userIds = [.. userIds.OrderBy(_ => Guid.NewGuid())];
         orderIds = [.. orderIds.OrderBy(_ => Guid.NewGuid())];
 
-        int count = Math.Min(userIds.Count, orderIds.Count);
+        var userIndex = 0;
 
-        for (int i = 0; i < count; i++)
+        foreach (var orderId in orderIds)
         {
+            if (userIndex >= userIds.Count)
+            {
+                userIndex = 0;
+            }
+
             var userOrder = userOrderFaker.Generate();
 
-            userOrder.UserId = userIds[i];
-            userOrder.OrderId = orderIds[i];
+            userOrder.UserId = userIds[userIndex];
+            userOrder.OrderId = orderId;
             userOrders.Add(userOrder);
+
+            userIndex++;
         }
 
         return userOrders;
@@ -132,6 +144,96 @@ public static class DataGenerator
         return notificationFaker.Generate(count);
     }
 
+    public static Report GenerateReport(UserOrder userOrder, bool withCorrection = false)
+    {
+        var reportFaker = new Faker<Report>()
+            .RuleFor(r => r.Id, f => Guid.NewGuid())
+            .RuleFor(r => r.Title, f => f.Lorem.Sentence(5))
+            .RuleFor(r => r.Description, f => f.Lorem.Sentences(3))
+            .RuleFor(r => r.Grade, f => f.Random.Short(1, 5))
+            .RuleFor(r => r.OrderId, f => userOrder.OrderId)
+            .RuleFor(r => r.UserId, f => userOrder.UserId)
+            .RuleFor(r => r.ReportCorrection, f => withCorrection ? GenerateReportCorrection() : null);
+
+        return reportFaker.Generate(1)[0];
+    }
+
+    public static ReportCorrection GenerateReportCorrection()
+    {
+        var reportCorrectionFaker = new Faker<ReportCorrection>()
+            .RuleFor(c => c.Id, f => Guid.NewGuid())
+            .RuleFor(c => c.Description, f => f.Lorem.Sentences(5));
+
+        return reportCorrectionFaker.Generate(1)[0];
+    }
+
+    public static List<Report> GenerateReports(List<UserOrder> userOrders)
+    {
+        Random random = new();
+
+        var reports = new List<Report>();
+
+        foreach (var userOrder in userOrders)
+        {
+            if (userOrder.Status == UserOrderStatus.InProgress || userOrder.Status == UserOrderStatus.Completed)
+            {
+                var OrderReports = Enumerable.Range(1, random.Next(0, 3)).Select(x => GenerateReport(userOrder, withCorrection: true));
+
+                foreach (var report in OrderReports)
+                {
+                    reports.AddRange(OrderReports);
+                }
+
+                if (userOrder.Status == UserOrderStatus.Completed || (OrderReports.Any() && random.NextDouble() > 0.5))
+                {
+                    reports.Add(GenerateReport(userOrder));
+                }
+            }
+        }
+
+        return reports;
+    }
+
+    public static Dispute GenerateDispute(Guid userId, Guid orderId)
+    {
+        var disputeFaker = new Faker<Dispute>()
+            .RuleFor(d => d.Id, f => Guid.NewGuid())
+            .RuleFor(d => d.CompanyText, f => f.PickRandom(f.Lorem.Sentences(5), null))
+            .RuleFor(d => d.UserText, (f, current) => string.IsNullOrEmpty(current.CompanyText)
+                ? f.Lorem.Sentences(5)
+                : f.PickRandom(f.Lorem.Sentences(5), null))
+            .RuleFor(d => d.ResolvedAt, f => null)
+            .RuleFor(d => d.OrderId, f => orderId)
+            .RuleFor(d => d.UserId, f => userId);
+
+        return disputeFaker.Generate(1)[0];
+    }
+
+    public static List<Dispute> GenerateDisputes(List<UserOrder> userOrders)
+    {
+        Random random = new();
+
+        var disputes = new List<Dispute>();
+
+        foreach (var userOrder in userOrders)
+        {
+            if (userOrder.Status == UserOrderStatus.InProgress && random.NextDouble() > 0.7)
+            {
+                disputes.Add(GenerateDispute(userOrder.UserId, userOrder.OrderId));
+            }
+
+            if (userOrder.Status == UserOrderStatus.ForceClosed)
+            {
+                var dispute = GenerateDispute(userOrder.UserId, userOrder.OrderId);
+
+                dispute.ResolvedAt = DateTime.UtcNow;
+                disputes.Add(dispute);
+            }
+        }
+
+        return disputes;
+    }
+
     public static void GenerateAndSeedDatabase(MysteryShopperDbContext context)
     {
         // Generate Users
@@ -144,13 +246,23 @@ public static class DataGenerator
         context.SaveChanges();
 
         // Generate Orders
-        var orders = GenerateOrders(100, companies.Select(c => c.Id).ToList());
+        var orders = GenerateOrders(400, companies.Select(c => c.Id).ToList());
         context.Orders.AddRange(orders);
         context.SaveChanges();
 
         // Generate UserOrders
         var userOrders = GenerateUserOrders(users.Select(u => u.Id).ToList(), orders.Select(o => o.Id).ToList());
         context.UserOrders.AddRange(userOrders);
+        context.SaveChanges();
+
+        // Generate reports and corrections
+        var reports = GenerateReports(userOrders);
+        context.Reports.AddRange(reports);
+        context.SaveChanges();
+
+        // Genrate disputes
+        var disputes = GenerateDisputes(userOrders);
+        context.Disputes.AddRange(disputes);
         context.SaveChanges();
 
         // Generate User Reviews
