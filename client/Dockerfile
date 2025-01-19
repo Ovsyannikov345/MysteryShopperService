@@ -1,4 +1,4 @@
-FROM node:latest AS builder
+FROM node:23 AS builder
 
 COPY package.json package.json
 RUN npm install
@@ -6,7 +6,7 @@ RUN npm install
 COPY create-env-file.sh ./create-env-file.sh
 ARG REACT_APP_API_URL
 ARG REACT_APP_AUTH_API_URL
-RUN sh create-env-file.sh REACT_APP_API_URL=$REACT_APP_API_URL REACT_APP_AUTH_API_URL=$REACT_APP_AUTH_API_URL
+RUN sh create-env-file.sh REACT_APP_API_URL="$REACT_APP_API_URL" REACT_APP_AUTH_API_URL="$REACT_APP_AUTH_API_URL"
 
 COPY . .
 RUN npm run build

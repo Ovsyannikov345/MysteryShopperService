@@ -1,31 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-    Grid2 as Grid,
-    Typography,
-    Container,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Button,
-    Collapse,
-    Pagination,
-    useTheme,
-    useMediaQuery,
-    ToggleButton,
-    Switch,
-} from "@mui/material";
+import { Grid2 as Grid, Typography, Container, useTheme, useMediaQuery } from "@mui/material";
 import UserHeader from "../../components/headers/UserHeader";
 import backgroundImage from "../../images/background.jpg";
 import useOrderApi, { UserOrder } from "../../hooks/useOrderApi";
-import { PagedResult } from "../../hooks/utils/responses";
 import { useNotifications } from "@toolpad/core";
-import { ArrowDownward, ArrowUpward, FilterAlt, Visibility, VisibilityOff } from "@mui/icons-material";
-import OrderFilter from "../../components/filters/OrderFilter";
-import OrderCard from "../../components/info/OrderCard";
 import OrderCardSkeleton from "../../components/skeletons/OrderCardSkeleton";
 import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
-import hiddenIcon from "../../images/switchIcons/hidden.svg";
 import OrderCardSection from "../../components/info/UserOrderCardSection";
 
 const UserOrdersPage = () => {

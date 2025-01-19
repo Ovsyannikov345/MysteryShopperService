@@ -18,7 +18,7 @@ const companyEditFormValidationSchema = Yup.object().shape({
         .max(50, "Contact person patronymic should be between 3 and 50 characters")
         .nullable(),
     contactPersonPhone: Yup.string()
-        .matches(/^\+?375\([1-9]{2}\)[0-9]{3}-[0-9]{2}-[0-9]{2}$/, "Invalid phone format")
+        .matches(/^\+?375\([1-9]{2}\)\d{3}-\d{2}-\d{2}$/, "Invalid phone format")
         .required("Phone is required"),
     contactPersonEmail: Yup.string().email("Invalid email format").required("Email is required"),
 });

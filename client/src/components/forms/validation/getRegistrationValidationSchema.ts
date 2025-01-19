@@ -40,7 +40,7 @@ const getRegistrationValidationSchema = (userType: string | undefined) => {
         contactPersonPhone:
             userType === "company"
                 ? Yup.string()
-                      .matches(/^\+?375\([1-9]{2}\)[0-9]{3}-[0-9]{2}-[0-9]{2}$/, "Invalid phone format")
+                      .matches(/^\+?375\([1-9]{2}\)\d{3}-\d{2}-\d{2}$/, "Invalid phone format")
                       .required("Phone is required")
                 : Yup.string().nullable(),
         contactPersonEmail:
@@ -50,7 +50,7 @@ const getRegistrationValidationSchema = (userType: string | undefined) => {
         phone:
             userType === "user"
                 ? Yup.string()
-                      .matches(/^\+?375\([1-9]{2}\)[0-9]{3}-[0-9]{2}-[0-9]{2}$/, "Invalid phone format")
+                      .matches(/^\+?375\([1-9]{2}\)\d{3}-\d{2}-\d{2}$/, "Invalid phone format")
                       .required("Phone is required")
                 : Yup.string().nullable(),
         name:

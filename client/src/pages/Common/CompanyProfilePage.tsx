@@ -72,7 +72,8 @@ const CompanyOwnProfilePage = () => {
             return 0;
         }
 
-        let rating = companyData.companyReviews.map((c) => c.grade).reduce((acc, val) => (acc += val)) / companyData.companyReviews.length;
+        let rating =
+            companyData.companyReviews.map((c) => c.grade).reduce((acc, val) => acc + val, 0) / companyData.companyReviews.length;
 
         return parseFloat(rating.toFixed(2));
     }, [companyData]);
@@ -138,7 +139,13 @@ const CompanyOwnProfilePage = () => {
                         <ProfilePageSkeleton />
                     ) : (
                         <>
-                            <Grid container spacing={4} alignItems="center" sx={{ p: isMediumScreen ? 1 : 4 }} mt={isMediumScreen ? 2 : 0}>
+                            <Grid
+                                container
+                                spacing={4}
+                                alignItems="center"
+                                sx={{ p: isMediumScreen ? 1 : 4 }}
+                                mt={isMediumScreen ? 2 : 0}
+                            >
                                 <Grid container>
                                     <Avatar sx={{ width: 150, height: 150 }} alt={companyData.name + " avatar"} src={imageSrc} />
                                 </Grid>
@@ -157,15 +164,18 @@ const CompanyOwnProfilePage = () => {
                                 <ProfileCard title="Member for" value={moment(companyData.createdAt).fromNow(true)} />
                                 <ProfileCard title="Orders" value={companyData.orders.length} />
                                 <ProfileCard title="Reviews" value={companyData.companyReviews.length} />
-                                <ProfileCard title="Rating" value={<Rating value={rating} precision={0.5} size="large" readOnly />} />
+                                <ProfileCard
+                                    title="Rating"
+                                    value={<Rating value={rating} precision={0.5} size="large" readOnly />}
+                                />
                             </Grid>
                             <Typography variant="h5" mt={4} ref={reviewHeaderRef}>
                                 User Reviews
                             </Typography>
                             <Grid container spacing={3} mt={2} mb={3}>
-                                {paginatedReviews.map((review, index) => (
+                                {paginatedReviews.map((review) => (
                                     <ReviewCard
-                                        key={index}
+                                        key={review.id}
                                         sender={{
                                             id: review.user.id,
                                             name: review.user.name + " " + review.user.surname,
