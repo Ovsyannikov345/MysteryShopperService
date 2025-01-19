@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { Moment } from "moment";
 import { OrderSortOptions } from "../utils/enums/orderSortOptions";
 import QueryParamNames from "./utils/queryParamNames";
+import { UserOrderStatus } from "../utils/enums/userOrderStatus";
 
 export interface Order {
     id: string;
@@ -28,6 +29,37 @@ export interface Order {
             },
         ];
     };
+    reports: {
+        id: string;
+        title: string;
+        description: string;
+        grade: number;
+        createdAt: Moment;
+        reportCorrection?: {
+            id: string;
+            description: string;
+        };
+    }[];
+    disputes: {
+        id: string;
+        userText?: string;
+        companyText?: string;
+        createdAt: Moment;
+        resolvedAt?: Moment;
+    }[];
+    userReviews: {
+        id: string;
+        userText: string;
+        createdAt: Moment;
+    }[];
+}
+
+export interface UserOrder {
+    id: string;
+    status: UserOrderStatus;
+    createdAt: Moment;
+    updatedAt: Moment;
+    order: Order;
 }
 
 export interface OrderQueryFilter {
@@ -74,7 +106,24 @@ const useOrderApi = () => {
         [baseURL]
     );
 
-    return { getAvailableOrders };
+    const getMyOrders = useCallback(async (): Promise<ApiResponse<UserOrder[]>> => {
+        const client = await AxiosFactory.createAxiosInstance(baseURL);
+
+        try {
+            const response = await client.get("my-orders");
+
+            return response.data;
+        } catch (error: any) {
+            if (error.response) {
+                const { status, data } = error.response;
+                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+            } else {
+                return { error: true, message: "An unexpected error occurred." };
+            }
+        }
+    }, [baseURL]);
+
+    return { getAvailableOrders, getMyOrders };
 };
 
 export default useOrderApi;
