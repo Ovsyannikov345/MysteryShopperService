@@ -1,4 +1,16 @@
-import { Avatar, Button, Collapse, Container, Grid2 as Grid, Pagination, Rating, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+    Avatar,
+    Button,
+    Collapse,
+    Container,
+    Grid2 as Grid,
+    Pagination,
+    Rating,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useNotifications } from "@toolpad/core";
 import useUserApi, { User } from "../../hooks/useUserApi";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -174,7 +186,11 @@ const UserOwnProfilePage = () => {
                                             alt={`${userData.name} ${userData.surname}'s avatar`}
                                             src={imageSrc}
                                         />
-                                        <Button variant="contained" onClick={() => setIsChangingImage(true)}>
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<CloudUploadIcon />}
+                                            onClick={() => setIsChangingImage(true)}
+                                        >
                                             Choose image
                                         </Button>
                                     </Grid>
@@ -183,7 +199,9 @@ const UserOwnProfilePage = () => {
                                             {`${userData.name} ${userData.surname}`}
                                         </Typography>
                                         <Typography variant="subtitle1">
-                                            {userData.birthDate ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o." : ""}
+                                            {userData.birthDate
+                                                ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o."
+                                                : ""}
                                             {userData.birthDate && userData.city && ", "}
                                             {userData.city ? userData.city : ""}
                                         </Typography>
@@ -204,7 +222,11 @@ const UserOwnProfilePage = () => {
                                 </Typography>
                                 <Rating value={rating} precision={0.5} size="large" readOnly sx={{ mt: 1 }} />
                                 <Grid container mt={1} mb={2}>
-                                    <Button variant="contained" startIcon={<Reviews />} onClick={() => setDisplayReviews(!displayReviews)}>
+                                    <Button
+                                        variant="contained"
+                                        startIcon={<Reviews />}
+                                        onClick={() => setDisplayReviews(!displayReviews)}
+                                    >
                                         {displayReviews ? "Hide Reviews" : `Show Reviews (${userData.userReviews.length})`}
                                     </Button>
                                 </Grid>

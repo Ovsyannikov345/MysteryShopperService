@@ -2,8 +2,20 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import useCompanyApi, { Company } from "../../hooks/useCompanyApi";
 import { useNotifications } from "@toolpad/core";
 import CompanyHeader from "../../components/headers/CompanyHeader";
-import { Avatar, Button, Collapse, Container, Grid2 as Grid, Pagination, Rating, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+    Avatar,
+    Button,
+    Collapse,
+    Container,
+    Grid2 as Grid,
+    Pagination,
+    Rating,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
 import { Reviews } from "@mui/icons-material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import backgroundImage from "../../images/background.jpg";
 import ProfilePageSkeleton from "../../components/skeletons/ProfilePageSkeleton";
 import CompanyEditForm, { CompanyEditData } from "../../components/forms/CompanyEditForm";
@@ -66,7 +78,8 @@ const CompanyOwnProfilePage = () => {
             return 0;
         }
 
-        let rating = companyData.companyReviews.map((c) => c.grade).reduce((acc, val) => (acc += val)) / companyData.companyReviews.length;
+        let rating =
+            companyData.companyReviews.map((c) => c.grade).reduce((acc, val) => (acc += val)) / companyData.companyReviews.length;
 
         return parseFloat(rating.toFixed(2));
     }, [companyData]);
@@ -171,8 +184,16 @@ const CompanyOwnProfilePage = () => {
                                     mt={isMediumScreen ? 2 : 0}
                                 >
                                     <Grid container direction="column" alignItems={"center"}>
-                                        <Avatar sx={{ width: 150, height: 150 }} alt={companyData.name + " avatar"} src={imageSrc} />
-                                        <Button variant="contained" onClick={() => setIsChangingImage(true)}>
+                                        <Avatar
+                                            sx={{ width: 150, height: 150 }}
+                                            alt={companyData.name + " avatar"}
+                                            src={imageSrc}
+                                        />
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<CloudUploadIcon />}
+                                            onClick={() => setIsChangingImage(true)}
+                                        >
                                             Choose image
                                         </Button>
                                     </Grid>
@@ -192,7 +213,11 @@ const CompanyOwnProfilePage = () => {
                                 </Typography>
                                 <Rating value={rating} precision={0.5} size="large" readOnly sx={{ mt: 1 }} />
                                 <Grid container mt={1} mb={2}>
-                                    <Button variant="contained" startIcon={<Reviews />} onClick={() => setDisplayReviews(!displayReviews)}>
+                                    <Button
+                                        variant="contained"
+                                        startIcon={<Reviews />}
+                                        onClick={() => setDisplayReviews(!displayReviews)}
+                                    >
                                         {displayReviews ? "Hide Reviews" : `Show Reviews (${companyData.companyReviews.length})`}
                                     </Button>
                                 </Grid>
