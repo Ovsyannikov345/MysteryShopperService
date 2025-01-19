@@ -7,7 +7,9 @@ const CompanyHeader = () => {
     return (
         <Header
             actions={[
+                // TODO implement
                 { icon: <AddIcon />, label: "Create Order", onClick: () => console.log("Create Order click") },
+                // TODO implement
                 { icon: <FormatListBulletedIcon />, label: "My Orders", onClick: () => console.log("My Orders click") },
             ]}
         />

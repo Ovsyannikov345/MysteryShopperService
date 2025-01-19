@@ -98,11 +98,13 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                         </Grid>
                         <Grid container>
                             <Grid container gap={isSmallScreen ? "0px" : "10px"} alignItems={"center"}>
+                                {/* TODO implement */}
                                 <Tooltip title="Notifications">
                                     <IconButton color="secondary">
                                         <NotificationsRoundedIcon fontSize={isSmallScreen ? "medium" : "large"} />
                                     </IconButton>
                                 </Tooltip>
+                                {/* TODO implement */}
                                 <Tooltip title="Support">
                                     <IconButton color="secondary">
                                         <SupportAgentRoundedIcon fontSize={isSmallScreen ? "medium" : "large"} />
