@@ -1,4 +1,6 @@
-﻿namespace MysteryShopper.API.ViewModels;
+﻿using MysteryShopper.DAL.Entities.Models;
+
+namespace MysteryShopper.API.ViewModels;
 
 public class OrderViewModel
 {
@@ -23,4 +25,10 @@ public class OrderViewModel
     public bool IsClosed { get; set; }
 
     public required OrderCompanyViewModel Company { get; set; }
+
+    public required List<ReportViewModel> Reports { get; set; }
+
+    public required List<DisputeViewModel> Disputes { get; set; }
+
+    public required List<UserReview> UserReviews { get; set; }
 }

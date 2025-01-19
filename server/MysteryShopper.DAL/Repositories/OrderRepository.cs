@@ -47,13 +47,19 @@ namespace MysteryShopper.DAL.Repositories
             };
         }
 
-        public async Task<IEnumerable<UserOrder>> GetUserOrdersWithCompanyDataAsync(Guid userId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<UserOrder>> GetUserOrdersAsync(Guid userId, CancellationToken cancellationToken = default)
         {
             return await _context.UserOrders.AsNoTracking()
                 .Where(x => x.UserId == userId)
                 .Include(u => u.Order)
                     .ThenInclude(o => o.Company)
-                        .ThenInclude(c => c.CompanyReviews)
+                .Include(u => u.Order)
+                    .ThenInclude(o => o.Reports.Where(r => r.UserId == userId))
+                        .ThenInclude(r => r.ReportCorrection)
+                .Include(u => u.Order)
+                    .ThenInclude(o => o.Disputes.Where(d => d.UserId == userId))
+                .Include(u => u.Order)
+                    .ThenInclude(o => o.UserReviews.Where(r => r.UserId == userId))
                 .ToListAsync(cancellationToken);
         }
 
