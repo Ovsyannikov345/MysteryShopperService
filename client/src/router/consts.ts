@@ -6,3 +6,4 @@ export const COMPANY_PROFILE_ROUTE = "/company/:id";
 export const OWN_PROFILE_ROUTE = "/profile";
 
 export const AVAILABLE_ORDERS_ROUTE = "/orders";
+export const MY_ORDERS_ROUTE = "/my-orders";
