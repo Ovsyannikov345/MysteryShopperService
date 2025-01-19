@@ -16,7 +16,7 @@ namespace MysteryShopper.BLL.Services
         IMapper mapper,
         ReportCorrectionValidator correctionValidator) : IReportCorrectionService
     {
-        public async Task<ReportCorrectionModel> CreateReportCorrectionAsync(ReportCorrectionModel correctionData, CancellationToken cancellationToken = default)
+        public async Task<ReportCorrectionModel> CreateReportCorrectionAsync(ReportCorrectionModel correctionData, Guid currentCompanyId, CancellationToken cancellationToken = default)
         {
             var validationResult = correctionValidator.Validate(correctionData);
 
@@ -28,7 +28,7 @@ namespace MysteryShopper.BLL.Services
             var report = await reportRepository.GetReportDetailsAsync(correctionData.ReportId, cancellationToken)
                 ?? throw new NotFoundException("Report is not found");
 
-            if (report.Order.CompanyId != correctionData.CompanyId)
+            if (report.Order.CompanyId != currentCompanyId)
             {
                 throw new ForbiddenException("You can't create a correction to report for other company's order");
             }

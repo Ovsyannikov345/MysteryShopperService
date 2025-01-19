@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MysteryShopper.DAL.Entities.Models;
+using MysteryShopper.BLL.Dto;
 
 namespace MysteryShopper.BLL.Utilities.Validators
 {
@@ -10,9 +10,6 @@ namespace MysteryShopper.BLL.Utilities.Validators
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required.")
                 .MaximumLength(500).WithMessage("Description cannot exceed 500 characters.");
-
-            RuleFor(x => x.CompanyId)
-                .NotEmpty().WithMessage("CompanyId is required.");
 
             RuleFor(x => x.ReportId)
                 .NotEmpty().WithMessage("ReportId is required.");

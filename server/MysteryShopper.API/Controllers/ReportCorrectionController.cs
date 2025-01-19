@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MysteryShopper.API.Extensions;
 using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Services.IServices;
-using MysteryShopper.DAL.Entities.Models;
+using MysteryShopper.BLL.Dto;
 
 namespace MysteryShopper.API.Controllers
 {
@@ -19,9 +19,9 @@ namespace MysteryShopper.API.Controllers
         {
             var correctionToCreate = mapper.Map<ReportCorrectionModel>(correctionData);
 
-            correctionToCreate.CompanyId = HttpContext.GetIdFromContext();
+            var companyId = HttpContext.GetIdFromContext();
 
-            var createdCorrection = await reportCorrectionService.CreateReportCorrectionAsync(correctionToCreate, cancellationToken);
+            var createdCorrection = await reportCorrectionService.CreateReportCorrectionAsync(correctionToCreate, companyId, cancellationToken);
 
             return mapper.Map<ReportCorrectionViewModel>(createdCorrection);
         }
