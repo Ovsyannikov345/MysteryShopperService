@@ -22,7 +22,7 @@ export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
         <Card sx={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }} elevation={5}>
             <CardContent>
                 <Typography variant="h6" component="div">
-                    {order.id}
+                    {order.title}
                 </Typography>
                 <Grid container wrap="nowrap" spacing={1}>
                     <Map />
