@@ -73,6 +73,24 @@ export interface CompanyOrder {
     lat?: number;
     lng?: number;
     isClosed: boolean;
+    users: {
+        id: string;
+        status: UserOrderStatus;
+    }[];
+    reports: {
+        id: string;
+        userId: string;
+        reportCorrection?: {
+            id: string;
+        };
+    }[];
+    disputes: {
+        id: string;
+        userText?: string;
+        companyText?: string;
+        createdAt: Moment;
+        resolvedAt?: Moment;
+    }[];
 }
 
 export interface OrderQueryFilter {

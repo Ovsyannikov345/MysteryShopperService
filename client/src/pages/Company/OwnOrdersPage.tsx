@@ -4,7 +4,7 @@ import { useNotifications } from "@toolpad/core";
 import backgroundImage from "../../images/background.jpg";
 import { Container, Grid2 as Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
 import CompanyHeader from "../../components/headers/CompanyHeader";
-import OrderCardSection from "../../components/info/UserOrderCardSection";
+import OrderCardSection from "../../components/info/OrderCardSection";
 import OrderCardSkeleton from "../../components/skeletons/OrderCardSkeleton";
 
 export default function OwnOrdersPage() {
