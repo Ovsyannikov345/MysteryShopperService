@@ -101,6 +101,16 @@ export interface OrderQueryFilter {
     minPrice?: string;
 }
 
+export interface OrderToCreate {
+    title: string;
+    description?: string;
+    place: string;
+    timeToComplete?: string;
+    price?: number;
+    lat?: number;
+    lng?: number;
+}
+
 const useOrderApi = () => {
     const baseURL = process.env.REACT_APP_API_URL + "/Order";
 
@@ -171,7 +181,27 @@ const useOrderApi = () => {
         }
     }, [baseURL]);
 
-    return { getAvailableOrders, getUserOrders, getCompanyOrders };
+    const createOrder = useCallback(
+        async (orderData: OrderToCreate): Promise<ApiResponse<CompanyOrder>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL);
+
+            try {
+                const response = await client.post("", orderData);
+
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
+            }
+        },
+        [baseURL]
+    );
+
+    return { getAvailableOrders, getUserOrders, getCompanyOrders, createOrder };
 };
 
 export default useOrderApi;
