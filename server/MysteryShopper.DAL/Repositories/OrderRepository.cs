@@ -63,6 +63,15 @@ namespace MysteryShopper.DAL.Repositories
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<IEnumerable<Order>> GetCompanyOrdersAsync(Guid companyId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Orders.AsNoTracking()
+                .Where(o => o.CompanyId == companyId)
+                .Include(o => o.Users)
+                .ToListAsync();
+
+        }
+
         public async Task<Order?> GetFullOrderDetailsAsync(Guid orderId, CancellationToken cancellationToken = default)
         {
             return await _context.Orders.AsNoTracking()

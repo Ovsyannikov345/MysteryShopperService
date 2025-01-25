@@ -18,6 +18,8 @@ namespace MysteryShopper.BLL.Services.IServices
 
         Task<IEnumerable<UserOrder>> GetUserOrdersAsync(Guid userId, CancellationToken cancellationToken = default);
 
+        Task<IEnumerable<OrderModel>> GetCompanyOrdersAsync(Guid companyId, CancellationToken cancellationToken = default);
+
         Task SendOrderRequestAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default);
 
         Task<UserOrder> GetOrderDetailsForUserAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default);

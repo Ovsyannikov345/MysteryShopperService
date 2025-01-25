@@ -29,13 +29,22 @@ namespace MysteryShopper.API.Controllers
             return mapper.Map<PagedResult<Order>, PagedResult<OrderViewModel>>(orders);
         }
 
-        [HttpGet("my-orders")]
+        [HttpGet("in-progress")]
         [Authorize(Roles = "User")]
         public async Task<IEnumerable<UserOrderViewModel>> GetUserOrders(CancellationToken cancellationToken)
         {
             var orderList = await orderService.GetUserOrdersAsync(HttpContext.GetIdFromContext(), cancellationToken);
 
             return mapper.Map<IEnumerable<UserOrder>, IEnumerable<UserOrderViewModel>>(orderList);
+        }
+
+        [HttpGet("my")]
+        [Authorize(Roles = "Company")]
+        public async Task<IEnumerable<OrderViewModel>> GetCompanyOrders(CancellationToken cancellationToken)
+        {
+            var orders = await orderService.GetCompanyOrdersAsync(HttpContext.GetIdFromContext());
+
+            return mapper.Map<IEnumerable<OrderModel>, IEnumerable<OrderViewModel>>(orders);
         }
 
         [HttpGet("{id}")]

@@ -92,6 +92,13 @@ namespace MysteryShopper.BLL.Services
             return await orderRepository.GetUserOrdersAsync(userId, cancellationToken);
         }
 
+        public async Task<IEnumerable<OrderModel>> GetCompanyOrdersAsync(Guid companyId, CancellationToken cancellationToken = default)
+        {
+            var orders = await orderRepository.GetCompanyOrdersAsync(companyId, cancellationToken);
+
+            return mapper.Map<IEnumerable<Order>, IEnumerable<OrderModel>>(orders);
+        }
+
         public async Task SendOrderRequestAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
         {
             var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken)

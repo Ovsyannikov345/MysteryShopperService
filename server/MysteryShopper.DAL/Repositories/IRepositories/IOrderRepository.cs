@@ -17,6 +17,8 @@ namespace MysteryShopper.DAL.Repositories.IRepositories
 
         Task<IEnumerable<UserOrder>> GetUserOrdersAsync(Guid userId, CancellationToken cancellationToken = default);
 
+        Task<IEnumerable<Order>> GetCompanyOrdersAsync(Guid companyId, CancellationToken cancellationToken = default);
+
         Task<Order?> GetFullOrderDetailsAsync(Guid orderId, CancellationToken cancellationToken = default);
     }
 }
