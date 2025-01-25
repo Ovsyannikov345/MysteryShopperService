@@ -27,13 +27,21 @@ const CreateOrderPage = () => {
             title: orderData.title,
             description: orderData.description,
             place: orderData.place,
-            timeToComplete: `${orderData.daysToComplete}.${orderData.hoursToComplete}:00:00`,
+            timeToComplete: `${orderData.daysToComplete ?? "0"}.${orderData.hoursToComplete ?? "00"}:00:00`,
             price: orderData.price,
             lat: orderData.lat,
             lng: orderData.lng,
         };
 
+        if (order.timeToComplete === "0.00:00:00") {
+            order.timeToComplete = undefined;
+        }
+
+        setLoading(true);
+
         const response = await createOrder(order);
+
+        setLoading(false);
 
         if ("error" in response) {
             notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
@@ -73,7 +81,7 @@ const CreateOrderPage = () => {
                         borderRadius: isMediumScreen ? 0 : "10px",
                     }}
                 >
-                    <OrderCreationForm submitHandler={handleCreate} loading={loading}/>
+                    <OrderCreationForm submitHandler={handleCreate} loading={loading} />
                 </Container>
             </Grid>
         </Grid>

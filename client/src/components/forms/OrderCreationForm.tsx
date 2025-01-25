@@ -16,7 +16,13 @@ export interface OrderCreationData {
     price: number | undefined;
 }
 
-export default function OrderCreationForm({ submitHandler, loading }: { submitHandler: (orderData: OrderCreationData) => void, loading: boolean }) {
+export default function OrderCreationForm({
+    submitHandler,
+    loading,
+}: {
+    submitHandler: (orderData: OrderCreationData) => void;
+    loading: boolean;
+}) {
     const setNewLocation = (setFieldValue: Function, newLocation: LatLng, address: string) => {
         setFieldValue("place", address);
         setFieldValue("lat", newLocation.lat);
@@ -166,6 +172,8 @@ export default function OrderCreationForm({ submitHandler, loading }: { submitHa
                                                 readOnly: true,
                                             },
                                         }}
+                                        error={touched.place && Boolean(errors.place)}
+                                        helperText={touched.place && errors.place}
                                     />
                                 </Grid>
                                 <Grid size={12}>
@@ -178,7 +186,14 @@ export default function OrderCreationForm({ submitHandler, loading }: { submitHa
                             </Grid>
 
                             <Grid size={12}>
-                                <Button type="submit" variant="contained" color="primary" fullWidth size="large">
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    size="large"
+                                    loading={loading}
+                                >
                                     Create Order
                                 </Button>
                             </Grid>
