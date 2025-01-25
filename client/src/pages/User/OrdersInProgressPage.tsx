@@ -17,7 +17,7 @@ const UserOrdersPage = () => {
 
     const headerRef = useRef<HTMLDivElement>(null);
 
-    const { getMyOrders } = useOrderApi();
+    const { getUserOrders } = useOrderApi();
 
     const [orders, setOrders] = useState<UserOrder[]>();
 
@@ -32,7 +32,7 @@ const UserOrdersPage = () => {
 
     useEffect(() => {
         const loadOrders = async () => {
-            const response = await getMyOrders();
+            const response = await getUserOrders();
 
             if ("error" in response) {
                 notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
@@ -44,7 +44,7 @@ const UserOrdersPage = () => {
         };
 
         loadOrders();
-    }, [getMyOrders, notifications]);
+    }, [getUserOrders, notifications]);
 
     const pendingOrders = useMemo(() => {
         return orders?.filter((o) => o.status === UserOrderStatus.Requested);

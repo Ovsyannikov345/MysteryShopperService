@@ -1,7 +1,8 @@
 import { Button, Collapse, Grid2 as Grid, Typography } from "@mui/material";
-import { UserOrder } from "../../hooks/useOrderApi";
+import { CompanyOrder, UserOrder } from "../../hooks/useOrderApi";
 import UserOrderCard from "./UserOrderCard";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import CompanyOrderCard from "./CompanyOrderCard";
 
 const OrderCardSection = ({
     label,
@@ -10,7 +11,7 @@ const OrderCardSection = ({
     onToggle,
 }: {
     label: string;
-    orders: UserOrder[];
+    orders: UserOrder[] | CompanyOrder[];
     open: boolean;
     onToggle: () => void;
 }) => {
@@ -26,7 +27,7 @@ const OrderCardSection = ({
                 <Grid container size={12} spacing={2} alignContent={"stretch"}>
                     {orders.map((order) => (
                         <Grid size={{ xs: 12, sm: 6 }} key={order.id}>
-                            <UserOrderCard orderData={order} />
+                            {"order" in order ? <UserOrderCard orderData={order} /> : <CompanyOrderCard order={order} />}
                         </Grid>
                     ))}
                 </Grid>
