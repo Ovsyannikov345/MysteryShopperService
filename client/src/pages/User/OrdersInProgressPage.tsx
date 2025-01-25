@@ -6,7 +6,7 @@ import useOrderApi, { UserOrder } from "../../hooks/useOrderApi";
 import { useNotifications } from "@toolpad/core";
 import OrderCardSkeleton from "../../components/skeletons/OrderCardSkeleton";
 import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
-import OrderCardSection from "../../components/info/UserOrderCardSection";
+import OrderCardSection from "../../components/info/OrderCardSection";
 
 const UserOrdersPage = () => {
     const theme = useTheme();
