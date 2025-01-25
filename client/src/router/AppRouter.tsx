@@ -43,16 +43,14 @@ const AppRouter = () => {
         );
     }
 
-    if (!jwt) {
-        return (
-            <Routes>
-                {publicRoutes.map(({ path, Component }) => (
-                    <Route key={path} path={path} element={<Component />} />
-                ))}
-                <Route key="*" path="*" element={<Navigate to={LOGIN_ROUTE} />} />
-            </Routes>
-        );
-    }
+    return (
+        <Routes>
+            {publicRoutes.map(({ path, Component }) => (
+                <Route key={path} path={path} element={<Component />} />
+            ))}
+            <Route key="*" path="*" element={<Navigate to={LOGIN_ROUTE} />} />
+        </Routes>
+    );
 };
 
 export default AppRouter;
