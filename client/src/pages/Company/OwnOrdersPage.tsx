@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useOrderApi, { CompanyOrder } from "../../hooks/useOrderApi";
 import { useNotifications } from "@toolpad/core";
 import backgroundImage from "../../images/background.jpg";
@@ -11,8 +11,6 @@ export default function OwnOrdersPage() {
     const theme = useTheme();
 
     const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
-
-    const headerRef = useRef<HTMLDivElement>(null);
 
     const notifications = useNotifications();
 
@@ -48,6 +46,10 @@ export default function OwnOrdersPage() {
         return orders?.filter((o) => o.isClosed);
     }, [orders]);
 
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+
     return (
         <Grid container minHeight={"100%"} flexDirection={"column"}>
             <CompanyHeader />
@@ -80,7 +82,7 @@ export default function OwnOrdersPage() {
                         mt={isMediumScreen ? 2 : 0}
                     >
                         <Grid container justifyContent={"flex-start"} alignItems={"center"} size={12}>
-                            <Typography ref={headerRef} variant="h4">
+                            <Typography variant="h4">
                                 Your orders
                             </Typography>
                         </Grid>
