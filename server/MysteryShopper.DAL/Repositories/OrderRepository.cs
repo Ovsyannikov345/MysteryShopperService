@@ -68,8 +68,10 @@ namespace MysteryShopper.DAL.Repositories
             return await _context.Orders.AsNoTracking()
                 .Where(o => o.CompanyId == companyId)
                 .Include(o => o.Users)
+                .Include(o => o.Disputes)
+                .Include(o => o.Reports)
+                    .ThenInclude(o => o.ReportCorrection)
                 .ToListAsync();
-
         }
 
         public async Task<Order?> GetFullOrderDetailsAsync(Guid orderId, CancellationToken cancellationToken = default)

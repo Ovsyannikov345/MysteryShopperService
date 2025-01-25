@@ -26,6 +26,8 @@ public class OrderViewModel
 
     public required OrderCompanyViewModel Company { get; set; }
 
+    public required List<UserOrderViewModel> Users { get; set; }
+
     public required List<ReportViewModel> Reports { get; set; }
 
     public required List<DisputeViewModel> Disputes { get; set; }
