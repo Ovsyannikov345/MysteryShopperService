@@ -1,58 +1,80 @@
-import React from "react";
-import { Grid } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Container, Grid2 as Grid, useMediaQuery, useTheme } from "@mui/material";
 import CompanyHeader from "../../components/headers/CompanyHeader";
-import CreateOrderForm, { OrderCreationData } from "../../components/forms/CreateOrderForm";
-import { createOrder } from "../../api/ordersApi";
 import { useNavigate } from "react-router-dom";
-import isApiError from "../../utils/isApiError";
 import { useNotifications } from "@toolpad/core";
+import backgroundImage from "../../images/background.jpg";
+import OrderCreationForm, { OrderCreationData } from "../../components/forms/OrderCreationForm";
+import useOrderApi from "../../hooks/useOrderApi";
+import { OrderToCreate } from "../../hooks/useOrderApi";
+import { MY_ORDERS_ROUTE } from "../../router/consts";
 
 const CreateOrderPage = () => {
+    const theme = useTheme();
+
+    const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
+
     const navigate = useNavigate();
 
     const notifications = useNotifications();
 
-    const create = async (orderData: OrderCreationData) => {
-        let order: any = { ...orderData };
+    const { createOrder } = useOrderApi();
 
-        if (orderData.timeToComplete) {
-            order.timeToComplete = `${orderData.timeToComplete}.00:00:00`;
-        }
+    const [loading, setLoading] = useState(false);
+
+    const handleCreate = async (orderData: OrderCreationData) => {
+        const order: OrderToCreate = {
+            title: orderData.title,
+            description: orderData.description,
+            place: orderData.place,
+            timeToComplete: `${orderData.daysToComplete}.${orderData.hoursToComplete}:00:00`,
+            price: orderData.price,
+            lat: orderData.lat,
+            lng: orderData.lng,
+        };
 
         const response = await createOrder(order);
 
-        if (isApiError(response)) {
-            displayError(response.message);
-        } else {
-            navigate("/my-orders");
+        if ("error" in response) {
+            notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
+            return;
         }
+
+        notifications.show("Order created", { severity: "success", autoHideDuration: 3000 });
+        // TODO navigate to details page
+        navigate(MY_ORDERS_ROUTE);
     };
 
-    const displayError = (message: string) => {
-        notifications.show(message, { severity: "error", autoHideDuration: 3000 });
-    };
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
 
     return (
-        <Grid
-            container
-            width={"100%"}
-            minHeight={"100vh"}
-            flexDirection={"column"}
-            justifyContent={"flex-start"}
-            alignItems={"center"}
-            bgcolor={"#E7E7E7"}
-        >
+        <Grid container minHeight={"100%"} flexDirection={"column"}>
             <CompanyHeader />
             <Grid
                 container
-                item
                 flexDirection={"column"}
-                alignItems={"center"}
-                maxWidth={"1300px"}
                 flexGrow={1}
-                bgcolor={"#FFFFFF"}
+                sx={{
+                    backgroundImage: `url(${backgroundImage})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundAttachment: "fixed",
+                    backdropFilter: "blur(8px)",
+                }}
             >
-                <CreateOrderForm submitHandler={create} />
+                <Container
+                    maxWidth="md"
+                    sx={{
+                        mt: isMediumScreen ? 0 : 2,
+                        mb: isMediumScreen ? 0 : 2,
+                        bgcolor: "white",
+                        borderRadius: isMediumScreen ? 0 : "10px",
+                    }}
+                >
+                    <OrderCreationForm submitHandler={handleCreate} loading={loading}/>
+                </Container>
             </Grid>
         </Grid>
     );

@@ -7,3 +7,4 @@ export const OWN_PROFILE_ROUTE = "/profile";
 
 export const AVAILABLE_ORDERS_ROUTE = "/orders";
 export const MY_ORDERS_ROUTE = "/my-orders";
+export const CREATE_ORDER_ROUTE = "/orders/create";
