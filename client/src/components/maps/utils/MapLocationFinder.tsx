@@ -5,7 +5,7 @@ import { useMapEvents } from "react-leaflet";
 const MapLocationFinder = () => {
     const map = useMapEvents({
         locationfound: (location: { latlng: LatLngExpression }) => {
-            map.setView(location.latlng, map.getZoom());
+            map.flyTo(location.latlng, map.getZoom());
         },
     });
 
@@ -13,7 +13,7 @@ const MapLocationFinder = () => {
         map.locate();
     }, [map]);
 
-    return null;
+    return <></>;
 };
 
 export default MapLocationFinder;

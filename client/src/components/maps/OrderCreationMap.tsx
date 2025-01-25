@@ -1,32 +1,34 @@
 import { MapContainer, TileLayer } from "react-leaflet";
-import MapLocationFinder from "./MapLocationFinder";
-import PlaceableMarker from "./PlaceableMarker";
-import { getAddressFromCoordinates } from "../../api/openStreetMapApi";
+import MapLocationFinder from "./utils/MapLocationFinder";
+import PlaceableMarker from "./utils/PlaceableMarker";
 import { LatLng } from "leaflet";
-import { ApiError } from "../../api";
 import { useNotifications } from "@toolpad/core";
+import useOSMApi from "../../hooks/useOSMApi";
+import "./map.css";
 
-const OrderCreationMap = ({ onLocationChange }: { onLocationChange: (newLocation: LatLng, address: any) => any }) => {
+export interface Location {
+    lat: number;
+    lng: number;
+}
+
+const OrderCreationMap = ({ onLocationChange }: { onLocationChange: (newLocation: LatLng, address: string) => void }) => {
     const notifications = useNotifications();
 
-    const changeLocation = async (newLocation: LatLng) => {
-        const isApiError = (response: any | ApiError): response is ApiError => {
-            return (response as ApiError).message !== undefined;
-        };
+    const { getAddressFromCoordinates } = useOSMApi();
 
+    const changeLocation = async (newLocation: LatLng) => {
         const response = await getAddressFromCoordinates({ lat: newLocation.lat, lng: newLocation.lng });
 
-        if (isApiError(response)) {
+        if ("error" in response) {
             notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
-        } else {
-            const address = response.address;
-
-            onLocationChange(newLocation, address);
+            return;
         }
+
+        onLocationChange(newLocation, response.display_name);
     };
 
     return (
-        <MapContainer center={[51.505, -0.09]} zoom={12} scrollWheelZoom={true} style={{ height: "450px", width: "100%" }}>
+        <MapContainer center={[51.505, -0.09]} zoom={12} scrollWheelZoom={true} style={{ width: "100%", aspectRatio: "16/9" }}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

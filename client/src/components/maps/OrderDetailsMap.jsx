@@ -1,6 +1,6 @@
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
-import ZoomCalculator from "./ZoomCalculator";
-import { orderIcon, userIcon } from "./mapIcons";
+import ZoomCalculator from "./utils/ZoomCalculator";
+import { orderIcon, userIcon } from "./utils/mapIcons";
 import { Typography } from "@mui/material";
 import { calculateRouteLength } from "../../api/openStreetMapApi";
 import { useEffect, useState } from "react";
