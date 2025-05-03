@@ -2,7 +2,6 @@ import OsmQueryParamNames from "./utils/osmQueryPramNames";
 import AxiosFactory from "./utils/axiosFactory";
 import { useCallback } from "react";
 import { ApiResponse } from "./utils/responses";
-import { InterestsRounded } from "@mui/icons-material";
 
 interface Location {
     lat: number;

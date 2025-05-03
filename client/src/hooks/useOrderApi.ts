@@ -14,6 +14,7 @@ export interface Order {
     timeToComplete?: string;
     price?: number;
     createdAt: Moment;
+    updatedAt: Moment;
     lat?: number;
     lng?: number;
     isClosed: boolean;
@@ -59,6 +60,8 @@ export interface UserOrder {
     status: UserOrderStatus;
     createdAt: Moment;
     updatedAt: Moment;
+    requestedAt: Moment;
+    acceptedAt?: Moment;
     order: Order;
 }
 
@@ -182,7 +185,7 @@ const useOrderApi = () => {
     }, [baseURL]);
 
     const getOrderDetails = useCallback(
-        async (orderId: string): Promise<ApiResponse<any>> => {
+        async (orderId: string): Promise<ApiResponse<UserOrder>> => {
             const client = await AxiosFactory.createAxiosInstance(baseURL);
 
             try {
@@ -221,7 +224,27 @@ const useOrderApi = () => {
         [baseURL]
     );
 
-    return { getAvailableOrders, getUserOrders, getCompanyOrders, getOrderDetails, createOrder };
+    const requestOrder = useCallback(
+        async (orderId: string): Promise<ApiResponse<any>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL);
+
+            try {
+                const response = await client.post(`${orderId}/request`);
+
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
+            }
+        },
+        [baseURL]
+    );
+
+    return { getAvailableOrders, getUserOrders, getCompanyOrders, getOrderDetails, createOrder, requestOrder };
 };
 
 export default useOrderApi;

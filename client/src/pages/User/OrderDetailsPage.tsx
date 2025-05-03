@@ -1,29 +1,16 @@
 import React, { useEffect, useState } from "react";
-import {
-    Grid2 as Grid,
-    Container,
-    useMediaQuery,
-    useTheme,
-    Typography,
-    Divider,
-    Card,
-    CardContent,
-    Box,
-    Stack,
-    Rating,
-    Avatar,
-    Button,
-} from "@mui/material";
+import { Grid2 as Grid, Container, useMediaQuery, useTheme, Typography, Stack, Rating, Avatar, Button } from "@mui/material";
 import UserHeader from "../../components/headers/UserHeader";
 import backgroundImage from "../../images/background.jpg";
 import { useNotifications } from "@toolpad/core";
-import useOrderApi from "../../hooks/useOrderApi";
+import useOrderApi, { UserOrder } from "../../hooks/useOrderApi";
 import NavigateBack from "../../components/buttons/NavigateBack";
 import { useParams } from "react-router-dom";
-import moment, { Duration, Moment } from "moment";
+import moment, { Duration } from "moment";
 import useCompanyApi from "../../hooks/useCompanyApi";
-import { ArrowRight, CompareArrows } from "@mui/icons-material";
+import { ArrowRight } from "@mui/icons-material";
 import MapModal from "../../components/modals/MapModal";
+import UserOrderActions from "../../components/OrderActions/UserOrderActions";
 
 const OrderDetailsPage = () => {
     const theme = useTheme();
@@ -40,7 +27,7 @@ const OrderDetailsPage = () => {
 
     const { id } = useParams();
 
-    const [orderData, setOrderData] = useState<any>();
+    const [orderData, setOrderData] = useState<UserOrder>();
 
     const [showFullDescription, setShowFullDescription] = useState(false);
 
@@ -49,7 +36,7 @@ const OrderDetailsPage = () => {
     const [companyImageSrc, setCompanyImageSrc] = useState("");
 
     const companyRating =
-        (orderData?.order?.company?.companyReviews || []).reduce((sum: number, r: any) => sum + r.grade, 0) /
+        (orderData?.order?.company?.companyReviews.map((r) => r.grade) || []).reduce((sum: number, r: any) => sum + r.grade, 0) /
         (orderData?.order?.company?.companyReviews.length || 1);
 
     useEffect(() => {
@@ -169,7 +156,11 @@ const OrderDetailsPage = () => {
                                             </Typography>
                                             <Typography
                                                 variant="body1"
-                                                sx={{ "&:hover": { cursor: "pointer", textDecoration: "underline" } }}
+                                                sx={
+                                                    orderData.order.lat && orderData.order.lng
+                                                        ? { "&:hover": { cursor: "pointer", textDecoration: "underline" } }
+                                                        : {}
+                                                }
                                                 onClick={() => setMapModalOpen(true)}
                                             >
                                                 <strong>Location:</strong> {orderData.order.place}
@@ -234,38 +225,44 @@ const OrderDetailsPage = () => {
                                         </Grid>
                                     </Grid>
 
-                                    <Grid container size={12} flexDirection={"column"}>
-                                        <Typography variant="h6" gutterBottom>
-                                            Description
-                                        </Typography>
-                                        <Typography variant="subtitle1" gutterBottom sx={{ whiteSpace: "pre-wrap" }}>
-                                            {orderData.order.description.length > 300 && !showFullDescription
-                                                ? orderData.order.description.slice(0, 300).trim() + "..."
-                                                : orderData.order.description}
-                                        </Typography>
-                                        {orderData.order.description.length > 300 && (
-                                            <Grid>
-                                                <Button
-                                                    variant="contained"
-                                                    size="small"
-                                                    onClick={() => setShowFullDescription((prev) => !prev)}
-                                                >
-                                                    {showFullDescription ? "Show less" : "Show more"}
-                                                </Button>
-                                            </Grid>
-                                        )}
-                                    </Grid>
+                                    {orderData.order.description && (
+                                        <Grid container size={12} flexDirection={"column"}>
+                                            <Typography variant="h6" gutterBottom>
+                                                Description
+                                            </Typography>
+                                            <Typography variant="subtitle1" gutterBottom sx={{ whiteSpace: "pre-wrap" }}>
+                                                {orderData.order.description.length > 300 && !showFullDescription
+                                                    ? orderData.order.description.slice(0, 300).trim() + "..."
+                                                    : orderData.order.description}
+                                            </Typography>
+                                            {orderData.order.description.length > 300 && (
+                                                <Grid>
+                                                    <Button
+                                                        variant="contained"
+                                                        size="small"
+                                                        onClick={() => setShowFullDescription((prev) => !prev)}
+                                                    >
+                                                        {showFullDescription ? "Show less" : "Show more"}
+                                                    </Button>
+                                                </Grid>
+                                            )}
+                                        </Grid>
+                                    )}
+
+                                    <UserOrderActions orderData={orderData} />
                                 </>
                             )}
                         </Grid>
                     </Container>
                 </Grid>
             </Grid>
-            <MapModal
-                isOpen={mapModalOpen}
-                onClose={() => setMapModalOpen(false)}
-                orderPosition={{ lat: orderData?.order?.lat, lng: orderData?.order?.lng }}
-            />
+            {orderData?.order.lat && orderData.order.lng && (
+                <MapModal
+                    isOpen={mapModalOpen}
+                    onClose={() => setMapModalOpen(false)}
+                    orderPosition={{ lat: orderData!.order.lat!, lng: orderData!.order.lng! }}
+                />
+            )}
         </>
     );
 };
