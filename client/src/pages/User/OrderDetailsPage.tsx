@@ -12,6 +12,7 @@ import {
     Stack,
     Rating,
     Avatar,
+    Button,
 } from "@mui/material";
 import UserHeader from "../../components/headers/UserHeader";
 import backgroundImage from "../../images/background.jpg";
@@ -21,7 +22,8 @@ import NavigateBack from "../../components/buttons/NavigateBack";
 import { useParams } from "react-router-dom";
 import moment, { Duration, Moment } from "moment";
 import useCompanyApi from "../../hooks/useCompanyApi";
-import { CompareArrows } from "@mui/icons-material";
+import { ArrowRight, CompareArrows } from "@mui/icons-material";
+import MapModal from "../../components/modals/MapModal";
 
 const OrderDetailsPage = () => {
     const theme = useTheme();
@@ -39,6 +41,10 @@ const OrderDetailsPage = () => {
     const { id } = useParams();
 
     const [orderData, setOrderData] = useState<any>();
+
+    const [showFullDescription, setShowFullDescription] = useState(false);
+
+    const [mapModalOpen, setMapModalOpen] = useState(false);
 
     const [companyImageSrc, setCompanyImageSrc] = useState("");
 
@@ -103,127 +109,164 @@ const OrderDetailsPage = () => {
     // TODO create a base page component to handle the common logic between this and the other pages.
 
     return (
-        <Grid container minHeight={"100%"} flexDirection={"column"}>
-            <UserHeader />
-            <Grid
-                container
-                flexDirection={"column"}
-                flexGrow={1}
-                sx={{
-                    backgroundImage: `url(${backgroundImage})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundAttachment: "fixed",
-                    backdropFilter: "blur(8px)",
-                }}
-            >
-                {!isMediumScreen && (
-                    <Container
-                        maxWidth="md"
-                        style={{ paddingLeft: 0 }}
-                        sx={{
-                            mt: isMediumScreen ? 0 : 2,
-                        }}
-                    >
-                        <NavigateBack to={-1} label="Back" />
-                    </Container>
-                )}
-                <Container
-                    maxWidth="md"
+        <>
+            <Grid container minHeight={"100%"} flexDirection={"column"}>
+                <UserHeader />
+                <Grid
+                    container
+                    flexDirection={"column"}
+                    flexGrow={1}
                     sx={{
-                        mt: isMediumScreen ? 0 : 2,
-                        mb: isMediumScreen ? 0 : 2,
-                        bgcolor: "white",
-                        borderRadius: isMediumScreen ? 0 : "10px",
+                        backgroundImage: `url(${backgroundImage})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        backgroundAttachment: "fixed",
+                        backdropFilter: "blur(8px)",
                     }}
                 >
-                    {isMediumScreen && (
-                        <Grid mt={3}>
+                    {!isMediumScreen && (
+                        <Container
+                            maxWidth="md"
+                            style={{ paddingLeft: 0 }}
+                            sx={{
+                                mt: isMediumScreen ? 0 : 2,
+                            }}
+                        >
                             <NavigateBack to={-1} label="Back" />
-                        </Grid>
+                        </Container>
                     )}
-                    <Grid
-                        container
-                        spacing={4}
-                        alignItems="flex-start"
-                        sx={{ p: isMediumScreen ? 1 : 4 }}
-                        mt={isMediumScreen ? 2 : 0}
+                    <Container
+                        maxWidth="md"
+                        sx={{
+                            mt: isMediumScreen ? 0 : 2,
+                            mb: isMediumScreen ? 0 : 2,
+                            bgcolor: "white",
+                            borderRadius: isMediumScreen ? 0 : "10px",
+                        }}
                     >
-                        {orderData && (
-                            <>
-                                <Grid container size={12} flexDirection={"column"} spacing={1}>
-                                    <Typography variant="body1">
-                                        {moment(orderData.updatedAt).format("MMMM Do YYYY, hh:mm")}
-                                    </Typography>
-                                    <Typography variant="h5">{orderData.order.title}</Typography>
-                                </Grid>
-
-                                <Grid container size={12} spacing={2} justifyContent={"space-between"}>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <Typography variant="h6" gutterBottom>
-                                            Order Info
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            <strong>Location:</strong> {orderData.order.place}
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            <strong>Price:</strong> {orderData.order.price} BYN
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            <strong>Time to complete:</strong>{" "}
-                                            {getExpirationString(moment.duration(orderData.order.timeToComplete))}
-                                        </Typography>
-                                        <Typography variant="body1">
-                                            <strong>Status:</strong> {orderData.order.isClosed ? "Closed" : "Open"}
-                                        </Typography>
+                        {isMediumScreen && (
+                            <Grid mt={3}>
+                                <NavigateBack to={-1} label="Back" />
+                            </Grid>
+                        )}
+                        <Grid
+                            container
+                            spacing={4}
+                            alignItems="flex-start"
+                            sx={{ p: isMediumScreen ? 1 : 4 }}
+                            mt={isMediumScreen ? 2 : 0}
+                        >
+                            {orderData && (
+                                <>
+                                    <Grid container size={12} flexDirection={"column"} spacing={1}>
+                                        <Typography variant="h5">{orderData.order.title}</Typography>
                                     </Grid>
-                                    <Grid size={{ xs: 12, md: 6 }}>
-                                        <Typography variant="h6" gutterBottom>
-                                            Company Info
-                                        </Typography>
-                                        <Grid container wrap="nowrap" spacing={2}>
-                                            <Grid mt={0.5}>
-                                                <Avatar
-                                                    sx={{ width: 50, height: 50 }}
-                                                    alt={`${orderData.order.company.name}'s avatar`}
-                                                    src={companyImageSrc}
-                                                />
-                                            </Grid>
-                                            <Grid container flexDirection={"column"} spacing={0}>
-                                                <Typography variant="body1">{orderData.order.company.name}</Typography>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    {orderData.order.company.email}
-                                                </Typography>
-                                                <Stack direction="row" alignItems="center" spacing={1}>
-                                                    <Rating
-                                                        value={companyRating}
-                                                        precision={0.5}
-                                                        readOnly
-                                                        size={isSmallScreen ? "small" : "medium"}
-                                                    />
-                                                    <Typography variant="body2">
-                                                        ({orderData.order.company.companyReviews.length} reviews)
+
+                                    <Grid container size={12} spacing={2} justifyContent={"space-between"}>
+                                        <Grid size={{ xs: 12, md: 6 }}>
+                                            <Typography variant="h6" gutterBottom>
+                                                Order Info
+                                            </Typography>
+                                            <Typography
+                                                variant="body1"
+                                                sx={{ "&:hover": { cursor: "pointer", textDecoration: "underline" } }}
+                                                onClick={() => setMapModalOpen(true)}
+                                            >
+                                                <strong>Location:</strong> {orderData.order.place}
+                                            </Typography>
+                                            <Typography variant="body1">
+                                                <strong>Price:</strong> {orderData.order.price} BYN
+                                            </Typography>
+                                            <Typography variant="body1">
+                                                <strong>Time to complete:</strong>{" "}
+                                                {getExpirationString(moment.duration(orderData.order.timeToComplete))}
+                                            </Typography>
+                                            <Typography variant="body1">
+                                                <strong>Status:</strong> {orderData.order.isClosed ? "Closed" : "Open"}
+                                            </Typography>
+                                            <Typography variant="body1">
+                                                <strong>Created:</strong>{" "}
+                                                {moment(orderData.order.createdAt).format("MMMM Do YYYY, hh:mm a")}
+                                            </Typography>
+                                            {orderData.order.updatedAt &&
+                                                orderData.order.createdAt !== orderData.order.updatedAt && (
+                                                    <Typography variant="body1">
+                                                        <strong>Updated:</strong>{" "}
+                                                        {moment(orderData.order.updatedAt).format("MMMM Do YYYY, hh:mm a")}
                                                     </Typography>
-                                                </Stack>
+                                                )}
+                                        </Grid>
+                                        <Grid size={{ xs: 12, md: 6 }}>
+                                            <Grid container spacing={1} alignItems={"center"}>
+                                                <Typography variant="h6" gutterBottom>
+                                                    Company Info
+                                                </Typography>
+                                            </Grid>
+                                            <Grid container wrap="nowrap" spacing={2}>
+                                                <Grid mt={0.5}>
+                                                    <Avatar
+                                                        sx={{ width: 50, height: 50 }}
+                                                        alt={`${orderData.order.company.name}'s avatar`}
+                                                        src={companyImageSrc}
+                                                    />
+                                                </Grid>
+                                                <Grid container flexDirection={"column"} spacing={0}>
+                                                    <Typography variant="body1">{orderData.order.company.name}</Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        {orderData.order.company.email}
+                                                    </Typography>
+                                                    <Stack direction="row" alignItems="center" spacing={1}>
+                                                        <Rating
+                                                            value={companyRating}
+                                                            precision={0.5}
+                                                            readOnly
+                                                            size={isSmallScreen ? "small" : "medium"}
+                                                        />
+                                                        <Typography variant="body2">
+                                                            ({orderData.order.company.companyReviews.length} reviews)
+                                                        </Typography>
+                                                    </Stack>
+                                                    <Button variant="contained" fullWidth endIcon={<ArrowRight />} sx={{ mt: 1 }}>
+                                                        Profile
+                                                    </Button>
+                                                </Grid>
                                             </Grid>
                                         </Grid>
                                     </Grid>
-                                </Grid>
 
-                                <Grid container size={12} flexDirection={"column"}>
-                                    <Typography variant="h6" gutterBottom>
-                                        Description
-                                    </Typography>
-                                    <Typography variant="subtitle1" gutterBottom>
-                                        {orderData.order.description}
-                                    </Typography>
-                                </Grid>
-                            </>
-                        )}
-                    </Grid>
-                </Container>
+                                    <Grid container size={12} flexDirection={"column"}>
+                                        <Typography variant="h6" gutterBottom>
+                                            Description
+                                        </Typography>
+                                        <Typography variant="subtitle1" gutterBottom sx={{ whiteSpace: "pre-wrap" }}>
+                                            {orderData.order.description.length > 300 && !showFullDescription
+                                                ? orderData.order.description.slice(0, 300).trim() + "..."
+                                                : orderData.order.description}
+                                        </Typography>
+                                        {orderData.order.description.length > 300 && (
+                                            <Grid>
+                                                <Button
+                                                    variant="contained"
+                                                    size="small"
+                                                    onClick={() => setShowFullDescription((prev) => !prev)}
+                                                >
+                                                    {showFullDescription ? "Show less" : "Show more"}
+                                                </Button>
+                                            </Grid>
+                                        )}
+                                    </Grid>
+                                </>
+                            )}
+                        </Grid>
+                    </Container>
+                </Grid>
             </Grid>
-        </Grid>
+            <MapModal
+                isOpen={mapModalOpen}
+                onClose={() => setMapModalOpen(false)}
+                orderPosition={{ lat: orderData?.order?.lat, lng: orderData?.order?.lng }}
+            />
+        </>
     );
 };
 

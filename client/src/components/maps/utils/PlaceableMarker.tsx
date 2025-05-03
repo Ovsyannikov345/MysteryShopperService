@@ -1,15 +1,7 @@
-import L, { LatLngExpression } from "leaflet";
+import { LatLngExpression } from "leaflet";
 import { useState } from "react";
 import { Marker, useMapEvents } from "react-leaflet";
-import placedMarkerIconImage from "../../../images/marker.png";
-
-const placedMarkerIcon = L.icon({
-    iconUrl: placedMarkerIconImage,
-    iconRetinaUrl: placedMarkerIconImage,
-    iconAnchor: [23, 45],
-    popupAnchor: [10, -44],
-    iconSize: [45, 45],
-});
+import { markerIcon } from "./mapIcons";
 
 const PlaceableMarker = ({ onMoveCallback }: { onMoveCallback: Function }) => {
     const [position, setPosition] = useState<LatLngExpression>();
@@ -21,7 +13,7 @@ const PlaceableMarker = ({ onMoveCallback }: { onMoveCallback: Function }) => {
         },
     });
 
-    return position ? <Marker position={position} icon={placedMarkerIcon} /> : <></>;
+    return position ? <Marker position={position} icon={markerIcon} /> : <></>;
 };
 
 export default PlaceableMarker;
