@@ -23,7 +23,7 @@ public class UserService(IUserRepository userRepository) : IUserService
             throw new ForbiddenException("You can't update other person's profile");
         }
 
-        var user = await userRepository.GetByItemAsync(u => u.Id == userData.Id, cancellationToken)
+        var user = await userRepository.GetAsync(u => u.Id == userData.Id, disableTracking: false, cancellationToken)
             ?? throw new NotFoundException("User is not found");
 
         var userProperties = typeof(User).GetProperties();

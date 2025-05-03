@@ -82,7 +82,7 @@ namespace MysteryShopper.BLL.Services
 
         public async Task<IEnumerable<DisputeModel>> GetOrderDisputesAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default)
         {
-            var order = await orderRepository.GetByItemAsync(o => o.Id == orderId, cancellationToken);
+            var order = await orderRepository.GetAsync(o => o.Id == orderId, disableTracking: true, cancellationToken);
 
             if (order is not null && order.CompanyId != companyId)
             {

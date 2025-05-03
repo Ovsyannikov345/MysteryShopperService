@@ -45,7 +45,7 @@ namespace MysteryShopper.BLL.Services
 
         public async Task<TokenPair> RefreshTokensAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
-            var refreshTokenEntity = await _refreshTokenRepository.GetByItemAsync(token => token.Token == refreshToken, cancellationToken)
+            var refreshTokenEntity = await _refreshTokenRepository.GetAsync(token => token.Token == refreshToken, disableTracking: false, cancellationToken)
                 ?? throw new NotFoundException("Provided refresh token is not found");
 
             var tokenHandler = new JsonWebTokenHandler();
@@ -100,7 +100,7 @@ namespace MysteryShopper.BLL.Services
 
         public async Task RemoveRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
-            var token = await _refreshTokenRepository.GetByItemAsync(t => t.Token == refreshToken, cancellationToken);
+            var token = await _refreshTokenRepository.GetAsync(t => t.Token == refreshToken, disableTracking: false, cancellationToken);
 
             if (token == null)
             {

@@ -25,9 +25,16 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
         return count;
     }
 
-    public virtual async Task<TEntity?> GetByItemAsync(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter, bool disableTracking = true, CancellationToken cancellationToken = default)
     {
-        var entity = await _context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(filter, cancellationToken);
+        var query = _context.Set<TEntity>().AsQueryable();
+
+        if (disableTracking)
+        {
+            query = query.AsNoTracking();
+        }
+
+        var entity = await query.FirstOrDefaultAsync(filter, cancellationToken);
 
         _logger.Information("{0} GetByItemAsync called. Entity: {1}", typeof(TEntity), entity);
 

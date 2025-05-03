@@ -22,7 +22,7 @@ namespace MysteryShopper.BLL.Services
                 throw new ForbiddenException("You can't update other company's profile");
             }
 
-            var company = await companyRepository.GetByItemAsync(c => c.Id == companyData.Id, cancellationToken)
+            var company = await companyRepository.GetAsync(c => c.Id == companyData.Id, disableTracking: false, cancellationToken)
                 ?? throw new NotFoundException("Company is not found");
 
             var companyProperties = typeof(Company).GetProperties();

@@ -46,7 +46,7 @@ namespace MysteryShopper.BLL.Services
                 throw new BadRequestException("You can't post a review from other company");
             }
 
-            var order = await orderRepository.GetByItemAsync(o => o.Id == reviewData.OrderId, cancellationToken)
+            var order = await orderRepository.GetAsync(o => o.Id == reviewData.OrderId, disableTracking: true, cancellationToken)
                 ?? throw new NotFoundException("Order is not found");
 
             if (order.CompanyId != companyId)

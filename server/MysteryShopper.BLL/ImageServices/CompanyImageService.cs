@@ -11,7 +11,7 @@ public class CompanyImageService(ICompanyAvatarStorage companyAvatarStorage, ICo
 {
     public override async Task UploadImageAsync(Guid entityId, IFormFile file, CancellationToken cancellationToken = default)
     {
-        _ = await companyRepository.GetByItemAsync(c => c.Id == entityId, cancellationToken)
+        _ = await companyRepository.GetAsync(c => c.Id == entityId, disableTracking: true, cancellationToken)
             ?? throw new NotFoundException("Company is not found");
 
         await base.UploadImageAsync(entityId, file, cancellationToken);

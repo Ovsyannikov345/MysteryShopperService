@@ -122,10 +122,10 @@ namespace MysteryShopper.BLL.Services
 
         public async Task<UserOrder> GetOrderDetailsForUserAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
         {
-            var order = await orderRepository.GetByItemAsync(o => o.Id == orderId, cancellationToken)
+            var order = await orderRepository.GetAsync(o => o.Id == orderId, disableTracking: false, cancellationToken)
                 ?? throw new NotFoundException("Order is not found");
 
-            var user = await userRepository.GetByItemAsync(u => u.Id == userId, cancellationToken)
+            var user = await userRepository.GetAsync(u => u.Id == userId, disableTracking: false, cancellationToken)
                 ?? throw new NotFoundException("User is not found");
 
             var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken);
@@ -237,7 +237,7 @@ namespace MysteryShopper.BLL.Services
 
         public async Task FinishOrderAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default)
         {
-            var order = await orderRepository.GetByItemAsync(o => o.Id == orderId, cancellationToken)
+            var order = await orderRepository.GetAsync(o => o.Id == orderId, disableTracking: false, cancellationToken)
                 ?? throw new NotFoundException("Order is not found");
 
             if (order.CompanyId != companyId)

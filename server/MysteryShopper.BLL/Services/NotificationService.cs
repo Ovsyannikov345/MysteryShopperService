@@ -38,7 +38,7 @@ namespace MysteryShopper.BLL.Services
 
         public async Task ReadCompanyNotificationAsync(Guid notificationId, Guid companyId, CancellationToken cancellationToken = default)
         {
-            var notification = await notificationRepository.GetByItemAsync(n => n.Id == notificationId, cancellationToken)
+            var notification = await notificationRepository.GetAsync(n => n.Id == notificationId, disableTracking: false, cancellationToken)
                 ?? throw new NotFoundException("Notification is not found");
 
             if (notification.CompanyId != companyId)
@@ -52,7 +52,7 @@ namespace MysteryShopper.BLL.Services
 
         public async Task ReadUserNotificationAsync(Guid notificationId, Guid userId, CancellationToken cancellationToken = default)
         {
-            var notification = await notificationRepository.GetByItemAsync(n => n.Id == notificationId, cancellationToken)
+            var notification = await notificationRepository.GetAsync(n => n.Id == notificationId, disableTracking: false, cancellationToken)
                 ?? throw new NotFoundException("Notification is not found");
 
             if (notification.UserId != userId)

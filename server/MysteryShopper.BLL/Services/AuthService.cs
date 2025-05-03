@@ -35,11 +35,11 @@ namespace MysteryShopper.BLL.Services
 
         public async Task<AuthCredentials> LoginAsync(string email, string password, CancellationToken cancellationToken = default)
         {
-            var user = await _userRepository.GetByItemAsync(u => u.Email == email, cancellationToken);
+            var user = await _userRepository.GetAsync(u => u.Email == email, disableTracking: true, cancellationToken);
 
             if (user is null)
             {
-                var company = await _companyRepository.GetByItemAsync(c => c.Email == email, cancellationToken);
+                var company = await _companyRepository.GetAsync(c => c.Email == email, disableTracking: true, cancellationToken);
 
                 if (company is null)
                 {
@@ -112,7 +112,7 @@ namespace MysteryShopper.BLL.Services
                 throw new BadRequestException($"{validationResult.Errors[0].ErrorMessage}");
             }
 
-            if ((await _userRepository.GetByItemAsync(u => u.Email == userData.Email, cancellationToken)) != null)
+            if ((await _userRepository.GetAsync(u => u.Email == userData.Email, disableTracking: true, cancellationToken)) != null)
             {
                 _logger.Information("User email {0} is taken", userData.Email);
 
@@ -148,7 +148,7 @@ namespace MysteryShopper.BLL.Services
                 throw new BadRequestException($"{validationResult.Errors[0].ErrorMessage}");
             }
 
-            if ((await _companyRepository.GetByItemAsync(c => c.Email == companyData.Email, cancellationToken)) != null)
+            if ((await _companyRepository.GetAsync(c => c.Email == companyData.Email, disableTracking: true, cancellationToken)) != null)
             {
                 _logger.Information("Company email {0} is taken", companyData.Email);
 

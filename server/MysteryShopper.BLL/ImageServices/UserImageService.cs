@@ -10,7 +10,7 @@ public class UserImageService(IUserAvatarStorage userAvatarStorage, IUserReposit
 {
     public override async Task UploadImageAsync(Guid entityId, IFormFile file, CancellationToken cancellationToken = default)
     {
-        _ = await userRepository.GetByItemAsync(u => u.Id == entityId, cancellationToken)
+        _ = await userRepository.GetAsync(u => u.Id == entityId, disableTracking: true, cancellationToken)
             ?? throw new NotFoundException("User is not found");
 
         await base.UploadImageAsync(entityId, file, cancellationToken);

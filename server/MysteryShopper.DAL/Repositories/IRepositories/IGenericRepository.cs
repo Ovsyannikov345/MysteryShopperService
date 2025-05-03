@@ -2,11 +2,13 @@
 
 namespace MysteryShopper.DAL.Repositories.IRepositories
 {
+    // TODO move all interafaces to their implementations.
+
     public interface IGenericRepository<TEntity> where TEntity : class
     {
         public Task<int> CountAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default);
 
-        public Task<TEntity?> GetByItemAsync(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken = default);
+        public Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter, bool disableTracking = true, CancellationToken cancellationToken = default);
 
         public Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default);
 

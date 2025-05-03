@@ -30,7 +30,7 @@ public class CategorizationService(
 
             foreach (var tagText in tagData.Tags)
             {
-                var tag = await orderTagRepository.GetByItemAsync(t => t.Text == tagText, cancellationToken);
+                var tag = await orderTagRepository.GetAsync(t => t.Text == tagText, disableTracking: false, cancellationToken);
 
                 if (tag is not null)
                 {
@@ -43,7 +43,7 @@ public class CategorizationService(
 
             foreach (var tagText in tagData.NewTags)
             {
-                var existingTag = await orderTagRepository.GetByItemAsync(t => t.Text == tagText, cancellationToken);
+                var existingTag = await orderTagRepository.GetAsync(t => t.Text == tagText, disableTracking: false, cancellationToken);
 
                 if (existingTag is not null)
                 {
