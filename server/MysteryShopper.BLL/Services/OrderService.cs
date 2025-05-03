@@ -110,6 +110,7 @@ namespace MysteryShopper.BLL.Services
             }
 
             userOrder.Status = UserOrderStatus.Requested;
+            userOrder.RequestedAt = DateTime.UtcNow;
 
             await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
 
@@ -176,6 +177,8 @@ namespace MysteryShopper.BLL.Services
             }
 
             userOrder.Status = UserOrderStatus.InProgress;
+            userOrder.AcceptedAt = DateTime.UtcNow;
+
             await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
 
             await notificationService.CreateNotificationAsync(new NotificationModel

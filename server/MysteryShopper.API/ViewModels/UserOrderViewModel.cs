@@ -12,5 +12,9 @@ public class UserOrderViewModel
 
     public DateTime UpdatedAt { get; set; }
 
+    public DateTime? RequestedAt { get; set; }
+
+    public DateTime? AcceptedAt { get; set; }
+
     public UserOrderStatus Status { get; set; } = UserOrderStatus.Requested;
 }

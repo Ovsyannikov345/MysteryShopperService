@@ -12,5 +12,9 @@ public partial class UserOrder : EntityBase
 
     public required virtual User User { get; set; }
 
-    public UserOrderStatus Status { get; set; } = UserOrderStatus.Requested;
+    public UserOrderStatus Status { get; set; } = UserOrderStatus.None;
+
+    public DateTime? RequestedAt { get; set; }
+
+    public DateTime? AcceptedAt { get; set; }
 }
