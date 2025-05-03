@@ -1,21 +1,27 @@
-import { AVAILABLE_ORDERS_ROUTE, COMPANY_PROFILE_ROUTE, MY_ORDERS_ROUTE, OWN_PROFILE_ROUTE } from "./consts";
+import {
+    AVAILABLE_ORDERS_ROUTE,
+    COMPANY_PROFILE_ROUTE,
+    MY_ORDERS_ROUTE,
+    ORDER_DETAILS_ROUTE,
+    OWN_PROFILE_ROUTE,
+    USER_PROFILE_ROUTE,
+} from "./consts";
 import CompanyProfilePage from "../pages/Common/CompanyProfilePage";
 import UserOwnProfilePage from "../pages/User/UserOwnProfilePage";
 import UserProfilePage from "../pages/Common/UserProfilePage";
 import AvailableOrdersPage from "../pages/User/AvailableOrdersPage";
 import UserOrdersPage from "../pages/User/OrdersInProgressPage";
-
-// TODO remove commented code.
+import OrderDetailsPage from "../pages/User/OrderDetailsPage";
 
 export const userRoutes = [
     {
         path: AVAILABLE_ORDERS_ROUTE,
         Component: AvailableOrdersPage,
     },
-    // {
-    //     path: "/orders/:id",
-    //     Component: UserOrderDetails,
-    // },
+    {
+        path: ORDER_DETAILS_ROUTE,
+        Component: OrderDetailsPage,
+    },
     {
         path: MY_ORDERS_ROUTE,
         Component: UserOrdersPage,
@@ -25,7 +31,7 @@ export const userRoutes = [
         Component: CompanyProfilePage,
     },
     {
-        path: "/user/:id",
+        path: USER_PROFILE_ROUTE,
         Component: UserProfilePage,
     },
     {

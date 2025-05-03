@@ -44,6 +44,8 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
         await logout();
     };
 
+    // TODO fix navigation options display on medium screens.
+
     return (
         <>
             <Box id="header">

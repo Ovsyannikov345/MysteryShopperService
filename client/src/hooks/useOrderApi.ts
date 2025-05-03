@@ -181,6 +181,26 @@ const useOrderApi = () => {
         }
     }, [baseURL]);
 
+    const getOrderDetails = useCallback(
+        async (orderId: string): Promise<ApiResponse<any>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL);
+
+            try {
+                const response = await client.get(`${orderId}`);
+
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
+            }
+        },
+        [baseURL]
+    );
+
     const createOrder = useCallback(
         async (orderData: OrderToCreate): Promise<ApiResponse<CompanyOrder>> => {
             const client = await AxiosFactory.createAxiosInstance(baseURL);
@@ -201,7 +221,7 @@ const useOrderApi = () => {
         [baseURL]
     );
 
-    return { getAvailableOrders, getUserOrders, getCompanyOrders, createOrder };
+    return { getAvailableOrders, getUserOrders, getCompanyOrders, getOrderDetails, createOrder };
 };
 
 export default useOrderApi;

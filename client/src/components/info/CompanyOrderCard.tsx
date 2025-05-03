@@ -4,8 +4,12 @@ import { NavigateNext, Map, Person } from "@mui/icons-material";
 import "react-pulse-dot/dist/index.css";
 import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
 import PulseDot from "react-pulse-dot";
+import { useNavigate } from "react-router-dom";
+import { ORDER_DETAILS_ROUTE } from "../../router/consts";
 
 export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
+    const navigate = useNavigate();
+
     const activeUsersCount = order.users.filter(
         (u) => u.status === UserOrderStatus.Requested || u.status === UserOrderStatus.InProgress
     ).length;
@@ -56,12 +60,11 @@ export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
                 )}
             </CardContent>
             <CardActions sx={{ flexGrow: 1, alignItems: "flex-end" }}>
-                {/* TODO implement */}
                 <Button
                     variant="contained"
                     fullWidth
                     startIcon={<NavigateNext />}
-                    onClick={() => console.log("navigated to order " + order.id)}
+                    onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, order.id))}
                 >
                     Details
                 </Button>

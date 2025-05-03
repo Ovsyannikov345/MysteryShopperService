@@ -5,6 +5,7 @@ import moment from "moment";
 import { Timer, Map, MonetizationOn } from "@mui/icons-material";
 import useCompanyApi from "../../hooks/useCompanyApi";
 import { useEffect, useState } from "react";
+import { ORDER_DETAILS_ROUTE } from "../../router/consts";
 
 const OrderCard = ({ orderData }: { orderData: Order }) => {
     const navigate = useNavigate();
@@ -55,8 +56,7 @@ const OrderCard = ({ orderData }: { orderData: Order }) => {
                 </Grid>
             </CardContent>
             <CardActions sx={{ flexGrow: 1, alignItems: "flex-end" }}>
-                {/* TODO implement */}
-                <Button variant="contained" fullWidth onClick={() => console.log("navigated to order " + orderData.id)}>
+                <Button variant="contained" fullWidth onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, orderData.id))}>
                     Details
                 </Button>
             </CardActions>

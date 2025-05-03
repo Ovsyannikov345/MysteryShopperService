@@ -7,8 +7,12 @@ import { useEffect, useState } from "react";
 import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
 import PulseDot from "react-pulse-dot";
 import "react-pulse-dot/dist/index.css";
+import { ORDER_DETAILS_ROUTE } from "../../router/consts";
+import { useNavigate } from "react-router-dom";
 
 const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
+    const navigate = useNavigate();
+
     const { getProfileImage: getCompanyProfileImage } = useCompanyApi();
 
     const [imageSrc, setImageSrc] = useState("");
@@ -151,12 +155,11 @@ const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
             />
             {getCardContent()}
             <CardActions sx={{ flexGrow: 1, alignItems: "flex-end" }}>
-                {/* TODO implement */}
                 <Button
                     variant="contained"
                     fullWidth
                     startIcon={<NavigateNext />}
-                    onClick={() => console.log("navigated to order " + orderData.id)}
+                    onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, orderData.id))}
                 >
                     Details
                 </Button>
