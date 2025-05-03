@@ -11,6 +11,7 @@ import ProfilePageSkeleton from "../../components/skeletons/ProfilePageSkeleton"
 import { useNavigate, useParams } from "react-router-dom";
 import ReviewCard from "../../components/info/ReviewCard";
 import { Roles } from "../../utils/enums/roles";
+import UserHeader from "../../components/headers/UserHeader";
 
 const CompanyOwnProfilePage = () => {
     const theme = useTheme();
@@ -34,6 +35,10 @@ const CompanyOwnProfilePage = () => {
     const reviewsPerPage = 5;
 
     const reviewHeaderRef = useRef<HTMLDivElement>(null);
+
+    const userRole = useMemo(() => {
+        return Number(localStorage.getItem("role")) as Roles;
+    }, []);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -97,7 +102,7 @@ const CompanyOwnProfilePage = () => {
 
     return (
         <Grid container minHeight={"100%"} flexDirection={"column"}>
-            <CompanyHeader />
+            {userRole === Roles.Company ? <CompanyHeader /> : userRole === Roles.User ? <UserHeader /> : <></>}
             <Grid
                 container
                 flexDirection={"column"}

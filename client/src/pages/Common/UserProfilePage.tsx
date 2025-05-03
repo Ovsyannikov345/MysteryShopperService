@@ -11,6 +11,7 @@ import moment from "moment";
 import { Roles } from "../../utils/enums/roles";
 import { useNavigate, useParams } from "react-router-dom";
 import ProfileCard from "../../components/info/ProfileCard";
+import CompanyHeader from "../../components/headers/CompanyHeader";
 
 const UserProfilePage = () => {
     const theme = useTheme();
@@ -34,6 +35,10 @@ const UserProfilePage = () => {
     const reviewsPerPage = 5;
 
     const reviewHeaderRef = useRef<HTMLDivElement>(null);
+
+    const userRole = useMemo(() => {
+        return Number(localStorage.getItem("role")) as Roles;
+    }, []);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -96,7 +101,7 @@ const UserProfilePage = () => {
 
     return (
         <Grid container minHeight={"100%"} flexDirection={"column"}>
-            <UserHeader />
+            {userRole === Roles.Company ? <CompanyHeader /> : userRole === Roles.User ? <UserHeader /> : <></>}
             <Grid
                 container
                 flexDirection={"column"}
