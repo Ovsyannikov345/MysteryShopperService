@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Grid2 as Grid, Container, useMediaQuery, useTheme, Typography, Stack, Rating, Avatar, Button } from "@mui/material";
 import UserHeader from "../../components/headers/UserHeader";
 import backgroundImage from "../../images/background.jpg";
 import { useNotifications } from "@toolpad/core";
 import useOrderApi, { UserOrder } from "../../hooks/useOrderApi";
 import NavigateBack from "../../components/buttons/NavigateBack";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment, { Duration } from "moment";
 import useCompanyApi from "../../hooks/useCompanyApi";
 import { ArrowRight } from "@mui/icons-material";
 import MapModal from "../../components/modals/MapModal";
 import UserOrderActions from "../../components/OrderActions/UserOrderActions";
+import { COMPANY_PROFILE_ROUTE } from "../../router/consts";
 
 const OrderDetailsPage = () => {
     const theme = useTheme();
@@ -20,6 +21,8 @@ const OrderDetailsPage = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
     const notifications = useNotifications();
+
+    const navigate = useNavigate();
 
     const { getOrderDetails } = useOrderApi();
 
@@ -37,9 +40,16 @@ const OrderDetailsPage = () => {
 
     const [reload, setReload] = useState(false);
 
-    const companyRating =
-        (orderData?.order?.company?.companyReviews.map((r) => r.grade) || []).reduce((sum: number, r: any) => sum + r.grade, 0) /
-        (orderData?.order?.company?.companyReviews.length || 1);
+    const companyRating = useMemo(() => {
+        if (!orderData || orderData.order.company.companyReviews.length === 0) {
+            return 0;
+        }
+
+        return (
+            orderData.order.company.companyReviews.reduce((sum: number, r) => sum + r.grade, 0) /
+            orderData.order.company.companyReviews.length
+        );
+    }, [orderData]);
 
     useEffect(() => {
         const loadOrderData = async () => {
@@ -219,7 +229,17 @@ const OrderDetailsPage = () => {
                                                             ({orderData.order.company.companyReviews.length} reviews)
                                                         </Typography>
                                                     </Stack>
-                                                    <Button variant="contained" fullWidth endIcon={<ArrowRight />} sx={{ mt: 1 }}>
+                                                    <Button
+                                                        variant="contained"
+                                                        fullWidth
+                                                        endIcon={<ArrowRight />}
+                                                        sx={{ mt: 1 }}
+                                                        onClick={() =>
+                                                            navigate(
+                                                                COMPANY_PROFILE_ROUTE.replace(/:.*/, orderData.order.company.id)
+                                                            )
+                                                        }
+                                                    >
                                                         Profile
                                                     </Button>
                                                 </Grid>

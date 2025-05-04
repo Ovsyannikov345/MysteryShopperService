@@ -23,12 +23,10 @@ export interface Order {
         name: string;
         email: string;
         createdAt: Moment;
-        companyReviews: [
-            {
-                id: string;
-                grade: number;
-            },
-        ];
+        companyReviews: {
+            id: string;
+            grade: number;
+        }[];
     };
     reports: {
         id: string;
