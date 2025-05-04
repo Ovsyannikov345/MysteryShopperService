@@ -35,6 +35,8 @@ const OrderDetailsPage = () => {
 
     const [companyImageSrc, setCompanyImageSrc] = useState("");
 
+    const [reload, setReload] = useState(false);
+
     const companyRating =
         (orderData?.order?.company?.companyReviews.map((r) => r.grade) || []).reduce((sum: number, r: any) => sum + r.grade, 0) /
         (orderData?.order?.company?.companyReviews.length || 1);
@@ -58,7 +60,7 @@ const OrderDetailsPage = () => {
         };
 
         loadData();
-    }, [getOrderDetails, id, notifications]);
+    }, [getOrderDetails, id, notifications, reload]);
 
     useEffect(() => {
         const loadCompanyImage = async () => {
@@ -249,7 +251,7 @@ const OrderDetailsPage = () => {
                                         </Grid>
                                     )}
 
-                                    <UserOrderActions orderData={orderData} />
+                                    <UserOrderActions orderData={orderData} onAction={() => setReload((prev) => !prev)} />
                                 </>
                             )}
                         </Grid>

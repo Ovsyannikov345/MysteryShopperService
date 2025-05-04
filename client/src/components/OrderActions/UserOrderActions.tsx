@@ -6,38 +6,36 @@ import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
-import { Button, Grid2 as Grid, Typography } from "@mui/material";
+import { Button, CircularProgress, Grid2 as Grid, Typography } from "@mui/material";
 import moment from "moment";
 import useOrderApi, { UserOrder } from "../../hooks/useOrderApi";
-import CancelIconAlt from "@mui/icons-material/Cancel";
 import { useNotifications } from "@toolpad/core";
+import { useState } from "react";
 
-const UserOrderActions = ({ orderData }: { orderData: UserOrder }) => {
+const UserOrderActions = ({ orderData, onAction }: { orderData: UserOrder; onAction: () => void }) => {
     const notification = useNotifications();
 
-    const {requestOrder} = useOrderApi();
-    
+    const { requestOrder } = useOrderApi();
+
     const status = orderData.status as UserOrderStatus;
 
-    if (orderData.order.isClosed && status === UserOrderStatus.None) {
-        return (
-            <Grid container size={12} justifyContent={"center"}>
-                <Typography variant="h5">Order is closed</Typography>
-            </Grid>
-        );
-    }
+    const [isLoading, setIsLoading] = useState(false);
 
     const sendRequest = async () => {
-        const response = await requestOrder(orderData.order.id)
+        setIsLoading(true);
 
-        if ("error" in response) {
-            notification.show("Error sending request", {severity: "error", autoHideDuration: 3000});
+        const response = await requestOrder(orderData.order.id);
+
+        setIsLoading(false);
+
+        if (response && "error" in response) {
+            notification.show("Error sending request", { severity: "error", autoHideDuration: 3000 });
             return;
         }
 
-        notification.show("Request sent", {severity: "success", autoHideDuration: 3000});
-        // TODO refresh order data
-    }
+        notification.show("Request sent", { severity: "success", autoHideDuration: 3000 });
+        onAction();
+    };
 
     const getAvailableAction = () => {
         if (orderData.status === UserOrderStatus.None) {
@@ -98,6 +96,14 @@ const UserOrderActions = ({ orderData }: { orderData: UserOrder }) => {
         return <Typography>Request is accepted</Typography>;
     };
 
+    if (orderData.order.isClosed && status === UserOrderStatus.None) {
+        return (
+            <Grid container size={12} justifyContent={"center"}>
+                <Typography variant="h5">Order is closed</Typography>
+            </Grid>
+        );
+    }
+
     return (
         <Grid container size={12} flexDirection={"column"} alignItems={"center"}>
             <Timeline sx={{ p: 0, width: "100%" }}>
@@ -116,7 +122,7 @@ const UserOrderActions = ({ orderData }: { orderData: UserOrder }) => {
                 {getRequestActionHistory()}
             </Timeline>
             <Grid container mt={2}>
-                {getAvailableAction()}
+                {isLoading ? <CircularProgress size={30} /> : getAvailableAction()}
             </Grid>
         </Grid>
     );
