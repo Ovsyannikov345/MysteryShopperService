@@ -11,6 +11,8 @@ import moment from "moment";
 import useOrderApi, { UserOrder } from "../../hooks/useOrderApi";
 import { useNotifications } from "@toolpad/core";
 import { useState } from "react";
+import PulseDot from "react-pulse-dot";
+import { Cancel, Close, Done } from "@mui/icons-material";
 
 const UserOrderActions = ({ orderData, onAction }: { orderData: UserOrder; onAction: () => void }) => {
     const notification = useNotifications();
@@ -66,7 +68,19 @@ const UserOrderActions = ({ orderData, onAction }: { orderData: UserOrder; onAct
                         <Typography>Request was sent</Typography>
                     </TimelineContent>
                 </TimelineItem>
-                {getRejectActionHistory() || getAcceptActionHistory()}
+                {getRejectActionHistory() || getAcceptActionHistory() || (
+                    <TimelineItem>
+                        <TimelineOppositeContent sx={{ pr: 0.5 }} />
+                        <TimelineSeparator>
+                            <TimelineDot sx={{ backgroundColor: "transparent", boxShadow: "none", margin: 0 }}>
+                                <PulseDot style={{ fontSize: "13px" }} />
+                            </TimelineDot>
+                        </TimelineSeparator>
+                        <TimelineContent sx={{ pl: 0.5 }}>
+                            <Typography>Waiting for response...</Typography>
+                        </TimelineContent>
+                    </TimelineItem>
+                )}
             </>
         );
     };
@@ -79,21 +93,41 @@ const UserOrderActions = ({ orderData, onAction }: { orderData: UserOrder; onAct
         return (
             <TimelineItem>
                 <TimelineOppositeContent>
-                    <Typography sx={{ p: 0 }}>{moment(orderData.updatedAt).calendar()}</Typography>
+                    <Typography sx={{ p: 0, mt: 1 }}>{moment(orderData.updatedAt).calendar()}</Typography>
                 </TimelineOppositeContent>
                 <TimelineSeparator>
-                    <TimelineDot color="primary" />
-                    <TimelineConnector />
+                    <TimelineDot color="error" sx={{}}>
+                        <Close sx={{ width: "20px", height: "20px" }} />
+                    </TimelineDot>
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Typography>Request was rejected</Typography>
+                    <Typography mt={1}>Request was rejected</Typography>
                 </TimelineContent>
             </TimelineItem>
         );
     };
 
     const getAcceptActionHistory = () => {
-        return <Typography>Request is accepted</Typography>;
+        if (!orderData.acceptedAt) {
+            return null;
+        }
+
+        return (
+            <TimelineItem>
+                <TimelineOppositeContent>
+                    <Typography sx={{ p: 0, mt: 1 }}>{moment(orderData.acceptedAt).calendar()}</Typography>
+                </TimelineOppositeContent>
+                <TimelineSeparator>
+                    <TimelineDot color="success">
+                        <Done sx={{ width: "20px", height: "20px" }} />
+                    </TimelineDot>
+                    <TimelineConnector />
+                </TimelineSeparator>
+                <TimelineContent>
+                    <Typography mt={1}>Request was accepted</Typography>
+                </TimelineContent>
+            </TimelineItem>
+        );
     };
 
     if (orderData.order.isClosed && status === UserOrderStatus.None) {
