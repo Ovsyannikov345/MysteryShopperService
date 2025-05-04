@@ -1,4 +1,4 @@
-import { ApiResponse, ProfileImage } from "./utils/responses";
+import { ApiResponse, FileResponse } from "./utils/responses";
 import AxiosFactory from "./utils/axiosFactory";
 import { useCallback } from "react";
 
@@ -105,7 +105,7 @@ const useCompanyApi = () => {
     );
 
     const getProfileImage = useCallback(
-        async (id: string): Promise<ApiResponse<ProfileImage>> => {
+        async (id: string): Promise<ApiResponse<FileResponse>> => {
             const client = await AxiosFactory.createAxiosInstance(baseImageURL);
 
             try {
@@ -119,7 +119,7 @@ const useCompanyApi = () => {
                     responseType: "blob",
                 });
 
-                return { blob: response.data };
+                return { contentType: response.headers["content-type"] as string, blob: response.data };
             } catch (error: any) {
                 if (error.response) {
                     const { status, data } = error.response;

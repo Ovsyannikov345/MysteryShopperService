@@ -4,7 +4,8 @@ interface ApiError {
     message: string;
 }
 
-export interface ProfileImage {
+export interface FileResponse {
+    contentType: string;
     blob: Blob;
 }
 

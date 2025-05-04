@@ -30,6 +30,8 @@ export interface Order {
     };
     reports: {
         id: string;
+        userId: string;
+        orderId: string;
         title: string;
         description: string;
         grade: number;
@@ -37,6 +39,8 @@ export interface Order {
         reportCorrection?: {
             id: string;
             description: string;
+            createdAt: Moment;
+            updatedAt: Moment;
         };
     }[];
     disputes: {

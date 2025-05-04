@@ -22,9 +22,9 @@ class AxiosFactory {
         });
 
         if (addTokenAuth) {
-            const token = localStorage.getItem("accessToken");
-
             instance.interceptors.request.use((config) => {
+                const token = localStorage.getItem("accessToken");
+
                 config.headers.Authorization = `Bearer ${token}`;
 
                 return config;
