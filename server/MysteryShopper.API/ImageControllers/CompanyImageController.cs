@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MysteryShopper.API.Extensions;
-using MysteryShopper.BLL.ImageServices.IImageServices;
+using MysteryShopper.BLL.ImageServices;
 
 namespace MysteryShopper.API.ImageControllers
 {
@@ -13,15 +13,15 @@ namespace MysteryShopper.API.ImageControllers
         [HttpGet("{companyId}/exists")]
         public async Task<bool> AvatarExists(Guid companyId, CancellationToken cancellationToken)
         {
-            return await companyImageService.ImageExistsAsync(companyId, cancellationToken);
+            return await companyImageService.FileExistsAsync(companyId.ToString(), cancellationToken);
         }
 
         [HttpGet("{companyId}")]
         public async Task<FileStreamResult> GetAvatar(Guid companyId, CancellationToken cancellationToken)
         {
-            var stream = await companyImageService.GetImageAsync(companyId, cancellationToken);
+            var blobObject = await companyImageService.GetFileAsync(companyId.ToString(), cancellationToken);
 
-            return File(stream, $"image/{companyImageService.ImageExtension}");
+            return File(blobObject.Stream, $"{blobObject.ContentType}");
         }
 
         [HttpPost]

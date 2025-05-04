@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using MysteryShopper.DAL.BlobStorages;
-using MysteryShopper.DAL.BlobStorages.IBlobStorages;
 using MysteryShopper.DAL.Data;
 using MysteryShopper.DAL.Repositories;
 using MysteryShopper.DAL.Repositories.IRepositories;
@@ -38,8 +37,9 @@ namespace MysteryShopper.DAL.DI
                 .WithSSL(false)
                 .Build());
 
-            services.AddScoped<IUserAvatarStorage, UserAvatarMinioStorage>();
-            services.AddScoped<ICompanyAvatarStorage, CompanyAvatarMinioStorage>();
+            services.AddScoped<IUserAvatarStorage, UserAvatarStorage>()
+                    .AddScoped<ICompanyAvatarStorage, CompanyAvatarStorage>()
+                    .AddScoped<IReportAttachmentStorage, ReportAttachmentStorage>();
         }
 
         private static void AddDbContext(this IServiceCollection services, IConfiguration configuration) =>

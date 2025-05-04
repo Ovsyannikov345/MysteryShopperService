@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MysteryShopper.BLL.ImageServices;
-using MysteryShopper.BLL.ImageServices.IImageServices;
 using MysteryShopper.BLL.Services;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Mapping;
@@ -46,7 +45,8 @@ namespace MysteryShopper.BLL.DI
                     .AddScoped<IMistralService, MistralService>();
 
             services.AddScoped<ICompanyImageService, CompanyImageService>()
-                    .AddScoped<IUserImageService, UserImageService>();
+                    .AddScoped<IUserImageService, UserImageService>()
+                    .AddScoped<IReportAttachmentService, ReportAttachmentService>();
         }
     }
 }

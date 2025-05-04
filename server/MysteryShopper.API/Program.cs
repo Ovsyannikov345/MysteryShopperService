@@ -25,10 +25,6 @@ public static class Program
 
         services.AddDataAccessDependencies(configuration);
 
-
-
-
-
         services.AddBusinessLogicDependencies(configuration);
 
         services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
@@ -49,13 +45,13 @@ public static class Program
 
         if (app.Environment.IsDevelopment())
         {
-            using var scope = app.Services.CreateScope();
+            //using var scope = app.Services.CreateScope();
 
-            var context = scope.ServiceProvider.GetRequiredService<MysteryShopperDbContext>();
+            //var context = scope.ServiceProvider.GetRequiredService<MysteryShopperDbContext>();
 
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            DataGenerator.GenerateAndSeedDatabase(context);
+            //context.Database.EnsureDeleted();
+            //context.Database.EnsureCreated();
+            //DataGenerator.GenerateAndSeedDatabase(context);
         }
 
         // Configure the HTTP request pipeline.

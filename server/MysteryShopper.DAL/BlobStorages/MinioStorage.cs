@@ -1,27 +1,37 @@
 ﻿using Minio;
 using Minio.DataModel.Args;
-using MysteryShopper.DAL.BlobStorages.IBlobStorages;
-using System.Security.AccessControl;
+using MysteryShopper.DAL.BlobStorages.Entities;
 
 namespace MysteryShopper.DAL.BlobStorages
 {
-    public class MinioStorage(IMinioClient minioClient, string bucketName) : IBlobStorage
+    public interface IMinioStorage
+    {
+        Task DeleteObjectAsync(string name, CancellationToken cancellationToken = default);
+
+        Task<BlobObject?> GetObjectAsync(string name, CancellationToken cancellationToken = default);
+
+        Task<List<string>> GetObjectNamesByPrefixAsync(string prefix, CancellationToken cancellationToken = default);
+
+        Task<bool> ObjectExistsAsync(string name, CancellationToken cancellationToken = default);
+
+        Task SaveObjectAsync(Stream fileStream, string name, string contentType, CancellationToken cancellationToken = default);
+    }
+
+    public class MinioStorage(IMinioClient minioClient, string bucketName) : IMinioStorage
     {
         protected readonly IMinioClient _minioClient = minioClient;
 
         protected readonly string _bucketName = bucketName;
 
-        public async Task<bool> ObjectExistsAsync(string name, string? prefix = null, CancellationToken cancellationToken = default)
+        public async Task<bool> ObjectExistsAsync(string name, CancellationToken cancellationToken = default)
         {
             await EnsureBucketCreatedAsync(cancellationToken);
-
-            var objectName = string.IsNullOrEmpty(prefix) ? name : $"{prefix}/{name}";
 
             try
             {
                 await _minioClient.StatObjectAsync(new StatObjectArgs()
                     .WithBucket(_bucketName)
-                    .WithObject(objectName), cancellationToken);
+                    .WithObject(name), cancellationToken);
             }
             catch
             {
@@ -34,17 +44,14 @@ namespace MysteryShopper.DAL.BlobStorages
         public async Task SaveObjectAsync(
             Stream fileStream,
             string name,
-            string? prefix = null,
-            string contentType = "image/jpeg",
+            string contentType,
             CancellationToken cancellationToken = default)
         {
             await EnsureBucketCreatedAsync(cancellationToken);
 
-            var objectName = string.IsNullOrEmpty(prefix) ? name : $"{prefix}/{name}";
-
             var putObjectArgs = new PutObjectArgs()
                 .WithBucket(_bucketName)
-                .WithObject(objectName)
+                .WithObject(name)
                 .WithStreamData(fileStream)
                 .WithObjectSize(fileStream.Length)
                 .WithContentType(contentType);
@@ -52,13 +59,13 @@ namespace MysteryShopper.DAL.BlobStorages
             await _minioClient.PutObjectAsync(putObjectArgs, cancellationToken);
         }
 
-        public async Task<Stream?> GetObjectAsync(string objectName, CancellationToken cancellationToken = default)
+        public async Task<BlobObject?> GetObjectAsync(string name, CancellationToken cancellationToken = default)
         {
             try
             {
                 await _minioClient.StatObjectAsync(new StatObjectArgs()
                     .WithBucket(_bucketName)
-                    .WithObject(objectName), cancellationToken);
+                    .WithObject(name), cancellationToken);
             }
             catch
             {
@@ -67,14 +74,19 @@ namespace MysteryShopper.DAL.BlobStorages
 
             var objectStream = new MemoryStream();
 
-            await _minioClient.GetObjectAsync(new GetObjectArgs()
+            var blobObject = await _minioClient.GetObjectAsync(new GetObjectArgs()
                 .WithBucket(_bucketName)
-                .WithObject(objectName)
+                .WithObject(name)
                 .WithCallbackStream((stream) => stream.CopyTo(objectStream)), cancellationToken);
 
             objectStream.Position = 0;
 
-            return objectStream;
+            return new()
+            {
+                Name = blobObject.ObjectName,
+                ContentType = blobObject.ContentType,
+                Stream = objectStream,
+            };
         }
 
         public async Task<List<string>> GetObjectNamesByPrefixAsync(string prefix, CancellationToken cancellationToken = default)
@@ -87,19 +99,19 @@ namespace MysteryShopper.DAL.BlobStorages
                 .WithBucket(_bucketName)
                 .WithPrefix($"{prefix}/"), cancellationToken))
             {
-                keys.Add(item.Key.Split("/")[1]);
+                keys.Add(item.Key);
             }
 
             return keys;
         }
 
-        public async Task DeleteObjectAsync(string objectName, CancellationToken cancellationToken = default)
+        public async Task DeleteObjectAsync(string name, CancellationToken cancellationToken = default)
         {
             await EnsureBucketCreatedAsync(cancellationToken);
 
             await _minioClient.RemoveObjectAsync(new RemoveObjectArgs()
                 .WithBucket(_bucketName)
-                .WithObject(objectName), cancellationToken);
+                .WithObject(name), cancellationToken);
         }
 
         private async Task EnsureBucketCreatedAsync(CancellationToken cancellationToken = default)

@@ -16,6 +16,9 @@ namespace MysteryShopper.DAL.Repositories
                 .Include(o => o.Order)
                     .ThenInclude(o => o.Company)
                         .ThenInclude(c => c.CompanyReviews)
+                .Include(xref => xref.Order)
+                    .ThenInclude(o => o.Reports.Where(r => r.UserId == userId))
+                        .ThenInclude(r => r.ReportCorrection)
                 .FirstOrDefaultAsync(o => o.UserId == userId && o.OrderId == orderId, cancellationToken);
         }
 
