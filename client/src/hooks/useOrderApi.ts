@@ -5,6 +5,7 @@ import { Moment } from "moment";
 import { OrderSortOptions } from "../utils/enums/orderSortOptions";
 import QueryParamNames from "./utils/queryParamNames";
 import { UserOrderStatus } from "../utils/enums/userOrderStatus";
+import { User } from "./useUserApi";
 
 export interface Order {
     id: string;
@@ -64,6 +65,7 @@ export interface UserOrder {
     updatedAt: Moment;
     requestedAt: Moment;
     acceptedAt?: Moment;
+    user: User;
     order: Order;
 }
 
@@ -79,10 +81,7 @@ export interface CompanyOrder {
     lat?: number;
     lng?: number;
     isClosed: boolean;
-    users: {
-        id: string;
-        status: UserOrderStatus;
-    }[];
+    users: UserOrder[];
     reports: {
         id: string;
         userId: string;
@@ -207,6 +206,26 @@ const useOrderApi = () => {
         [baseURL]
     );
 
+    const getCompanyOrderDetails = useCallback(
+        async (orderId: string): Promise<ApiResponse<CompanyOrder>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL);
+
+            try {
+                const response = await client.get(`${orderId}`);
+
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
+            }
+        },
+        [baseURL]
+    );
+
     const createOrder = useCallback(
         async (orderData: OrderToCreate): Promise<ApiResponse<CompanyOrder>> => {
             const client = await AxiosFactory.createAxiosInstance(baseURL);
@@ -247,7 +266,15 @@ const useOrderApi = () => {
         [baseURL]
     );
 
-    return { getAvailableOrders, getUserOrders, getCompanyOrders, getOrderDetails, createOrder, requestOrder };
+    return {
+        getAvailableOrders,
+        getUserOrders,
+        getCompanyOrders,
+        getOrderDetails,
+        getCompanyOrderDetails,
+        createOrder,
+        requestOrder,
+    };
 };
 
 export default useOrderApi;

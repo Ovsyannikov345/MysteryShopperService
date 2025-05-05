@@ -10,9 +10,10 @@ interface OrderDetailsMapProps {
         lat: number;
         lng: number;
     };
+    displayDistance?: boolean;
 }
 
-const OrderDetailsMap = ({ orderPosition }: OrderDetailsMapProps) => {
+const OrderDetailsMap = ({ orderPosition, displayDistance = true }: OrderDetailsMapProps) => {
     const notifications = useNotifications();
 
     const { getRouteLength } = useOSMApi();
@@ -22,6 +23,10 @@ const OrderDetailsMap = ({ orderPosition }: OrderDetailsMapProps) => {
     const [routeLength, setRouteLength] = useState<number | null>();
 
     useEffect(() => {
+        if (!displayDistance) {
+            return;
+        }
+
         const loadUserPosition = () => {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -37,10 +42,9 @@ const OrderDetailsMap = ({ orderPosition }: OrderDetailsMapProps) => {
         };
 
         loadUserPosition();
-    }, [getRouteLength, notifications, orderPosition]);
+    }, [displayDistance, getRouteLength, notifications, orderPosition]);
 
     useEffect(() => {
-        // TODO try later
         const loadLength = async () => {
             if (!userPosition) {
                 return;
@@ -89,9 +93,11 @@ const OrderDetailsMap = ({ orderPosition }: OrderDetailsMapProps) => {
                 />
                 <Marker position={orderPosition} icon={markerIcon} />
             </MapContainer>
-            <Typography mb={2} ml={2}>
-                Distance to order: {getDistanceString()}
-            </Typography>
+            {displayDistance && (
+                <Typography mb={2} ml={2}>
+                    Distance to order: {getDistanceString()}
+                </Typography>
+            )}
         </>
     );
 };

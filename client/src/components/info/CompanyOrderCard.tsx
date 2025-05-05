@@ -19,9 +19,7 @@ export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
     const isNewReports = order.reports.some(
         (r) => !r.reportCorrection && !order.users.some((u) => u.id === r.userId && u.status === UserOrderStatus.Completed)
     );
-
-    const isActiveDisputes = order.disputes.some((d) => !d.companyText);
-
+    
     return (
         <Card sx={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }} elevation={5}>
             <CardContent>
@@ -48,12 +46,6 @@ export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
                             <Grid container wrap="nowrap" alignItems={"center"} spacing={0.5} mt={1} ml={"-3px"}>
                                 <PulseDot color="#e3bf00" style={{ fontSize: "15px" }} />
                                 <Typography variant="body1">New reports</Typography>
-                            </Grid>
-                        )}
-                        {isActiveDisputes && (
-                            <Grid container wrap="nowrap" alignItems={"center"} spacing={0.5} mt={1} ml={"-3px"}>
-                                <PulseDot color="danger" style={{ fontSize: "15px" }} />
-                                <Typography variant="body1">Active dispute</Typography>
                             </Grid>
                         )}
                     </>

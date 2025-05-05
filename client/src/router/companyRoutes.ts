@@ -1,21 +1,27 @@
-import { COMPANY_PROFILE_ROUTE, CREATE_ORDER_ROUTE, MY_ORDERS_ROUTE, OWN_PROFILE_ROUTE, USER_PROFILE_ROUTE } from "./consts";
+import {
+    COMPANY_PROFILE_ROUTE,
+    CREATE_ORDER_ROUTE,
+    MY_ORDERS_ROUTE,
+    ORDER_DETAILS_ROUTE,
+    OWN_PROFILE_ROUTE,
+    USER_PROFILE_ROUTE,
+} from "./consts";
 import CompanyOwnProfilePage from "../pages/Company/CompanyOwnProfilePage";
 import CompanyProfilePage from "../pages/Common/CompanyProfilePage";
 import UserProfilePage from "../pages/Common/UserProfilePage";
 import OwnOrdersPage from "../pages/Company/OwnOrdersPage";
 import CreateOrderPage from "../pages/Company/CreateOrderPage";
-
-// TODO remove commented code
+import CompanyOrderDetailsPage from "../pages/Company/CompanyOrderDetailsPage";
 
 export const companyRoutes = [
     {
         path: MY_ORDERS_ROUTE,
         Component: OwnOrdersPage,
     },
-    // {
-    //     path: "/my-orders/:id",
-    //     Component: CompanyOrderDetails,
-    // },
+    {
+        path: ORDER_DETAILS_ROUTE,
+        Component: CompanyOrderDetailsPage,
+    },
     {
         path: USER_PROFILE_ROUTE,
         Component: UserProfilePage,

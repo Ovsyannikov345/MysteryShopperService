@@ -64,11 +64,9 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
             return false;
         }
 
-        const uploadResults = await Promise.all(
-            files.map(file => uploadAttachment(response.id, file))
-        );
+        const uploadResults = await Promise.all(files.map((file) => uploadAttachment(response.id, file)));
 
-        const failedUploads = uploadResults.filter(res => res && "error" in res).length;
+        const failedUploads = uploadResults.filter((res) => res && "error" in res).length;
 
         notification.show(`Report sent. ${failedUploads > 0 ? `${failedUploads} uploads failed` : ""}`, {
             severity: "success",
@@ -217,6 +215,48 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineSeparator>
                     <TimelineContent sx={{ pl: 0.5 }}>
                         <Typography>Waiting for your report...</Typography>
+                        <Typography>
+                            {moment
+                                .duration(
+                                    moment
+                                        .utc(orderData.acceptedAt)
+                                        .add(moment.duration(orderData.order.timeToComplete))
+                                        .diff(moment.utc())
+                                )
+                                .humanize()}{" "}
+                            remaining
+                        </Typography>
+                    </TimelineContent>
+                </TimelineItem>
+            ) : null;
+
+        var pendingCompanyAction = (
+            <TimelineItem>
+                <TimelineOppositeContent sx={{ pr: 0.5 }} />
+                <TimelineSeparator>
+                    <TimelineDot sx={{ backgroundColor: "transparent", boxShadow: "none", margin: 0 }}>
+                        <PulseDot style={{ fontSize: "13px" }} />
+                    </TimelineDot>
+                </TimelineSeparator>
+                <TimelineContent sx={{ pl: 0.5 }}>
+                    <Typography>Waiting for company actions...</Typography>
+                </TimelineContent>
+            </TimelineItem>
+        );
+
+        var completedOrderAction =
+            orderData.status === UserOrderStatus.Completed ? (
+                <TimelineItem>
+                    <TimelineOppositeContent>
+                        <Typography sx={{ p: 0, mt: 1 }}>{moment(orderData.updatedAt).calendar()}</Typography>
+                    </TimelineOppositeContent>
+                    <TimelineSeparator>
+                        <TimelineDot sx={{ backgroundColor: "transparent", boxShadow: "none", margin: 0 }}>
+                            <Done sx={{ width: "20px", height: "20px" }} />
+                        </TimelineDot>
+                    </TimelineSeparator>
+                    <TimelineContent>
+                        <Typography>Order is marked as completed</Typography>
                     </TimelineContent>
                 </TimelineItem>
             ) : null;
@@ -224,7 +264,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         // TODO Add buttons for details and report correction
         var reportActions = orderData.order.reports.map((report) => (
             <>
-                <TimelineItem>
+                <TimelineItem key={report.id}>
                     <TimelineOppositeContent>
                         <Typography sx={{ p: 0, mt: 1 }}>{moment(report.createdAt).calendar()}</Typography>
                     </TimelineOppositeContent>
@@ -242,7 +282,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineContent>
                 </TimelineItem>
                 {report.reportCorrection && (
-                    <TimelineItem>
+                    <TimelineItem key={report.reportCorrection.id}>
                         <TimelineOppositeContent>
                             <Typography sx={{ p: 0, mt: 1 }}>{moment(report.reportCorrection.createdAt).calendar()}</Typography>
                         </TimelineOppositeContent>
@@ -262,7 +302,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         return (
             <>
                 {reportActions}
-                {pendingReportAction}
+                {completedOrderAction || pendingReportAction || pendingCompanyAction}
             </>
         );
     };

@@ -5,13 +5,14 @@ interface MapModalProps {
     isOpen: boolean;
     onClose: () => void;
     orderPosition: { lat: number; lng: number };
+    displayDistance?: boolean;
 }
 
-const MapModal = ({ isOpen, onClose, orderPosition }: MapModalProps) => {
+const MapModal = ({ isOpen, onClose, orderPosition, displayDistance = true }: MapModalProps) => {
     return (
         <Dialog open={isOpen} onClose={onClose} maxWidth="lg" fullWidth>
             <Grid container>
-                <OrderDetailsMap orderPosition={orderPosition} />
+                <OrderDetailsMap orderPosition={orderPosition} displayDistance={displayDistance} />
             </Grid>
         </Dialog>
     );

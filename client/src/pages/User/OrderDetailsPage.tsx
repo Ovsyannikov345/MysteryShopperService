@@ -105,7 +105,8 @@ const OrderDetailsPage = () => {
         return readableExpiration;
     };
 
-    // TODO create a base page component to handle the common logic between this and the other pages.
+    // TODO Add skeleton loading
+    // TODO Add AI analysis of description
 
     return (
         <>

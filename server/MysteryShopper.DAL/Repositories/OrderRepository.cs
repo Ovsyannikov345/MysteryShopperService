@@ -80,6 +80,8 @@ namespace MysteryShopper.DAL.Repositories
                 .Include(o => o.Company)
                     .ThenInclude(c => c.CompanyReviews)
                 .Include(o => o.Users)
+                    .ThenInclude(xref => xref.User)
+                        .ThenInclude(u => u.UserReviews)
                 .Include(o => o.Reports)
                     .ThenInclude(r => r.ReportCorrection)
                 .Include(o => o.Disputes)
