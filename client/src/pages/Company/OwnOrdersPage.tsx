@@ -18,11 +18,6 @@ export default function OwnOrdersPage() {
 
     const [orders, setOrders] = useState<CompanyOrder[]>();
 
-    const [displayOptions, setDisplayOptions] = useState({
-        active: true,
-        finished: false,
-    });
-
     useEffect(() => {
         const loadOrders = async () => {
             const response = await getCompanyOrders();
@@ -82,33 +77,13 @@ export default function OwnOrdersPage() {
                         mt={isMediumScreen ? 2 : 0}
                     >
                         <Grid container justifyContent={"flex-start"} alignItems={"center"} size={12}>
-                            <Typography variant="h4">
-                                Your orders
-                            </Typography>
+                            <Typography variant="h4">Your orders</Typography>
                         </Grid>
                         {orders ? (
                             orders.length > 0 ? (
                                 <>
-                                    {activeOrders && (
-                                        <OrderCardSection
-                                            label="Active"
-                                            orders={activeOrders}
-                                            open={displayOptions.active}
-                                            onToggle={() =>
-                                                setDisplayOptions({ ...displayOptions, active: !displayOptions.active })
-                                            }
-                                        />
-                                    )}
-                                    {finishedOrders && (
-                                        <OrderCardSection
-                                            label="Finished"
-                                            orders={finishedOrders}
-                                            open={displayOptions.finished}
-                                            onToggle={() =>
-                                                setDisplayOptions({ ...displayOptions, finished: !displayOptions.finished })
-                                            }
-                                        />
-                                    )}
+                                    {activeOrders && <OrderCardSection label="Active" orders={activeOrders} />}
+                                    {finishedOrders && <OrderCardSection label="Finished" orders={finishedOrders} />}
                                 </>
                             ) : (
                                 <Typography variant="h6">You have no orders</Typography>

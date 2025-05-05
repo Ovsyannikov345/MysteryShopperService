@@ -21,15 +21,6 @@ const UserOrdersPage = () => {
 
     const [orders, setOrders] = useState<UserOrder[]>();
 
-    const [displayOptions, setDisplayOptions] = useState({
-        pending: true,
-        inProgress: true,
-        completed: false,
-        rejected: false,
-        expired: false,
-        forceClosed: false,
-    });
-
     useEffect(() => {
         const loadOrders = async () => {
             const response = await getUserOrders();
@@ -105,56 +96,11 @@ const UserOrdersPage = () => {
                         {orders ? (
                             orders.length > 0 ? (
                                 <>
-                                    {pendingOrders && (
-                                        <OrderCardSection
-                                            label="Pending"
-                                            orders={pendingOrders}
-                                            open={displayOptions.pending}
-                                            onToggle={() =>
-                                                setDisplayOptions({ ...displayOptions, pending: !displayOptions.pending })
-                                            }
-                                        />
-                                    )}
-                                    {ordersInProgress && (
-                                        <OrderCardSection
-                                            label="In Progress"
-                                            orders={ordersInProgress}
-                                            open={displayOptions.inProgress}
-                                            onToggle={() =>
-                                                setDisplayOptions({ ...displayOptions, inProgress: !displayOptions.inProgress })
-                                            }
-                                        />
-                                    )}
-                                    {completedOrders && (
-                                        <OrderCardSection
-                                            label="Completed"
-                                            orders={completedOrders}
-                                            open={displayOptions.completed}
-                                            onToggle={() =>
-                                                setDisplayOptions({ ...displayOptions, completed: !displayOptions.completed })
-                                            }
-                                        />
-                                    )}
-                                    {rejectedOrders && (
-                                        <OrderCardSection
-                                            label="Rejected"
-                                            orders={rejectedOrders}
-                                            open={displayOptions.rejected}
-                                            onToggle={() =>
-                                                setDisplayOptions({ ...displayOptions, rejected: !displayOptions.rejected })
-                                            }
-                                        />
-                                    )}
-                                    {expiredOrders && (
-                                        <OrderCardSection
-                                            label="Expired"
-                                            orders={expiredOrders}
-                                            open={displayOptions.expired}
-                                            onToggle={() =>
-                                                setDisplayOptions({ ...displayOptions, expired: !displayOptions.expired })
-                                            }
-                                        />
-                                    )}
+                                    {pendingOrders && <OrderCardSection label="Pending" orders={pendingOrders} />}
+                                    {ordersInProgress && <OrderCardSection label="In Progress" orders={ordersInProgress} />}
+                                    {completedOrders && <OrderCardSection label="Completed" orders={completedOrders} />}
+                                    {rejectedOrders && <OrderCardSection label="Rejected" orders={rejectedOrders} />}
+                                    {expiredOrders && <OrderCardSection label="Expired" orders={expiredOrders} />}
                                 </>
                             ) : (
                                 <Typography variant="h6">You have no orders</Typography>

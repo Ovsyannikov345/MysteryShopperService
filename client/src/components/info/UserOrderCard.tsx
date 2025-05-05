@@ -159,7 +159,7 @@ const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
                     variant="contained"
                     fullWidth
                     startIcon={<NavigateNext />}
-                    onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, orderData.id))}
+                    onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, orderData.order.id))}
                 >
                     Details
                 </Button>

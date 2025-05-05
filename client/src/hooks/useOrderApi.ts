@@ -75,6 +75,7 @@ export interface CompanyOrder {
     timeToComplete?: string;
     price?: number;
     createdAt: Moment;
+    updatedAt: Moment;
     lat?: number;
     lng?: number;
     isClosed: boolean;
