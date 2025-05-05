@@ -1,12 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Grid2 as Grid,
     Container,
     useMediaQuery,
     useTheme,
     Typography,
-    Stack,
-    Rating,
     Avatar,
     Button,
     Select,
@@ -17,18 +15,14 @@ import {
     ListItemAvatar,
     ListItemText,
 } from "@mui/material";
-import UserHeader from "../../components/headers/UserHeader";
 import backgroundImage from "../../images/background.jpg";
 import { useNotifications } from "@toolpad/core";
-import useOrderApi, { CompanyOrder, UserOrder } from "../../hooks/useOrderApi";
+import useOrderApi, { CompanyOrder } from "../../hooks/useOrderApi";
 import NavigateBack from "../../components/buttons/NavigateBack";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import moment, { Duration } from "moment";
-import useCompanyApi from "../../hooks/useCompanyApi";
-import { ArrowRight, Edit } from "@mui/icons-material";
+import { Edit } from "@mui/icons-material";
 import MapModal from "../../components/modals/MapModal";
-import UserOrderActions from "../../components/OrderActions/UserOrderActions";
-import { COMPANY_PROFILE_ROUTE } from "../../router/consts";
 import useUserApi from "../../hooks/useUserApi";
 import CompanyHeader from "../../components/headers/CompanyHeader";
 import PulseDot from "react-pulse-dot";
@@ -52,11 +46,7 @@ const CompanyOrderDetailsPage = () => {
 
     const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-
     const notifications = useNotifications();
-
-    const navigate = useNavigate();
 
     const { getCompanyOrderDetails } = useOrderApi();
 
