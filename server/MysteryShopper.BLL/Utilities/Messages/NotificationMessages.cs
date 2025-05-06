@@ -15,5 +15,7 @@
         public const string NewReportCorrection = "You have a new order report correction.";
 
         public const string OrderCompleted = "Your order report was accepted. Please leave a review.";
+
+        public const string OrderExpired = "Your order has expired.";
     }
 }

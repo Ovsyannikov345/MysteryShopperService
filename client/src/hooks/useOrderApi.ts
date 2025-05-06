@@ -247,11 +247,71 @@ const useOrderApi = () => {
     );
 
     const requestOrder = useCallback(
-        async (orderId: string): Promise<ApiResponse<any>> => {
+        async (orderId: string): Promise<ApiResponse<null>> => {
             const client = await AxiosFactory.createAxiosInstance(baseURL);
 
             try {
                 const response = await client.post(`${orderId}/request`);
+
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
+            }
+        },
+        [baseURL]
+    );
+
+    const expireOrder = useCallback(
+        async (orderId: string, userId: string): Promise<ApiResponse<null>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL);
+
+            try {
+                const response = await client.post(`${orderId}/expire`, null, { params: { userId } });
+
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
+            }
+        },
+        [baseURL]
+    );
+
+    const completeOrder = useCallback(
+        async (orderId: string, userId: string): Promise<ApiResponse<null>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL);
+
+            try {
+                const response = await client.post(`${orderId}/complete`, null, { params: { userId } });
+
+                return response.data;
+            } catch (error: any) {
+                if (error.response) {
+                    const { status, data } = error.response;
+                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                } else {
+                    return { error: true, message: "An unexpected error occurred." };
+                }
+            }
+        },
+        [baseURL]
+    );
+
+    const finishOrder = useCallback(
+        async (orderId: string): Promise<ApiResponse<null>> => {
+            const client = await AxiosFactory.createAxiosInstance(baseURL);
+
+            try {
+                const response = await client.post(`${orderId}/finish`);
 
                 return response.data;
             } catch (error: any) {
@@ -274,6 +334,9 @@ const useOrderApi = () => {
         getCompanyOrderDetails,
         createOrder,
         requestOrder,
+        expireOrder,
+        completeOrder,
+        finishOrder,
     };
 };
 

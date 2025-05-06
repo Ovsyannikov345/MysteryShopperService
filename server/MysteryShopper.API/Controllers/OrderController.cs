@@ -89,6 +89,13 @@ namespace MysteryShopper.API.Controllers
             await orderService.AcceptOrderAsync(HttpContext.GetIdFromContext(), userId, id, cancellationToken);
         }
 
+        [HttpPost("{id}/expire")]
+        [Authorize(Roles = "Company")]
+        public async Task ExpireOrder(Guid id, Guid userId, CancellationToken cancellationToken)
+        {
+            await orderService.ExpireOrderAsync(HttpContext.GetIdFromContext(), userId, id, cancellationToken);
+        }
+
         [HttpPost("{id}/finish")]
         [Authorize(Roles = "Company")]
         public async Task FinishOrder(Guid id, CancellationToken cancellationToken)

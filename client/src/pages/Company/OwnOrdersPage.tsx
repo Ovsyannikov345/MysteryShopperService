@@ -7,6 +7,7 @@ import CompanyHeader from "../../components/headers/CompanyHeader";
 import OrderCardSection from "../../components/info/OrderCardSection";
 import OrderCardSkeleton from "../../components/skeletons/OrderCardSkeleton";
 
+// TODO rework?
 export default function OwnOrdersPage() {
     const theme = useTheme();
 

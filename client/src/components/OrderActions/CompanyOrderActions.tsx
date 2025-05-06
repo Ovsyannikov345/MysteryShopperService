@@ -9,99 +9,159 @@ import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
 import { Button, CircularProgress, Grid2 as Grid, Typography } from "@mui/material";
 import moment from "moment";
 import useOrderApi, { UserOrder } from "../../hooks/useOrderApi";
-import { useNotifications } from "@toolpad/core";
+import { useDialogs, useNotifications } from "@toolpad/core";
 import { useState } from "react";
 import PulseDot from "react-pulse-dot";
 import { AccessTime, Close, Done, Feed } from "@mui/icons-material";
-import ReportModal, { ReportFormValues } from "../modals/ReportModal";
-import useReportApi, { Report } from "../../hooks/useReportApi";
+import { Report } from "../../hooks/useReportApi";
 import ReportDisplayModal from "../modals/ReportDisplayModal";
+import ReviewModal from "../modals/ReviewModal";
+import useReviewApi from "../../hooks/useReviewApi";
 
-interface UserOrderActionsProps {
+interface CompanyOrderActionsProps {
     orderData: UserOrder;
     onAction: () => void;
 }
 
-const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
+const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) => {
     const notification = useNotifications();
 
-    const { requestOrder } = useOrderApi();
+    const dialogs = useDialogs();
 
-    const { createReport, uploadAttachment } = useReportApi();
+    const { expireOrder, completeOrder } = useOrderApi();
+
+    const { createUserReview } = useReviewApi();
 
     const status = orderData.status as UserOrderStatus;
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const [reportModalOpen, setReportModalOpen] = useState(false);
+    //const [reportModalOpen, setReportModalOpen] = useState(false);
+
+    const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
     const [displayedReport, setDisplayedReport] = useState<Report | null>(null);
 
-    const sendRequest = async () => {
+    // const sendReport = async (values: ReportFormValues, files: File[]): Promise<boolean> => {
+    //     const response = await createReport({
+    //         orderId: orderData.order.id,
+    //         ...values,
+    //     });
+
+    //     if ("error" in response) {
+    //         notification.show("Error sending report", { severity: "error", autoHideDuration: 3000 });
+    //         return false;
+    //     }
+
+    //     const uploadResults = await Promise.all(files.map((file) => uploadAttachment(response.id, file)));
+
+    //     const failedUploads = uploadResults.filter((res) => res && "error" in res).length;
+
+    //     notification.show(`Report sent. ${failedUploads > 0 ? `${failedUploads} uploads failed` : ""}`, {
+    //         severity: "success",
+    //         autoHideDuration: 3000,
+    //     });
+    //     onAction();
+    //     return true;
+    // };
+
+    const markAsExpired = async () => {
         setIsLoading(true);
-
-        const response = await requestOrder(orderData.order.id);
-
-        setIsLoading(false);
+        const response = await expireOrder(orderData.order.id, orderData.user.id);
 
         if (response && "error" in response) {
-            notification.show("Error sending request", { severity: "error", autoHideDuration: 3000 });
+            notification.show("Error marking order as expired", { severity: "error", autoHideDuration: 3000 });
+            setIsLoading(false);
             return;
         }
 
-        notification.show("Request sent", { severity: "success", autoHideDuration: 3000 });
+        notification.show("Order marked as expired", { severity: "success", autoHideDuration: 3000 });
         onAction();
+        setIsLoading(false);
     };
 
-    const sendReport = async (values: ReportFormValues, files: File[]): Promise<boolean> => {
-        const response = await createReport({
-            orderId: orderData.order.id,
-            ...values,
-        });
+    const markAsCompleted = async () => {
+        setIsLoading(true);
+        const response = await completeOrder(orderData.order.id, orderData.user.id);
 
-        if ("error" in response) {
-            notification.show("Error sending report", { severity: "error", autoHideDuration: 3000 });
-            return false;
+        if (response && "error" in response) {
+            notification.show("Error marking order as completed", { severity: "error", autoHideDuration: 3000 });
+            setIsLoading(false);
+            return;
         }
 
-        const uploadResults = await Promise.all(files.map((file) => uploadAttachment(response.id, file)));
-
-        const failedUploads = uploadResults.filter((res) => res && "error" in res).length;
-
-        notification.show(`Report sent. ${failedUploads > 0 ? `${failedUploads} uploads failed` : ""}`, {
-            severity: "success",
-            autoHideDuration: 3000,
-        });
+        notification.show("Order marked as completed", { severity: "success", autoHideDuration: 3000 });
         onAction();
-        return true;
+        setIsLoading(false);
     };
 
+    // TODO add review action
     const getAvailableAction = () => {
-        if (orderData.status === UserOrderStatus.None) {
-            return (
-                <Button variant="contained" sx={{ mt: "-6px" }} onClick={sendRequest}>
-                    Send request
-                </Button>
-            );
+        if (orderData.status !== UserOrderStatus.InProgress) {
+            return [];
         }
 
         if (
-            orderData.status === UserOrderStatus.InProgress &&
-            (orderData.order.reports.length === 0 || orderData.order.reports.every((report) => report.reportCorrection))
+            orderData.order.reports.length === 0 &&
+            moment.utc(orderData.acceptedAt).add(moment.duration(orderData.order.timeToComplete)).diff(moment.utc()) <= 0
         ) {
-            return (
-                <Button variant="contained" sx={{ mt: "-6px" }} onClick={() => setReportModalOpen(true)}>
-                    Send report
-                </Button>
-            );
+            return [
+                <Button
+                    variant="contained"
+                    color="error"
+                    sx={{ mt: "-6px" }}
+                    onClick={async () => {
+                        const confirmed = await dialogs.confirm(null, {
+                            title: "Mark order as expired?",
+                            okText: <Typography>Yes</Typography>,
+                            cancelText: <Typography color="success">No</Typography>,
+                            severity: "error",
+                        });
+                        if (confirmed) {
+                            await markAsExpired();
+                        }
+                    }}
+                >
+                    Mark as expired
+                </Button>,
+            ];
         }
+
+        if (orderData.order.reports.every((report) => report.reportCorrection)) {
+            return [];
+        }
+
+        return (
+            <>
+                <Button
+                    variant="contained"
+                    color="success"
+                    sx={{ mt: "-6px", width: "205px" }}
+                    onClick={async () => {
+                        const confirmed = await dialogs.confirm(null, {
+                            title: "Mark order as completed?",
+                            okText: <Typography color="success">Yes</Typography>,
+                            cancelText: <Typography color="error">No</Typography>,
+                            severity: "error",
+                        });
+                        if (confirmed) {
+                            await markAsCompleted();
+                        }
+                    }}
+                >
+                    Complete order
+                </Button>
+                <Typography variant="subtitle1" sx={{ mx: 1 }}>
+                    or
+                </Typography>
+                <Button variant="contained" sx={{ mt: "-6px", width: "205px" }}>
+                    Request correction
+                </Button>
+            </>
+        );
     };
 
     const getRequestActionHistory = () => {
-        if (orderData.status === UserOrderStatus.None) {
-            return null;
-        }
-
         return (
             <>
                 <TimelineItem>
@@ -113,22 +173,10 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <Typography>Request was sent</Typography>
+                        <Typography>Request was received</Typography>
                     </TimelineContent>
                 </TimelineItem>
-                {getRejectActionHistory() || getAcceptActionHistory() || (
-                    <TimelineItem>
-                        <TimelineOppositeContent sx={{ pr: 0.5 }} />
-                        <TimelineSeparator>
-                            <TimelineDot sx={{ backgroundColor: "transparent", boxShadow: "none", margin: 0 }}>
-                                <PulseDot style={{ fontSize: "13px" }} />
-                            </TimelineDot>
-                        </TimelineSeparator>
-                        <TimelineContent sx={{ pl: 0.5 }}>
-                            <Typography>Waiting for response...</Typography>
-                        </TimelineContent>
-                    </TimelineItem>
-                )}
+                {getRejectActionHistory() || getAcceptActionHistory()}
             </>
         );
     };
@@ -139,7 +187,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         }
 
         return (
-            <TimelineItem>
+            <TimelineItem key={1}>
                 <TimelineOppositeContent>
                     <Typography sx={{ p: 0, mt: 1 }}>{moment(orderData.updatedAt).calendar()}</Typography>
                 </TimelineOppositeContent>
@@ -162,7 +210,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
 
         return (
             <>
-                <TimelineItem>
+                <TimelineItem key={2}>
                     <TimelineOppositeContent>
                         <Typography sx={{ p: 0, mt: 1 }}>{moment(orderData.acceptedAt).calendar()}</Typography>
                     </TimelineOppositeContent>
@@ -187,7 +235,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         }
 
         return (
-            <TimelineItem>
+            <TimelineItem key={3}>
                 <TimelineOppositeContent>
                     <Typography sx={{ p: 0, mt: 1 }}>{moment(orderData.updatedAt).calendar()}</Typography>
                 </TimelineOppositeContent>
@@ -197,7 +245,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineDot>
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Typography mt={1}>Order has expired</Typography>
+                    <Typography mt={1}>Order was marked as expired</Typography>
                 </TimelineContent>
             </TimelineItem>
         );
@@ -206,7 +254,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
     const getReportActionHistory = () => {
         var pendingReportAction =
             orderData.order.reports.length === 0 || orderData.order.reports.every((report) => report.reportCorrection) ? (
-                <TimelineItem>
+                <TimelineItem key={4}>
                     <TimelineOppositeContent sx={{ pr: 0.5 }} />
                     <TimelineSeparator>
                         <TimelineDot sx={{ backgroundColor: "transparent", boxShadow: "none", margin: 0 }}>
@@ -214,24 +262,13 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                         </TimelineDot>
                     </TimelineSeparator>
                     <TimelineContent sx={{ pl: 0.5 }}>
-                        <Typography>Waiting for your report...</Typography>
-                        <Typography>
-                            {moment
-                                .duration(
-                                    moment
-                                        .utc(orderData.acceptedAt)
-                                        .add(moment.duration(orderData.order.timeToComplete))
-                                        .diff(moment.utc())
-                                )
-                                .humanize()}{" "}
-                            remaining
-                        </Typography>
+                        <Typography>Waiting for user report...</Typography>
                     </TimelineContent>
                 </TimelineItem>
             ) : null;
 
         var pendingCompanyAction = (
-            <TimelineItem>
+            <TimelineItem key={5}>
                 <TimelineOppositeContent sx={{ pr: 0.5 }} />
                 <TimelineSeparator>
                     <TimelineDot sx={{ backgroundColor: "transparent", boxShadow: "none", margin: 0 }}>
@@ -239,7 +276,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineDot>
                 </TimelineSeparator>
                 <TimelineContent sx={{ pl: 0.5 }}>
-                    <Typography>Waiting for company actions...</Typography>
+                    <Typography>Waiting for your actions...</Typography>
                 </TimelineContent>
             </TimelineItem>
         );
@@ -333,18 +370,19 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineItem>
                     {getRequestActionHistory()}
                 </Timeline>
-                <Grid container mt={2}>
+                <Grid container width={"100%"} flexDirection={"column"} alignItems={"center"} gap={1}>
                     {isLoading ? <CircularProgress size={30} /> : getAvailableAction()}
                 </Grid>
             </Grid>
-            <ReportModal open={reportModalOpen} onClose={() => setReportModalOpen(false)} onSubmit={sendReport} />
+            {/* <ReportModal open={reportModalOpen} onClose={() => setReportModalOpen(false)} onSubmit={sendReport} /> */}
             <ReportDisplayModal
                 open={displayedReport !== null}
                 onClose={() => setDisplayedReport(null)}
                 report={displayedReport}
             />
+            <ReviewModal open={reviewModalOpen} onClose={() => setReviewModalOpen(false)} onSubmit={markAsCompleted} />
         </>
     );
 };
 
-export default UserOrderActions;
+export default CompanyOrderActions;

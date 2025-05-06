@@ -5,6 +5,7 @@ import { NotificationsProvider } from "@toolpad/core/useNotifications";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import "moment/locale/en-gb";
 import AppRouter from "./router/AppRouter";
+import { DialogsProvider } from "@toolpad/core";
 
 const App = () => {
     const theme = createTheme({
@@ -26,9 +27,11 @@ const App = () => {
         <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="en-gb">
             <ThemeProvider theme={theme}>
                 <NotificationsProvider>
-                    <BrowserRouter>
-                        <AppRouter />
-                    </BrowserRouter>
+                    <DialogsProvider>
+                        <BrowserRouter>
+                            <AppRouter />
+                        </BrowserRouter>
+                    </DialogsProvider>
                 </NotificationsProvider>
             </ThemeProvider>
         </LocalizationProvider>

@@ -213,6 +213,27 @@ namespace MysteryShopper.BLL.Services
             }, cancellationToken);
         }
 
+        public async Task ExpireOrderAsync(Guid companyId, Guid userId, Guid orderId, CancellationToken cancellationToken = default)
+        {
+            var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken)
+                ?? throw new NotFoundException("Order status for user is not specified");
+
+            if (userOrder.Order.Company.Id != companyId ||
+                userOrder.Status != UserOrderStatus.InProgress)
+            {
+                throw new ForbiddenException("You can't expire this order");
+            }
+
+            userOrder.Status = UserOrderStatus.Expired;
+            await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+
+            await notificationService.CreateNotificationAsync(new NotificationModel
+            {
+                UserId = userOrder.UserId,
+                Text = NotificationMessages.OrderExpired,
+            }, cancellationToken);
+        }
+
         public async Task AcceptOrderAsync(Guid companyId, Guid userId, Guid orderId, CancellationToken cancellationToken = default)
         {
             var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken)

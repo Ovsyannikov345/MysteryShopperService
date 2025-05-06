@@ -29,6 +29,7 @@ import PulseDot from "react-pulse-dot";
 import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
 import OrderRequest from "../../components/info/OrderRequest";
 import useRequestApi from "../../hooks/useRequestApi";
+import CompanyOrderActions from "../../components/OrderActions/CompanyOrderActions";
 
 // TODO Add skeleton loading
 // TODO Add edit order button to edit the order details.
@@ -302,7 +303,7 @@ const CompanyOrderDetailsPage = () => {
                                         orderData.users.some((u) => u.status === UserOrderStatus.Requested)) && (
                                         <Grid container size={12} flexDirection={"column"}>
                                             {users.some((u) => u.notification) && (
-                                                <Grid container size={12} spacing={1} alignItems={"center"} wrap="nowrap">
+                                                <Grid container size={12} spacing={1} alignItems={"center"} wrap="nowrap" key={1}>
                                                     <PulseDot color="warning" sx={{ width: "20px", height: "20px" }} />
                                                     <Typography variant="subtitle1">
                                                         {users.filter((u) => u.notification).length} new report(s)
@@ -310,7 +311,7 @@ const CompanyOrderDetailsPage = () => {
                                                 </Grid>
                                             )}
                                             {orderData.users.some((u) => u.status === UserOrderStatus.Requested) && (
-                                                <Grid container size={12} spacing={1} alignItems={"center"} wrap="nowrap">
+                                                <Grid container size={12} spacing={1} alignItems={"center"} wrap="nowrap" key={2}>
                                                     <PulseDot color="warning" sx={{ width: "20px", height: "20px" }} />
                                                     <Typography variant="subtitle1">
                                                         {
@@ -367,7 +368,10 @@ const CompanyOrderDetailsPage = () => {
                                                     labelId="user-select-label"
                                                     value={selectedUserId}
                                                     label="Select User"
-                                                    onChange={(e) => setSelectedUserId(e.target.value)}
+                                                    onChange={(e) => {
+                                                        setSelectedUserId(e.target.value);
+                                                        setTimeout(() => window.scrollBy({ behavior: "smooth", top: 400 }), 100);
+                                                    }}
                                                     renderValue={(selectedId) => {
                                                         const user = users.find((u) => u.id === selectedId);
                                                         return user ? `${user.firstName} ${user.lastName}` : "";
@@ -405,7 +409,12 @@ const CompanyOrderDetailsPage = () => {
                                         )}
                                     </Grid>
 
-                                    {/* <UserOrderActions orderData={orderData} onAction={() => setReload((prev) => !prev)} /> */}
+                                    {selectedUserId && (
+                                        <CompanyOrderActions
+                                            orderData={orderData.users.find((u) => u.user.id === selectedUserId)!}
+                                            onAction={() => setReload((prev) => !prev)}
+                                        />
+                                    )}
                                 </>
                             )}
                         </Grid>
