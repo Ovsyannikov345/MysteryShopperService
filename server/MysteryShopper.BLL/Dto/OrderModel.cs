@@ -18,6 +18,8 @@ public class OrderModel
 
     public DateTime CreatedAt { get; set; }
 
+    public DateTime UpdatedAt { get; set; }
+
     public double? Lat { get; set; }
 
     public double? Lng { get; set; }

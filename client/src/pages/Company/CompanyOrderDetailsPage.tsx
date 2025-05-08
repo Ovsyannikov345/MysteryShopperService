@@ -253,11 +253,13 @@ const CompanyOrderDetailsPage = () => {
                                                 <strong>Location:</strong> {orderData.place}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Price:</strong> {orderData.price} BYN
+                                                <strong>Price:</strong> {orderData.price ? orderData.price + " BYN" : "-"}
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Time to complete:</strong>{" "}
-                                                {getExpirationString(moment.duration(orderData.timeToComplete))}
+                                                {orderData.timeToComplete
+                                                    ? getExpirationString(moment.duration(orderData.timeToComplete))
+                                                    : "-"}
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Status:</strong> {orderData.isClosed ? "Closed" : "Open"}
@@ -268,7 +270,7 @@ const CompanyOrderDetailsPage = () => {
                                             </Typography>
                                             {orderData.updatedAt && orderData.createdAt !== orderData.updatedAt && (
                                                 <Typography variant="body1">
-                                                    <strong>Updated:</strong>{" "}
+                                                    <strong>Last modified:</strong>{" "}
                                                     {moment(orderData.updatedAt).format("MMMM Do YYYY, hh:mm a")}
                                                 </Typography>
                                             )}

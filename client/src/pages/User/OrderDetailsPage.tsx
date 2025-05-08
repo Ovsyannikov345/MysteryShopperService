@@ -179,11 +179,14 @@ const OrderDetailsPage = () => {
                                                 <strong>Location:</strong> {orderData.order.place}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Price:</strong> {orderData.order.price} BYN
+                                                <strong>Price:</strong>{" "}
+                                                {orderData.order.price ? orderData.order.price + " BYN" : "-"}
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Time to complete:</strong>{" "}
-                                                {getExpirationString(moment.duration(orderData.order.timeToComplete))}
+                                                {orderData.order.timeToComplete
+                                                    ? getExpirationString(moment.duration(orderData.order.timeToComplete))
+                                                    : "-"}
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Status:</strong> {orderData.order.isClosed ? "Closed" : "Open"}
@@ -195,7 +198,7 @@ const OrderDetailsPage = () => {
                                             {orderData.order.updatedAt &&
                                                 orderData.order.createdAt !== orderData.order.updatedAt && (
                                                     <Typography variant="body1">
-                                                        <strong>Updated:</strong>{" "}
+                                                        <strong>Last modified:</strong>{" "}
                                                         {moment(orderData.order.updatedAt).format("MMMM Do YYYY, hh:mm a")}
                                                     </Typography>
                                                 )}

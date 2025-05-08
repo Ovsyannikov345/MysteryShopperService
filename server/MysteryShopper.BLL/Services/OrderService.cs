@@ -145,7 +145,10 @@ namespace MysteryShopper.BLL.Services
                 Status = UserOrderStatus.None
             }, cancellationToken);
 
-            return (await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken))!;
+            userOrder = (await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken))!;
+            userOrder.Order.Reports = [.. userOrder.Order.Reports.OrderBy(r => r.CreatedAt)];
+
+            return userOrder;
         }
 
         public async Task<OrderModel> GetOrderDetailsForCompanyAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default)
@@ -158,7 +161,11 @@ namespace MysteryShopper.BLL.Services
                 throw new ForbiddenException("You are not the owner of the order");
             }
 
-            return mapper.Map<OrderModel>(order);
+            var orderModel = mapper.Map<OrderModel>(order);
+
+            orderModel.Reports = [.. orderModel.Reports.OrderBy(r => r.CreatedAt)];
+
+            return orderModel;
         }
 
         public async Task AcceptRequestAsync(Guid companyId, Guid id, CancellationToken cancellationToken = default)

@@ -1,68 +1,136 @@
-import React from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Rating, TextField, Box } from "@mui/material";
-import { Formik, Form, Field } from "formik";
+import React, { useState } from "react";
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    Rating,
+    TextField,
+    Box,
+    IconButton,
+    Typography,
+    LinearProgress,
+} from "@mui/material";
+import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Close } from "@mui/icons-material";
+
+export interface ReviewFormValues {
+    text: string;
+    grade: number;
+}
 
 interface ReviewModalProps {
     open: boolean;
     onClose: () => void;
-    onSubmit: (rating: number, reviewText: string) => void;
+    onSubmit: (review: ReviewFormValues) => Promise<boolean>;
 }
 
-const ReviewSchema = Yup.object().shape({
-    reviewText: Yup.string().required("Review text is required").max(500, "Maximum 500 characters allowed"),
-    rating: Yup.number().required().min(1, "Please give a rating"),
+const validationSchema = Yup.object().shape({
+    text: Yup.string().required("Review text is required").max(500, "Maximum 500 characters allowed"),
+    grade: Yup.number().required().min(1, "Please give a rating"),
 });
 
 const ReviewModal = ({ open, onClose, onSubmit }: ReviewModalProps) => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const formik = useFormik<ReviewFormValues>({
+        initialValues: {
+            text: "",
+            grade: 0,
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            setIsLoading(true);
+
+            const result = await onSubmit(values);
+
+            setIsLoading(false);
+
+            if (result) {
+                formik.resetForm();
+                onClose();
+            }
+        },
+    });
+
     return (
-        <Dialog open={open} onClose={onClose} fullWidth>
-            <DialogTitle>Leave a Review</DialogTitle>
-            <Formik
-                initialValues={{ rating: 0, reviewText: "" }}
-                validationSchema={ReviewSchema}
-                onSubmit={(values, actions) => {
-                    onSubmit(values.rating, values.reviewText);
-                    actions.setSubmitting(false);
-                    onClose();
-                }}
-            >
-                {({ values, errors, touched, setFieldValue, isSubmitting }) => (
-                    <Form>
-                        <DialogContent>
-                            <Box mb={2}>
-                                <Rating
-                                    name="rating"
-                                    value={values.rating}
-                                    onChange={(_, value) => setFieldValue("rating", value)}
-                                />
-                                {errors.rating && touched.rating && (
-                                    <div style={{ color: "red", fontSize: "0.8rem" }}>{errors.rating}</div>
-                                )}
-                            </Box>
-                            <Field
-                                as={TextField}
-                                name="reviewText"
-                                label="Your Review"
-                                fullWidth
-                                multiline
-                                rows={4}
-                                variant="outlined"
-                                error={touched.reviewText && Boolean(errors.reviewText)}
-                                helperText={touched.reviewText && errors.reviewText}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={onClose} disabled={isSubmitting}>
-                                Cancel
-                            </Button>
-                            <Button type="submit" variant="contained" disabled={isSubmitting}>
-                                Submit
-                            </Button>
-                        </DialogActions>
-                    </Form>
+        <Dialog
+            open={open}
+            onClose={() => {
+                onClose();
+                formik.setErrors({});
+                formik.setTouched({});
+            }}
+            fullWidth
+        >
+            <DialogTitle>
+                Leave a review{" "}
+                <IconButton
+                    aria-label="close"
+                    onClick={() => {
+                        onClose();
+                        formik.setErrors({});
+                        formik.setTouched({});
+                    }}
+                    sx={{
+                        position: "absolute",
+                        right: 8,
+                        top: 8,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                >
+                    <Close />
+                </IconButton>
+            </DialogTitle>
+            <DialogContent>
+                <form onSubmit={formik.handleSubmit} id="review-form">
+                    <TextField
+                        fullWidth
+                        margin="normal"
+                        label="Review text"
+                        name="text"
+                        multiline
+                        minRows={3}
+                        maxRows={10}
+                        value={formik.values.text}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.text && Boolean(formik.errors.text)}
+                        helperText={formik.touched.text && formik.errors.text}
+                    />
+
+                    <Box>
+                        <Typography component="legend" variant="subtitle1" ml={0.5}>
+                            Grade
+                        </Typography>
+                        <Rating
+                            size="large"
+                            name="grade"
+                            value={formik.values.grade}
+                            precision={1}
+                            max={5}
+                            onChange={(_, value) => formik.setFieldValue("grade", value)}
+                            onBlur={() => formik.setFieldTouched("grade", true)}
+                        />
+                        {formik.touched.grade && formik.errors.grade && (
+                            <Typography component="legend" variant="caption" color="error" ml={0.5}>
+                                {formik.errors.grade}
+                            </Typography>
+                        )}
+                    </Box>
+                </form>
+            </DialogContent>
+            <DialogActions>
+                {isLoading ? (
+                    <LinearProgress sx={{ width: "100%" }} />
+                ) : (
+                    <Button type="submit" form="review-form" variant="contained" sx={{ borderRadius: "7px", mb: 0.5 }}>
+                        Submit
+                    </Button>
                 )}
-            </Formik>
+            </DialogActions>
         </Dialog>
     );
 };

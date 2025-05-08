@@ -6,6 +6,8 @@ import { OrderSortOptions } from "../utils/enums/orderSortOptions";
 import QueryParamNames from "./utils/queryParamNames";
 import { UserOrderStatus } from "../utils/enums/userOrderStatus";
 import { User } from "./useUserApi";
+import { Report } from "./useReportApi";
+import { Review } from "./useReviewApi";
 
 export interface Order {
     id: string;
@@ -24,26 +26,9 @@ export interface Order {
         name: string;
         email: string;
         createdAt: Moment;
-        companyReviews: {
-            id: string;
-            grade: number;
-        }[];
+        companyReviews: Review[];
     };
-    reports: {
-        id: string;
-        userId: string;
-        orderId: string;
-        title: string;
-        description: string;
-        grade: number;
-        createdAt: Moment;
-        reportCorrection?: {
-            id: string;
-            description: string;
-            createdAt: Moment;
-            updatedAt: Moment;
-        };
-    }[];
+    reports: Report[];
     disputes: {
         id: string;
         userText?: string;
@@ -51,11 +36,7 @@ export interface Order {
         createdAt: Moment;
         resolvedAt?: Moment;
     }[];
-    userReviews: {
-        id: string;
-        userText: string;
-        createdAt: Moment;
-    }[];
+    userReviews: Review[];
 }
 
 export interface UserOrder {

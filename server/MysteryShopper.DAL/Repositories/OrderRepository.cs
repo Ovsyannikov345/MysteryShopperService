@@ -84,6 +84,7 @@ namespace MysteryShopper.DAL.Repositories
                         .ThenInclude(u => u.UserReviews)
                 .Include(o => o.Reports)
                     .ThenInclude(r => r.ReportCorrection)
+                .Include(o => o.UserReviews)
                 .Include(o => o.Disputes)
                 .FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
         }

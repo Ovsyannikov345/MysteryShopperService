@@ -12,15 +12,20 @@ import useOrderApi, { UserOrder } from "../../hooks/useOrderApi";
 import { useNotifications } from "@toolpad/core";
 import { useState } from "react";
 import PulseDot from "react-pulse-dot";
-import { AccessTime, Close, Done, Feed } from "@mui/icons-material";
+import { AccessTime, CallMade, CallReceived, Close, Done } from "@mui/icons-material";
 import ReportModal, { ReportFormValues } from "../modals/ReportModal";
 import useReportApi, { Report } from "../../hooks/useReportApi";
 import ReportDisplayModal from "../modals/ReportDisplayModal";
+import { Correction } from "../../hooks/useReportCorrectionApi";
+import CorrectionDisplayModal from "../modals/CorrectionDisplayModal";
 
 interface UserOrderActionsProps {
     orderData: UserOrder;
     onAction: () => void;
 }
+
+// TODO add review creation
+// TODO Display company-sent review
 
 const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
     const notification = useNotifications();
@@ -36,6 +41,8 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
     const [reportModalOpen, setReportModalOpen] = useState(false);
 
     const [displayedReport, setDisplayedReport] = useState<Report | null>(null);
+
+    const [displayedCorrection, setDisplayedCorrection] = useState<Correction | null>(null);
 
     const sendRequest = async () => {
         setIsLoading(true);
@@ -197,13 +204,20 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineDot>
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Typography mt={1}>Order has expired</Typography>
+                    <Typography mt={1}>Order was marked as expired</Typography>
                 </TimelineContent>
             </TimelineItem>
         );
     };
 
     const getReportActionHistory = () => {
+        const lastReport =
+            orderData.order.reports.length > 0 ? orderData.order.reports[orderData.order.reports.length - 1] : null;
+        const startTime = lastReport?.reportCorrection ? lastReport.reportCorrection.createdAt : orderData.acceptedAt;
+        const endTime = orderData.order.timeToComplete
+            ? moment.utc(startTime).add(moment.duration(orderData.order.timeToComplete))
+            : null;
+
         var pendingReportAction =
             orderData.order.reports.length === 0 || orderData.order.reports.every((report) => report.reportCorrection) ? (
                 <TimelineItem>
@@ -215,17 +229,15 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineSeparator>
                     <TimelineContent sx={{ pl: 0.5 }}>
                         <Typography>Waiting for your report...</Typography>
-                        <Typography>
-                            {moment
-                                .duration(
-                                    moment
-                                        .utc(orderData.acceptedAt)
-                                        .add(moment.duration(orderData.order.timeToComplete))
-                                        .diff(moment.utc())
-                                )
-                                .humanize()}{" "}
-                            remaining
-                        </Typography>
+                        {endTime && endTime.isAfter(moment.utc()) ? (
+                            <Typography>{moment.duration(moment.utc().diff(endTime)).humanize()} remaining</Typography>
+                        ) : endTime ? (
+                            <Typography color="error">
+                                Expired {moment.duration(endTime.diff(moment.utc())).humanize()} ago
+                            </Typography>
+                        ) : (
+                            <Typography>No expiration</Typography>
+                        )}
                     </TimelineContent>
                 </TimelineItem>
             ) : null;
@@ -261,7 +273,6 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                 </TimelineItem>
             ) : null;
 
-        // TODO Add buttons for details and report correction
         var reportActions = orderData.order.reports.map((report) => (
             <>
                 <TimelineItem key={report.id}>
@@ -270,7 +281,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineOppositeContent>
                     <TimelineSeparator>
                         <TimelineDot color="primary">
-                            <Feed sx={{ width: "20px", height: "20px" }} />
+                            <CallMade sx={{ width: "20px", height: "20px" }} />
                         </TimelineDot>
                         <TimelineConnector />
                     </TimelineSeparator>
@@ -287,12 +298,20 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                             <Typography sx={{ p: 0, mt: 1 }}>{moment(report.reportCorrection.createdAt).calendar()}</Typography>
                         </TimelineOppositeContent>
                         <TimelineSeparator>
-                            <TimelineDot>
-                                <Feed sx={{ width: "20px", height: "20px" }} />
+                            <TimelineDot color="primary">
+                                <CallReceived sx={{ width: "20px", height: "20px" }} />
                             </TimelineDot>
+                            <TimelineConnector />
                         </TimelineSeparator>
-                        <TimelineContent sx={{ pl: 0.5 }}>
+                        <TimelineContent>
                             <Typography>Correction was requested</Typography>
+                            <Button
+                                size="small"
+                                variant="contained"
+                                onClick={() => setDisplayedCorrection(report.reportCorrection!)}
+                            >
+                                Details
+                            </Button>
                         </TimelineContent>
                     </TimelineItem>
                 )}
@@ -342,6 +361,11 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                 open={displayedReport !== null}
                 onClose={() => setDisplayedReport(null)}
                 report={displayedReport}
+            />
+            <CorrectionDisplayModal
+                open={displayedCorrection !== null}
+                onClose={() => setDisplayedCorrection(null)}
+                correction={displayedCorrection}
             />
         </>
     );
