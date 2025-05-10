@@ -12,6 +12,7 @@ import { ArrowRight } from "@mui/icons-material";
 import MapModal from "../../components/modals/MapModal";
 import UserOrderActions from "../../components/OrderActions/UserOrderActions";
 import { COMPANY_PROFILE_ROUTE } from "../../router/consts";
+import UserOrderDetailsSkeleton from "../../components/skeletons/UserOrderDetailsSkeleton";
 
 const UserOrderDetailsPage = () => {
     const theme = useTheme();
@@ -61,8 +62,6 @@ const UserOrderDetailsPage = () => {
             }
 
             setOrderData(response);
-
-            console.log(response);
         };
 
         const loadData = async () => {
@@ -105,7 +104,6 @@ const UserOrderDetailsPage = () => {
         return readableExpiration;
     };
 
-    // TODO Add skeleton loading
     // TODO Add AI analysis of description
 
     return (
@@ -156,7 +154,9 @@ const UserOrderDetailsPage = () => {
                             sx={{ p: isMediumScreen ? 1 : 4 }}
                             mt={isMediumScreen ? 2 : 0}
                         >
-                            {orderData && (
+                            {!orderData ? (
+                                <UserOrderDetailsSkeleton />
+                            ) : (
                                 <>
                                     <Grid container size={12} flexDirection={"column"} spacing={1}>
                                         <Typography variant="h5">{orderData.order.title}</Typography>

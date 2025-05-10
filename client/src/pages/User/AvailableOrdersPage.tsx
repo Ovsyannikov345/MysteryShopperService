@@ -25,8 +25,6 @@ import { PagedResult } from "../../hooks/utils/responses";
 import OrderCard from "../../components/info/OrderCard";
 import OrderCardSkeleton from "../../components/skeletons/OrderCardSkeleton";
 
-// TODO fix constant image load error.
-
 const AvailableOrdersPage = () => {
     const theme = useTheme();
 

@@ -29,9 +29,7 @@ import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
 import OrderRequest from "../../components/info/OrderRequest";
 import useRequestApi from "../../hooks/useRequestApi";
 import CompanyOrderActions from "../../components/OrderActions/CompanyOrderActions";
-
-// TODO Add skeleton loading
-// TODO Add close order button
+import OrderDetailsSkeleton from "../../components/skeletons/CompanyOrderDetailsSkeleton";
 
 interface User {
     id: string;
@@ -82,8 +80,6 @@ const CompanyOrderDetailsPage = () => {
             const order = response;
 
             setOrderData(order);
-
-            console.log(response);
 
             const activeUserStatuses = [UserOrderStatus.InProgress, UserOrderStatus.Expired, UserOrderStatus.Completed];
 
@@ -232,7 +228,7 @@ const CompanyOrderDetailsPage = () => {
                             sx={{ p: isMediumScreen ? 1 : 4 }}
                             mt={isMediumScreen ? 2 : 0}
                         >
-                            {orderData && (
+                            {orderData ? (
                                 <>
                                     <Grid
                                         container
@@ -462,6 +458,8 @@ const CompanyOrderDetailsPage = () => {
                                         />
                                     )}
                                 </>
+                            ) : (
+                                <OrderDetailsSkeleton />
                             )}
                         </Grid>
                     </Container>

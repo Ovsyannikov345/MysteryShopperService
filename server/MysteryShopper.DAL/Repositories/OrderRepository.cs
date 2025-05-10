@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MysteryShopper.DAL.Data;
+using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
 using MysteryShopper.DAL.Utilities.Pagination;
@@ -25,7 +26,7 @@ namespace MysteryShopper.DAL.Repositories
                 .Include(o => o.Company)
                     .ThenInclude(c => c.CompanyReviews)
                 .Where(predicate)
-                .Where(o => !o.IsClosed && !_context.UserOrders.Any(uo => uo.UserId == userId && uo.OrderId == o.Id));
+                .Where(o => !o.IsClosed && !_context.UserOrders.Any(uo => uo.Status != UserOrderStatus.None && uo.UserId == userId && uo.OrderId == o.Id));
 
             var sortedOrders = isDescending
                 ? orders.OrderByDescending(sortKeySelector)

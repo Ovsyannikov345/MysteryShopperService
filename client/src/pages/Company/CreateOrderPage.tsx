@@ -7,7 +7,7 @@ import backgroundImage from "../../images/background.jpg";
 import OrderCreationForm, { OrderCreationData } from "../../components/forms/OrderCreationForm";
 import useOrderApi from "../../hooks/useOrderApi";
 import { OrderToCreate } from "../../hooks/useOrderApi";
-import { MY_ORDERS_ROUTE } from "../../router/consts";
+import { ORDER_DETAILS_ROUTE } from "../../router/consts";
 
 const CreateOrderPage = () => {
     const theme = useTheme();
@@ -49,8 +49,7 @@ const CreateOrderPage = () => {
         }
 
         notifications.show("Order created", { severity: "success", autoHideDuration: 3000 });
-        // TODO navigate to details page
-        navigate(MY_ORDERS_ROUTE);
+        navigate(ORDER_DETAILS_ROUTE.replace(":id", response.id));
     };
 
     useEffect(() => {

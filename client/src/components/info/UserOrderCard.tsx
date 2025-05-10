@@ -51,8 +51,6 @@ const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
         return `Expires ${readableExpiration}`;
     };
 
-    // TODO reduce code duplication.
-
     const getCardContent = () => {
         if (orderData.status === UserOrderStatus.Requested) {
             return (
