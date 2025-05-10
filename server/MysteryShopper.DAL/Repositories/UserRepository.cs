@@ -16,7 +16,7 @@ namespace MysteryShopper.DAL.Repositories
             return await _context.Users
                 .Include(u => u.Orders)
                     .ThenInclude(o => o.Order)
-                .Include(u => u.UserReviews)
+                .Include(u => u.UserReviews.OrderByDescending(r => r.CreatedAt))
                     .ThenInclude(r => r.Company)
                 .FirstOrDefaultAsync(filter, cancellationToken);
         }

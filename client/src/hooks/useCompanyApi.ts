@@ -1,6 +1,7 @@
 import { ApiResponse, FileResponse } from "./utils/responses";
 import AxiosFactory from "./utils/axiosFactory";
 import { useCallback } from "react";
+import { Moment } from "moment";
 
 export interface Company {
     id: string;
@@ -26,6 +27,7 @@ export interface Company {
             surname: string;
             patronymic: string;
         };
+        createdAt: Moment;
     }[];
 }
 

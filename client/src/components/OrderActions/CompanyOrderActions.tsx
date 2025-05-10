@@ -124,7 +124,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                     Leave review
                 </Button>
             ) : (
-                <Button variant="contained" color="success" startIcon={<Done/>} sx={{ mt: "-6px", width: "205px" }} disabled>
+                <Button variant="contained" color="success" startIcon={<Done />} sx={{ mt: "-6px", width: "205px" }} disabled>
                     Review is sent
                 </Button>
             );

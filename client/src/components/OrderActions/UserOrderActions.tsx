@@ -26,9 +26,6 @@ interface UserOrderActionsProps {
     onAction: () => void;
 }
 
-// TODO add review creation
-// TODO Display company-sent review
-
 const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
     const notification = useNotifications();
 

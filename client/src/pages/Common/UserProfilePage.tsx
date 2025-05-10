@@ -203,6 +203,7 @@ const UserProfilePage = () => {
                                         }}
                                         grade={review.grade}
                                         text={review.text}
+                                        createdAt={review.createdAt}
                                     />
                                 ))}
                             </Grid>

@@ -5,6 +5,7 @@ import { COMPANY_PROFILE_ROUTE, USER_PROFILE_ROUTE } from "../../router/consts";
 import useCompanyApi from "../../hooks/useCompanyApi";
 import useUserApi from "../../hooks/useUserApi";
 import { useEffect, useState } from "react";
+import moment, { Moment } from "moment";
 
 interface ReviewCardProps {
     sender: {
@@ -14,9 +15,10 @@ interface ReviewCardProps {
     };
     grade: number;
     text: string;
+    createdAt: Moment;
 }
 
-const ReviewCard = ({ sender, grade, text }: ReviewCardProps) => {
+const ReviewCard = ({ sender, grade, text, createdAt }: ReviewCardProps) => {
     const theme = useTheme();
 
     const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -68,10 +70,11 @@ const ReviewCard = ({ sender, grade, text }: ReviewCardProps) => {
                         </IconButton>
                         <Grid container direction={"column"} spacing={0} mt={"-5px"}>
                             <Typography variant="h6">{sender.name}</Typography>
-                            <Rating value={grade} precision={0.5} readOnly sx={{ ml: "-2px" }} />
+                            <Typography variant="subtitle1">{moment(createdAt).format("MMMM Do YYYY, HH:mm")}</Typography>
                         </Grid>
                     </Grid>
                     <Grid mt={"-5px"}>
+                        <Rating value={grade} precision={0.5} readOnly sx={{ ml: "-2px" }} />
                         <Typography variant="body1" sx={{ mt: 1 }}>
                             {text}
                         </Typography>
