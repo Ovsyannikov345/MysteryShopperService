@@ -37,6 +37,7 @@ export interface Order {
         resolvedAt?: Moment;
     }[];
     userReviews: Review[];
+    companyReviews: Review[];
 }
 
 export interface UserOrder {

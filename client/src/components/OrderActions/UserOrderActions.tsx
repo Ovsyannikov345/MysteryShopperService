@@ -18,6 +18,8 @@ import useReportApi, { Report } from "../../hooks/useReportApi";
 import ReportDisplayModal from "../modals/ReportDisplayModal";
 import { Correction } from "../../hooks/useReportCorrectionApi";
 import CorrectionDisplayModal from "../modals/CorrectionDisplayModal";
+import ReviewModal, { ReviewFormValues } from "../modals/ReviewModal";
+import useReviewApi from "../../hooks/useReviewApi";
 
 interface UserOrderActionsProps {
     orderData: UserOrder;
@@ -34,11 +36,15 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
 
     const { createReport, uploadAttachment } = useReportApi();
 
+    const { createCompanyReview } = useReviewApi();
+
     const status = orderData.status as UserOrderStatus;
 
     const [isLoading, setIsLoading] = useState(false);
 
     const [reportModalOpen, setReportModalOpen] = useState(false);
+
+    const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
     const [displayedReport, setDisplayedReport] = useState<Report | null>(null);
 
@@ -83,7 +89,32 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         return true;
     };
 
+    const sendReview = async (review: ReviewFormValues) => {
+        const response = await createCompanyReview(orderData.order.company.id, { ...review, orderId: orderData.order.id });
+
+        if (response && "error" in response) {
+            notification.show("Error sending review", { severity: "error", autoHideDuration: 3000 });
+            return false;
+        }
+
+        notification.show("Review is sent", { severity: "success", autoHideDuration: 3000 });
+        onAction();
+        return true;
+    };
+
     const getAvailableAction = () => {
+        if (orderData.status === UserOrderStatus.Completed) {
+            return !orderData.order.companyReviews.some((r) => r.userId === orderData.user.id) ? (
+                <Button variant="contained" sx={{ mt: "-6px", width: "205px" }} onClick={() => setReviewModalOpen(true)}>
+                    Leave review
+                </Button>
+            ) : (
+                <Button variant="contained" color="success" startIcon={<Done />} sx={{ mt: "-6px", width: "205px" }} disabled>
+                    Review is sent
+                </Button>
+            );
+        }
+
         if (orderData.status === UserOrderStatus.None) {
             return (
                 <Button variant="contained" sx={{ mt: "-6px" }} onClick={sendRequest}>
@@ -367,6 +398,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                 onClose={() => setDisplayedCorrection(null)}
                 correction={displayedCorrection}
             />
+            <ReviewModal open={reviewModalOpen} onClose={() => setReviewModalOpen(false)} onSubmit={sendReview} />
         </>
     );
 };

@@ -8,6 +8,8 @@ public class UserOrderViewModel
 
     public required OrderViewModel Order { get; set; }
 
+    public required UserProfileViewModel User { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }
