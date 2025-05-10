@@ -17,11 +17,6 @@ public class ContactPersonValidator : AbstractValidator<CompanyContactPersonCred
             .MaximumLength(50).WithMessage("Contact person surname should be from 3 to 50 symbols")
             .MinimumLength(3).WithMessage("Contact person surname should be from 3 to 50 symbols");
 
-        RuleFor(c => c.Patronymic)
-            .MaximumLength(50).WithMessage("Contact person patronymic should be from 3 to 50 symbols")
-            .MinimumLength(3).WithMessage("Contact person patronymic should be from 3 to 50 symbols")
-            .When(c => c.Patronymic != null);
-
         RuleFor(u => u.Email)
             .NotEmpty().WithMessage("Contact person email should not be empty")
             .EmailAddress().WithMessage("Contact person email has invalid format");

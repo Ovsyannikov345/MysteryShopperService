@@ -30,7 +30,6 @@ public static class DataGenerator
         var contactPersonFaker = new Faker<ContactPerson>()
             .RuleFor(c => c.Name, f => f.Person.FirstName)
             .RuleFor(c => c.Surname, f => f.Person.LastName)
-            .RuleFor(c => c.Patronymic, f => f.Person.Random.Word().OrNull(f))
             .RuleFor(c => c.Phone, f => f.Person.Phone)
             .RuleFor(c => c.Email, f => f.Person.Email);
 

@@ -11,9 +11,6 @@ public partial class ContactPerson : EntityBase
     public required string Surname { get; set; }
 
     [MaxLength(50)]
-    public string? Patronymic { get; set; }
-
-    [MaxLength(50)]
     public required string Phone { get; set; }
 
     [MaxLength(255)]

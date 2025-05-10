@@ -8,8 +8,6 @@ public class ContactPersonToUpdateModel
 
     public required string Surname { get; set; }
 
-    public string? Patronymic { get; set; }
-
     public required string Phone { get; set; }
 
     public required string Email { get; set; }

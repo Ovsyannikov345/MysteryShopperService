@@ -31,12 +31,6 @@ const getRegistrationValidationSchema = (userType: string | undefined) => {
                       .max(50, "Contact person surname should be between 3 and 50 characters")
                       .required("Contact person surname is required")
                 : Yup.string().nullable(),
-        contactPersonPatronymic:
-            userType === "company"
-                ? Yup.string()
-                      .min(3, "Contact person patronymic should be between 3 and 50 characters")
-                      .max(50, "Contact person patronymic should be between 3 and 50 characters")
-                : Yup.string().nullable(),
         contactPersonPhone:
             userType === "company"
                 ? Yup.string()

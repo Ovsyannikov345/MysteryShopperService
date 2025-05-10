@@ -28,7 +28,7 @@ import PulseDot from "react-pulse-dot";
 import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
 import OrderRequest from "../../components/info/OrderRequest";
 import useRequestApi from "../../hooks/useRequestApi";
-import CompanyOrderActions from "../../components/OrderActions/CompanyOrderActions";
+import CompanyOrderActions from "../../components/orderActions/CompanyOrderActions";
 import OrderDetailsSkeleton from "../../components/skeletons/CompanyOrderDetailsSkeleton";
 
 interface User {

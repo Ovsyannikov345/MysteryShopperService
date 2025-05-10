@@ -8,7 +8,6 @@ import OrderCardSkeleton from "../../components/skeletons/OrderCardSkeleton";
 import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
 import OrderCardSection from "../../components/info/OrderCardSection";
 
-// TODO rework?
 const UserOrdersPage = () => {
     const theme = useTheme();
 

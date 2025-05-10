@@ -57,7 +57,6 @@ const RegistrationPage = () => {
         companyName: "",
         contactPersonName: "",
         contactPersonSurname: "",
-        contactPersonPatronymic: "",
         contactPersonPhone: "",
         contactPersonEmail: "",
     };
@@ -125,7 +124,6 @@ const RegistrationPage = () => {
                 companyContactPerson: {
                     name: values.contactPersonName.trim(),
                     surname: values.contactPersonSurname.trim(),
-                    patronymic: values.contactPersonPatronymic.trim() ? values.contactPersonPatronymic.trim() : null,
                     email: values.contactPersonEmail.trim(),
                     phone: values.contactPersonPhone,
                 },
@@ -317,21 +315,6 @@ const RegistrationPage = () => {
                                                     onBlur={handleBlur}
                                                     helperText={<ErrorMessage name="contactPersonSurname" />}
                                                     error={touched.contactPersonSurname && Boolean(errors.contactPersonSurname)}
-                                                />
-                                            </Grid>
-                                            <Grid size={{ xs: 12 }}>
-                                                <Field
-                                                    as={TextField}
-                                                    label="Patronymic (Optional)"
-                                                    fullWidth
-                                                    name="contactPersonPatronymic"
-                                                    value={values.contactPersonPatronymic}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    helperText={<ErrorMessage name="contactPersonPatronymic" />}
-                                                    error={
-                                                        touched.contactPersonPatronymic && Boolean(errors.contactPersonPatronymic)
-                                                    }
                                                 />
                                             </Grid>
                                             <Grid size={{ xs: 12 }}>

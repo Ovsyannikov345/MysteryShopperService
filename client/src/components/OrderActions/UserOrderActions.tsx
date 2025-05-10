@@ -132,8 +132,6 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         }
     };
 
-    // TODO rename folder of this file
-
     const getRequestActionHistory = () => {
         if (orderData.status === UserOrderStatus.None) {
             return null;

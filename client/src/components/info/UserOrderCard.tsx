@@ -63,8 +63,6 @@ const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
             );
         }
 
-        // TODO Remove Forse closed from everywhere
-
         if (orderData.status === UserOrderStatus.Completed) {
             return (
                 <>

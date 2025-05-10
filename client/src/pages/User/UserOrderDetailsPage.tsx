@@ -10,7 +10,7 @@ import moment, { Duration } from "moment";
 import useCompanyApi from "../../hooks/useCompanyApi";
 import { ArrowRight } from "@mui/icons-material";
 import MapModal from "../../components/modals/MapModal";
-import UserOrderActions from "../../components/OrderActions/UserOrderActions";
+import UserOrderActions from "../../components/orderActions/UserOrderActions";
 import { COMPANY_PROFILE_ROUTE } from "../../router/consts";
 import UserOrderDetailsSkeleton from "../../components/skeletons/UserOrderDetailsSkeleton";
 

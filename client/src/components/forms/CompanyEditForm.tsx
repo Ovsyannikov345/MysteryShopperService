@@ -9,7 +9,6 @@ export interface CompanyEditData {
     contactPerson: {
         name: string;
         surname: string;
-        patronymic?: string;
         phone: string;
         email: string;
     };
@@ -27,7 +26,6 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
         companyName: initialValues.name,
         contactPersonName: initialValues.contactPerson.name,
         contactPersonSurname: initialValues.contactPerson.surname,
-        contactPersonPatronymic: initialValues.contactPerson.patronymic,
         contactPersonPhone: initialValues.contactPerson.phone,
         contactPersonEmail: initialValues.contactPerson.email,
     };
@@ -43,7 +41,6 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                     contactPerson: {
                         name: values.contactPersonName,
                         surname: values.contactPersonSurname,
-                        patronymic: values.contactPersonPatronymic,
                         phone: values.contactPersonPhone,
                         email: values.contactPersonEmail,
                     },
@@ -70,7 +67,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                         <Grid size={12}>
                             <Typography>Contact person</Typography>
                         </Grid>
-                        <Grid size={{ xs: 12, sm: 4 }}>
+                        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
                             <Field
                                 as={TextField}
                                 label="Name"
@@ -83,7 +80,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                                 error={touched.contactPersonName && Boolean(errors.contactPersonName)}
                             />
                         </Grid>
-                        <Grid size={{ xs: 12, sm: 4 }}>
+                        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
                             <Field
                                 as={TextField}
                                 label="Surname"
@@ -96,20 +93,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                                 error={touched.contactPersonSurname && Boolean(errors.contactPersonSurname)}
                             />
                         </Grid>
-                        <Grid size={{ xs: 12, sm: 4 }}>
-                            <Field
-                                as={TextField}
-                                label="Patronymic (Optional)"
-                                fullWidth
-                                name="contactPersonPatronymic"
-                                value={values.contactPersonPatronymic}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                helperText={<ErrorMessage name="contactPersonPatronymic" />}
-                                error={touched.contactPersonPatronymic && Boolean(errors.contactPersonPatronymic)}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 6 }}>
+                        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
                             <InputMask
                                 mask="+375(99)999-99-99"
                                 value={values.contactPersonPhone}
@@ -132,7 +116,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                                 )}
                             </InputMask>
                         </Grid>
-                        <Grid size={{ xs: 12, sm: 6 }}>
+                        <Grid size={{ xs: 12, sm: 6, md: 5 }}>
                             <Field
                                 as={TextField}
                                 label="Email"

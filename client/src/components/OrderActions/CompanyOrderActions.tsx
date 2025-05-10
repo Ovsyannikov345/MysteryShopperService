@@ -21,8 +21,6 @@ import useReportCorrectionApi, { Correction } from "../../hooks/useReportCorrect
 import CorrectionModal, { CorrectionFormValues } from "../modals/CorrectionModal";
 import CorrectionDisplayModal from "../modals/CorrectionDisplayModal";
 
-// TODO Removbe patronymics from everywhere
-
 interface CompanyOrderActionsProps {
     orderData: UserOrder;
     onAction: () => void;

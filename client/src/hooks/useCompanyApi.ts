@@ -12,7 +12,6 @@ export interface Company {
         id: string;
         name: string;
         surname: string;
-        patronymic: string;
         email: string;
         phone: string;
     };
@@ -25,7 +24,6 @@ export interface Company {
             id: string;
             name: string;
             surname: string;
-            patronymic: string;
         };
         createdAt: Moment;
     }[];
@@ -38,7 +36,6 @@ export interface CompanyToUpdate {
         id: string;
         name: string;
         surname: string;
-        patronymic: string | undefined;
         phone: string;
         email: string;
     };

@@ -24,7 +24,6 @@ export interface UserRegistrationData {
 export interface ContactPersonData {
     name: string;
     surname: string;
-    patronymic: string | null;
     email: string;
     phone: string;
 }
