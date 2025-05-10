@@ -195,13 +195,6 @@ const UserOrderDetailsPage = () => {
                                                 <strong>Created:</strong>{" "}
                                                 {moment(orderData.order.createdAt).format("MMMM Do YYYY, hh:mm a")}
                                             </Typography>
-                                            {orderData.order.updatedAt &&
-                                                orderData.order.createdAt !== orderData.order.updatedAt && (
-                                                    <Typography variant="body1">
-                                                        <strong>Last modified:</strong>{" "}
-                                                        {moment(orderData.order.updatedAt).format("MMMM Do YYYY, hh:mm a")}
-                                                    </Typography>
-                                                )}
                                         </Grid>
                                         <Grid size={{ xs: 12, md: 6 }}>
                                             <Grid container spacing={1} alignItems={"center"}>

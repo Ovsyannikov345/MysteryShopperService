@@ -180,7 +180,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                                             textAlign={"end"}
                                             sx={{ mt: "-30px" }}
                                         >
-                                            {values.description?.length}/500
+                                            {values.description?.length ?? 0}/500
                                         </Typography>
                                     )
                                 }

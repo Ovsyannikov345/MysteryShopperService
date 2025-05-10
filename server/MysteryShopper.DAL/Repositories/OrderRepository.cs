@@ -27,8 +27,6 @@ namespace MysteryShopper.DAL.Repositories
                 .Where(predicate)
                 .Where(o => !o.IsClosed && !_context.UserOrders.Any(uo => uo.UserId == userId && uo.OrderId == o.Id));
 
-            Console.WriteLine(orders.ToQueryString());
-
             var sortedOrders = isDescending
                 ? orders.OrderByDescending(sortKeySelector)
                 : orders.OrderBy(sortKeySelector);
@@ -82,7 +80,7 @@ namespace MysteryShopper.DAL.Repositories
                 .Include(o => o.Users)
                     .ThenInclude(xref => xref.User)
                         .ThenInclude(u => u.UserReviews)
-                .Include(o => o.Reports)
+                .Include(o => o.Reports.OrderBy(r => r.CreatedAt))
                     .ThenInclude(r => r.ReportCorrection)
                 .Include(o => o.UserReviews)
                 .Include(o => o.Disputes)

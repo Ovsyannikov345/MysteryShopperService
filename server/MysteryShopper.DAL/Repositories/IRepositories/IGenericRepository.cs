@@ -19,5 +19,6 @@ namespace MysteryShopper.DAL.Repositories.IRepositories
         public Task<TEntity?> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 
         public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default);
+        Task SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

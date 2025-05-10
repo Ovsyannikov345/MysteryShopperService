@@ -13,7 +13,7 @@ namespace MysteryShopper.DAL.Repositories
 
         public async Task<User?> GetUserWithReviewsAsync(Expression<Func<User, bool>> filter, CancellationToken cancellationToken = default)
         {
-            return await _context.Users
+            return await _context.Users.AsNoTracking()
                 .Include(u => u.Orders)
                     .ThenInclude(o => o.Order)
                 .Include(u => u.UserReviews.OrderByDescending(r => r.CreatedAt))

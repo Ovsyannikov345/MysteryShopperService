@@ -13,7 +13,7 @@ namespace MysteryShopper.DAL.Repositories
 
         public async Task<Company?> GetCompanyWithReviewsAsync(Expression<Func<Company, bool>> filter, CancellationToken cancellationToken = default)
         {
-            return await _context.Companies
+            return await _context.Companies.AsNoTracking()
                 .Include(c => c.ContactPerson)
                 .Include(c => c.Orders)
                 .Include(c => c.CompanyReviews.OrderByDescending(r => r.CreatedAt))

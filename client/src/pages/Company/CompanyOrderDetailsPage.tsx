@@ -16,12 +16,11 @@ import {
     ListItemText,
 } from "@mui/material";
 import backgroundImage from "../../images/background.jpg";
-import { useNotifications } from "@toolpad/core";
+import { useDialogs, useNotifications } from "@toolpad/core";
 import useOrderApi, { CompanyOrder } from "../../hooks/useOrderApi";
 import NavigateBack from "../../components/buttons/NavigateBack";
 import { useParams } from "react-router-dom";
 import moment, { Duration } from "moment";
-import { Edit } from "@mui/icons-material";
 import MapModal from "../../components/modals/MapModal";
 import useUserApi from "../../hooks/useUserApi";
 import CompanyHeader from "../../components/headers/CompanyHeader";
@@ -32,7 +31,7 @@ import useRequestApi from "../../hooks/useRequestApi";
 import CompanyOrderActions from "../../components/OrderActions/CompanyOrderActions";
 
 // TODO Add skeleton loading
-// TODO Add edit order button to edit the order details.
+// TODO Add close order button
 
 interface User {
     id: string;
@@ -49,7 +48,9 @@ const CompanyOrderDetailsPage = () => {
 
     const notifications = useNotifications();
 
-    const { getCompanyOrderDetails } = useOrderApi();
+    const dialogs = useDialogs();
+
+    const { getCompanyOrderDetails, finishOrder } = useOrderApi();
 
     const { getProfileImage } = useUserApi();
 
@@ -167,6 +168,22 @@ const CompanyOrderDetailsPage = () => {
         setReload((prev) => !prev);
     };
 
+    const markAsFinished = async () => {
+        if (!orderData) {
+            return;
+        }
+
+        const response = await finishOrder(orderData.id);
+
+        if (response) {
+            notifications.show(response.message, { severity: "error", autoHideDuration: 5000 });
+            return;
+        }
+
+        notifications.show("Order is marked as finished", { severity: "success", autoHideDuration: 3000 });
+        setOrderData({ ...orderData, isClosed: true });
+    };
+
     return (
         <>
             <Grid container minHeight={"100%"} flexDirection={"column"}>
@@ -204,11 +221,8 @@ const CompanyOrderDetailsPage = () => {
                         }}
                     >
                         {isMediumScreen && (
-                            <Grid container mt={3} size={12} justifyContent={"space-between"}>
+                            <Grid mt={3}>
                                 <NavigateBack to={-1} label="Back" />
-                                <Button startIcon={<Edit />} variant="contained" sx={{ alignSelf: "flex-start" }}>
-                                    Edit
-                                </Button>
                             </Grid>
                         )}
                         <Grid
@@ -229,11 +243,6 @@ const CompanyOrderDetailsPage = () => {
                                         wrap="nowrap"
                                     >
                                         <Typography variant="h5">{orderData.title}</Typography>
-                                        {!isMediumScreen && (
-                                            <Button startIcon={<Edit />} variant="contained" sx={{ alignSelf: "flex-start" }}>
-                                                Edit
-                                            </Button>
-                                        )}
                                     </Grid>
 
                                     <Grid container size={12} spacing={2} justifyContent={"space-between"}>
@@ -268,12 +277,6 @@ const CompanyOrderDetailsPage = () => {
                                                 <strong>Created:</strong>{" "}
                                                 {moment(orderData.createdAt).format("MMMM Do YYYY, hh:mm a")}
                                             </Typography>
-                                            {orderData.updatedAt && orderData.createdAt !== orderData.updatedAt && (
-                                                <Typography variant="body1">
-                                                    <strong>Last modified:</strong>{" "}
-                                                    {moment(orderData.updatedAt).format("MMMM Do YYYY, hh:mm a")}
-                                                </Typography>
-                                            )}
                                         </Grid>
                                     </Grid>
 
@@ -300,64 +303,105 @@ const CompanyOrderDetailsPage = () => {
                                             )}
                                         </Grid>
                                     )}
+                                    {!orderData.isClosed &&
+                                        (users.some((u) => u.notification) ||
+                                            orderData.users.some((u) => u.status === UserOrderStatus.Requested)) && (
+                                            <Grid container size={12} flexDirection={"column"}>
+                                                {users.some((u) => u.notification) && (
+                                                    <Grid
+                                                        container
+                                                        size={12}
+                                                        spacing={1}
+                                                        alignItems={"center"}
+                                                        wrap="nowrap"
+                                                        key={1}
+                                                    >
+                                                        <PulseDot color="warning" sx={{ width: "20px", height: "20px" }} />
+                                                        <Typography variant="subtitle1">
+                                                            {users.filter((u) => u.notification).length} new report(s)
+                                                        </Typography>
+                                                    </Grid>
+                                                )}
+                                                {orderData.users.some((u) => u.status === UserOrderStatus.Requested) && (
+                                                    <Grid
+                                                        container
+                                                        size={12}
+                                                        spacing={1}
+                                                        alignItems={"center"}
+                                                        wrap="nowrap"
+                                                        key={2}
+                                                    >
+                                                        <PulseDot color="warning" sx={{ width: "20px", height: "20px" }} />
+                                                        <Typography variant="subtitle1">
+                                                            {
+                                                                orderData.users.filter(
+                                                                    (u) => u.status === UserOrderStatus.Requested
+                                                                ).length
+                                                            }{" "}
+                                                            new request(s)
+                                                        </Typography>
+                                                    </Grid>
+                                                )}
+                                            </Grid>
+                                        )}
 
-                                    {(users.some((u) => u.notification) ||
-                                        orderData.users.some((u) => u.status === UserOrderStatus.Requested)) && (
-                                        <Grid container size={12} flexDirection={"column"}>
-                                            {users.some((u) => u.notification) && (
-                                                <Grid container size={12} spacing={1} alignItems={"center"} wrap="nowrap" key={1}>
-                                                    <PulseDot color="warning" sx={{ width: "20px", height: "20px" }} />
-                                                    <Typography variant="subtitle1">
-                                                        {users.filter((u) => u.notification).length} new report(s)
-                                                    </Typography>
-                                                </Grid>
+                                    {!orderData.isClosed && (
+                                        <Grid container size={12} flexDirection={"column"} spacing={1}>
+                                            <Typography variant="h6">Active requests</Typography>
+                                            {orderData.users.filter((u) => u.status === UserOrderStatus.Requested).length > 0 ? (
+                                                orderData.users
+                                                    .filter((u) => u.status === UserOrderStatus.Requested)
+                                                    .map((userOrder) => (
+                                                        <>
+                                                            <OrderRequest
+                                                                key={userOrder.id}
+                                                                id={userOrder.id}
+                                                                user={{
+                                                                    id: userOrder.user.id,
+                                                                    firstName: userOrder.user.name,
+                                                                    lastName: userOrder.user.surname,
+                                                                    rating:
+                                                                        userOrder.user.userReviews.reduce(
+                                                                            (acc: number, review) => acc + review.grade,
+                                                                            0
+                                                                        ) / userOrder.user.userReviews.length,
+                                                                }}
+                                                                onAccept={acceptOrderRequest}
+                                                                onReject={rejectOrderRequest}
+                                                            />
+                                                        </>
+                                                    ))
+                                            ) : (
+                                                <Typography variant="body1">No active requests</Typography>
                                             )}
-                                            {orderData.users.some((u) => u.status === UserOrderStatus.Requested) && (
-                                                <Grid container size={12} spacing={1} alignItems={"center"} wrap="nowrap" key={2}>
-                                                    <PulseDot color="warning" sx={{ width: "20px", height: "20px" }} />
-                                                    <Typography variant="subtitle1">
-                                                        {
-                                                            orderData.users.filter((u) => u.status === UserOrderStatus.Requested)
-                                                                .length
-                                                        }{" "}
-                                                        new request(s)
-                                                    </Typography>
-                                                </Grid>
-                                            )}
+                                            <Grid size={6} mt={1}>
+                                                <Button
+                                                    variant="contained"
+                                                    color="error"
+                                                    sx={{ width: "250px" }}
+                                                    onClick={async () => {
+                                                        const confirmed = await dialogs.confirm(
+                                                            <Typography color="error" variant="subtitle2">
+                                                                This action can't be undone
+                                                            </Typography>,
+                                                            {
+                                                                title: "Finish the order?",
+
+                                                                okText: <Typography>Yes</Typography>,
+                                                                cancelText: <Typography color="success">No</Typography>,
+                                                                severity: "error",
+                                                            }
+                                                        );
+                                                        if (confirmed) {
+                                                            await markAsFinished();
+                                                        }
+                                                    }}
+                                                >
+                                                    Finish order
+                                                </Button>
+                                            </Grid>
                                         </Grid>
                                     )}
-
-                                    <Grid container size={12} flexDirection={"column"} spacing={1}>
-                                        <Typography variant="h6" gutterBottom>
-                                            Active requests
-                                        </Typography>
-                                        {orderData.users.filter((u) => u.status === UserOrderStatus.Requested).length > 0 ? (
-                                            orderData.users
-                                                .filter((u) => u.status === UserOrderStatus.Requested)
-                                                .map((userOrder) => (
-                                                    <>
-                                                        <OrderRequest
-                                                            key={userOrder.id}
-                                                            id={userOrder.id}
-                                                            user={{
-                                                                id: userOrder.user.id,
-                                                                firstName: userOrder.user.name,
-                                                                lastName: userOrder.user.surname,
-                                                                rating:
-                                                                    userOrder.user.userReviews.reduce(
-                                                                        (acc: number, review) => acc + review.grade,
-                                                                        0
-                                                                    ) / userOrder.user.userReviews.length,
-                                                            }}
-                                                            onAccept={acceptOrderRequest}
-                                                            onReject={rejectOrderRequest}
-                                                        />
-                                                    </>
-                                                ))
-                                        ) : (
-                                            <Typography variant="body1">No active requests</Typography>
-                                        )}
-                                    </Grid>
 
                                     <Grid container size={{ xs: 12, sm: 8, md: 6 }} flexDirection={"column"} spacing={1}>
                                         <Typography variant="h6" gutterBottom>

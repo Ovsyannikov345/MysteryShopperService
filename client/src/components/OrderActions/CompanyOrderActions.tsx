@@ -10,7 +10,7 @@ import { Button, CircularProgress, Grid2 as Grid, Typography } from "@mui/materi
 import moment from "moment";
 import useOrderApi, { UserOrder } from "../../hooks/useOrderApi";
 import { useDialogs, useNotifications } from "@toolpad/core";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import PulseDot from "react-pulse-dot";
 import { AccessTime, CallMade, CallReceived, Close, Done } from "@mui/icons-material";
 import { Report } from "../../hooks/useReportApi";
@@ -22,6 +22,7 @@ import CorrectionModal, { CorrectionFormValues } from "../modals/CorrectionModal
 import CorrectionDisplayModal from "../modals/CorrectionDisplayModal";
 
 // TODO Remove disputes from everywhere
+// TODO Removbe patronymics from everywhere
 
 interface CompanyOrderActionsProps {
     orderData: UserOrder;
@@ -51,8 +52,13 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
 
     const [displayedCorrection, setDisplayedCorrection] = useState<Correction | null>(null);
 
+    const reports = useMemo(
+        () => orderData.order.reports.filter((r) => r.userId === orderData.user.id),
+        [orderData.order.reports, orderData.user.id]
+    );
+
     const sendCorrection = async (values: CorrectionFormValues): Promise<boolean> => {
-        const report = orderData.order.reports.find((r) => !r.reportCorrection);
+        const report = reports.find((r) => !r.reportCorrection);
 
         if (!report) {
             notification.show("Failed to determine report to send correction for", { severity: "error", autoHideDuration: 3000 });
@@ -134,8 +140,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
             return [];
         }
 
-        const lastReport =
-            orderData.order.reports.length > 0 ? orderData.order.reports[orderData.order.reports.length - 1] : null;
+        const lastReport = reports.length > 0 ? reports[reports.length - 1] : null;
         const startTime = lastReport?.reportCorrection ? lastReport.reportCorrection.createdAt : orderData.acceptedAt;
         const endTime = orderData.order.timeToComplete
             ? moment.utc(startTime).add(moment.duration(orderData.order.timeToComplete))
@@ -164,7 +169,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
             );
         }
 
-        if (orderData.order.reports.every((report) => report.reportCorrection)) {
+        if (reports.every((report) => report.reportCorrection)) {
             return [];
         }
 
@@ -289,15 +294,14 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
     };
 
     const getReportActionHistory = () => {
-        const lastReport =
-            orderData.order.reports.length > 0 ? orderData.order.reports[orderData.order.reports.length - 1] : null;
+        const lastReport = reports.length > 0 ? reports[reports.length - 1] : null;
         const startTime = lastReport?.reportCorrection ? lastReport.reportCorrection.createdAt : orderData.acceptedAt;
         const endTime = orderData.order.timeToComplete
             ? moment.utc(startTime).add(moment.duration(orderData.order.timeToComplete))
             : null;
 
         var pendingReportAction =
-            orderData.order.reports.length === 0 || orderData.order.reports.every((report) => report.reportCorrection) ? (
+            reports.length === 0 || reports.every((report) => report.reportCorrection) ? (
                 <TimelineItem key={4}>
                     <TimelineOppositeContent sx={{ pr: 0.5 }} />
                     <TimelineSeparator>
@@ -351,7 +355,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                 </TimelineItem>
             ) : null;
 
-        var reportActions = orderData.order.reports.map((report) => (
+        var reportActions = reports.map((report) => (
             <>
                 <TimelineItem key={report.id}>
                     <TimelineOppositeContent>

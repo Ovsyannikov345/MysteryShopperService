@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MysteryShopper.DAL.Data;
+using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories.IRepositories;
 using Serilog;
 using System.Linq.Expressions;
 
 namespace MysteryShopper.DAL.Repositories;
 
-public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger logger) : IGenericRepository<TEntity> where TEntity : class
+public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger logger) : IGenericRepository<TEntity> where TEntity : EntityBase
 {
     private readonly MysteryShopperDbContext _context = context;
 
@@ -89,6 +90,11 @@ public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger
 
     public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default)
     {
-        return await _dbSet.AnyAsync(predicate, cancellation);
+        return await _dbSet.AsNoTracking().AnyAsync(predicate, cancellation);
+    }
+
+    public virtual async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

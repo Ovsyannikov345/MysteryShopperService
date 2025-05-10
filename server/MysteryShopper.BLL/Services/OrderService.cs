@@ -109,10 +109,12 @@ namespace MysteryShopper.BLL.Services
                 throw new BadRequestException("You can't send request to this order");
             }
 
-            userOrder.Status = UserOrderStatus.Requested;
-            userOrder.RequestedAt = DateTime.UtcNow;
+            var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken)!;
 
-            await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+            userOrderToUpdate.Status = UserOrderStatus.Requested;
+            userOrderToUpdate.RequestedAt = DateTime.UtcNow;
+
+            await userOrderRepository.SaveChangesAsync(cancellationToken);
 
             await notificationService.CreateNotificationAsync(new NotificationModel
             {
@@ -133,6 +135,8 @@ namespace MysteryShopper.BLL.Services
 
             if (userOrder is not null)
             {
+                userOrder.Order.Reports = [.. userOrder.Order.Reports.Where(r => r.UserId == userId).OrderBy(r => r.CreatedAt)];
+
                 return userOrder;
             }
 
@@ -146,7 +150,6 @@ namespace MysteryShopper.BLL.Services
             }, cancellationToken);
 
             userOrder = (await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken))!;
-            userOrder.Order.Reports = [.. userOrder.Order.Reports.OrderBy(r => r.CreatedAt)];
 
             return userOrder;
         }
@@ -183,10 +186,12 @@ namespace MysteryShopper.BLL.Services
                 throw new BadRequestException("You can't accept this request");
             }
 
-            userOrder.Status = UserOrderStatus.InProgress;
-            userOrder.AcceptedAt = DateTime.UtcNow;
+            var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken);
 
-            await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+            userOrderToUpdate!.Status = UserOrderStatus.InProgress;
+            userOrderToUpdate.AcceptedAt = DateTime.UtcNow;
+
+            await userOrderRepository.SaveChangesAsync(cancellationToken);
 
             await notificationService.CreateNotificationAsync(new NotificationModel
             {
@@ -210,8 +215,10 @@ namespace MysteryShopper.BLL.Services
                 throw new BadRequestException("You can't reject this request");
             }
 
-            userOrder.Status = UserOrderStatus.Rejected;
-            await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+            var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken);
+
+            userOrderToUpdate!.Status = UserOrderStatus.Rejected;
+            await userOrderRepository.SaveChangesAsync(cancellationToken);
 
             await notificationService.CreateNotificationAsync(new NotificationModel
             {
@@ -231,8 +238,10 @@ namespace MysteryShopper.BLL.Services
                 throw new ForbiddenException("You can't expire this order");
             }
 
-            userOrder.Status = UserOrderStatus.Expired;
-            await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+            var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken);
+
+            userOrderToUpdate!.Status = UserOrderStatus.Expired;
+            await userOrderRepository.SaveChangesAsync(cancellationToken);
 
             await notificationService.CreateNotificationAsync(new NotificationModel
             {
@@ -256,8 +265,10 @@ namespace MysteryShopper.BLL.Services
                 throw new BadRequestException("You can't finish this order");
             }
 
-            userOrder.Status = UserOrderStatus.Completed;
-            await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+            var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken);
+
+            userOrderToUpdate!.Status = UserOrderStatus.Completed;
+            await userOrderRepository.SaveChangesAsync(cancellationToken);
 
             await notificationService.CreateNotificationAsync(new NotificationModel
             {
@@ -285,6 +296,12 @@ namespace MysteryShopper.BLL.Services
 
             order.IsClosed = true;
             await orderRepository.UpdateAsync(order, cancellationToken);
+
+            foreach (var userOrder in userOrders.Where(u => u.Status == UserOrderStatus.Requested))
+            {
+                userOrder.Status = UserOrderStatus.Rejected;
+                await userOrderRepository.UpdateAsync(userOrder, cancellationToken);
+            }
         }
     }
 }

@@ -213,7 +213,7 @@ const UserOwnProfilePage = () => {
                                             p={"5px 10px"}
                                             mt={1}
                                         >
-                                            {userData.description}
+                                            {userData.description ?? "No description"}
                                         </Typography>
                                     </Grid>
                                 </Grid>
