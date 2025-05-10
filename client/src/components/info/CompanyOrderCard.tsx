@@ -1,6 +1,6 @@
 import { CompanyOrder } from "./../../hooks/useOrderApi";
 import { Button, Card, CardActions, CardContent, Grid2 as Grid, Typography } from "@mui/material";
-import { NavigateNext, Map, Person } from "@mui/icons-material";
+import { Map, Person, InfoOutlined } from "@mui/icons-material";
 import "react-pulse-dot/dist/index.css";
 import { UserOrderStatus } from "../../utils/enums/userOrderStatus";
 import PulseDot from "react-pulse-dot";
@@ -19,9 +19,9 @@ export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
     const isNewReports = order.reports.some(
         (r) => !r.reportCorrection && !order.users.some((u) => u.id === r.userId && u.status === UserOrderStatus.Completed)
     );
-    
+
     return (
-        <Card sx={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }} elevation={5}>
+        <Card sx={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "stretch" }} elevation={3}>
             <CardContent>
                 <Typography variant="h6" component="div">
                     {order.title}
@@ -51,11 +51,10 @@ export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
                     </>
                 )}
             </CardContent>
-            <CardActions sx={{ flexGrow: 1, alignItems: "flex-end" }}>
+            <CardActions sx={{ flexGrow: 1, alignItems: "flex-end", justifyContent: "flex-end" }}>
                 <Button
                     variant="contained"
-                    fullWidth
-                    startIcon={<NavigateNext />}
+                    startIcon={<InfoOutlined />}
                     onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, order.id))}
                 >
                     Details

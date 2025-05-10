@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Order } from "./../../hooks/useOrderApi";
 import { Avatar, Button, Card, CardActions, CardContent, CardHeader, Grid2 as Grid, Typography } from "@mui/material";
 import moment from "moment";
-import { Timer, Map, MonetizationOn } from "@mui/icons-material";
+import { MonetizationOn, InfoOutlined, PlaceOutlined, Schedule } from "@mui/icons-material";
 import useCompanyApi from "../../hooks/useCompanyApi";
 import { useEffect, useState } from "react";
 import { ORDER_DETAILS_ROUTE } from "../../router/consts";
@@ -40,23 +40,35 @@ const OrderCard = ({ orderData }: { orderData: Order }) => {
                     {orderData.title}
                 </Typography>
                 <Grid container wrap="nowrap" spacing={1}>
-                    <Map />
+                    <PlaceOutlined />
                     <Typography variant="body1">{orderData.place}</Typography>
                 </Grid>
                 <Grid container wrap="nowrap" spacing={1} mt={1}>
-                    <Timer />
-                    <Typography variant="body1">
-                        {moment.duration(orderData.timeToComplete).days()} days{" "}
-                        {moment.duration(orderData.timeToComplete).hours()} hours
-                    </Typography>
+                    <Schedule />
+                    {orderData.timeToComplete ? (
+                        <Typography variant="body1">
+                            {moment.duration(orderData.timeToComplete).days()} days{" "}
+                            {moment.duration(orderData.timeToComplete).hours()} hours
+                        </Typography>
+                    ) : (
+                        <Typography variant="body1">-</Typography>
+                    )}
                 </Grid>
                 <Grid container wrap="nowrap" spacing={1} mt={1}>
-                    <MonetizationOn />
-                    <Typography variant="body1">{orderData.price} BYN</Typography>
+                    <MonetizationOn color="success" />
+                    {orderData.price ? (
+                        <Typography variant="body1">{orderData.price} BYN</Typography>
+                    ) : (
+                        <Typography>-</Typography>
+                    )}
                 </Grid>
             </CardContent>
-            <CardActions sx={{ flexGrow: 1, alignItems: "flex-end" }}>
-                <Button variant="contained" fullWidth onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, orderData.id))}>
+            <CardActions sx={{ flexGrow: 1, alignItems: "flex-end", justifyContent: "flex-end" }}>
+                <Button
+                    variant="contained"
+                    startIcon={<InfoOutlined />}
+                    onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, orderData.id))}
+                >
                     Details
                 </Button>
             </CardActions>

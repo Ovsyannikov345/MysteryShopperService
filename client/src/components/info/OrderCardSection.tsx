@@ -17,7 +17,6 @@ const OrderCardSection = ({ label, orders }: { label: string; orders: UserOrder[
     const shownOrders = useMemo(() => (showAll ? sortedOrders : sortedOrders.slice(0, 4)), [sortedOrders, showAll]);
 
     if (orders.length === 0) {
-        console.log(orders.length);
         return null;
     }
 

@@ -10,6 +10,8 @@ public class UserOrderViewModel
 
     public required UserProfileViewModel User { get; set; }
 
+    public required List<ReviewViewModel> CompanyReviews { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }

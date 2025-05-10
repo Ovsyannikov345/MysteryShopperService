@@ -271,7 +271,7 @@ const CompanyOrderDetailsPage = () => {
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Created:</strong>{" "}
-                                                {moment(orderData.createdAt).format("MMMM Do YYYY, hh:mm a")}
+                                                {moment(orderData.createdAt).format("MMMM Do YYYY, HH:mm a")}
                                             </Typography>
                                         </Grid>
                                     </Grid>
@@ -429,16 +429,27 @@ const CompanyOrderDetailsPage = () => {
                                                                     />
                                                                 </ListItemAvatar>
                                                                 <ListItemText
-                                                                    primary={`${user.firstName} ${user.lastName}`}
-                                                                    secondary={
-                                                                        user.notification ? (
-                                                                            <Grid container alignItems={"center"} gap={1}>
-                                                                                <PulseDot color="warning" />
-                                                                                <Typography variant="body2">
-                                                                                    {user.notification}
-                                                                                </Typography>
-                                                                            </Grid>
-                                                                        ) : null
+                                                                    primary={
+                                                                        <div
+                                                                            style={{
+                                                                                display: "flex",
+                                                                                alignItems: "center",
+                                                                                flexWrap: "nowrap",
+                                                                                gap: "10px",
+                                                                                justifyContent: "space-between",
+                                                                            }}
+                                                                        >
+                                                                            <Typography
+                                                                                sx={{
+                                                                                    textWrap: "nowrap",
+                                                                                    textOverflow: "ellipsis",
+                                                                                    overflow: "hidden",
+                                                                                }}
+                                                                            >
+                                                                                {user.firstName} {user.lastName}
+                                                                            </Typography>
+                                                                            {user.notification && <PulseDot color="warning" />}
+                                                                        </div>
                                                                     }
                                                                 />
                                                             </ListItem>

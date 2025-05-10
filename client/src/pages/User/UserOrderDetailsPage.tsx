@@ -193,7 +193,7 @@ const UserOrderDetailsPage = () => {
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Created:</strong>{" "}
-                                                {moment(orderData.order.createdAt).format("MMMM Do YYYY, hh:mm a")}
+                                                {moment(orderData.order.createdAt).format("MMMM Do YYYY, HH:mm a")}
                                             </Typography>
                                         </Grid>
                                         <Grid size={{ xs: 12, md: 6 }}>

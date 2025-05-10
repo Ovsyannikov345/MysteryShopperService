@@ -31,7 +31,6 @@ const UserOrdersPage = () => {
                 return;
             }
 
-            console.log(response);
             setOrders(response);
         };
 
