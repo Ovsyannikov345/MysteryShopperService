@@ -12,7 +12,6 @@ import {
     Tooltip,
     IconButton,
     Avatar,
-    Paper,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
@@ -44,8 +43,6 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
         await logout();
     };
 
-    // TODO fix navigation options display on medium screens.
-
     return (
         <>
             <Box id="header">
@@ -60,40 +57,34 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                                     onClick={(event) => {
                                         setActionsMenuAnchorEl(event.currentTarget);
                                     }}
-                                    sx={{ display: isSmallScreen ? "flex" : "none" }}
+                                    sx={{ display: isMediumScreen ? "flex" : "none" }}
                                 >
-                                    <MenuIcon />
+                                    <MenuIcon fontSize={isSmallScreen ? "medium" : "large"} />
                                 </IconButton>
                                 <img
                                     src={logo}
                                     alt="Logo"
                                     style={{
-                                        maxWidth: isSmallScreen ? "130px" : "200px",
+                                        maxWidth: isMediumScreen ? "130px" : "200px",
                                         height: "auto",
                                         cursor: "pointer",
                                         borderRadius: "10px",
-                                        display: isSmallScreen ? "none" : "flex",
+                                        display: isMediumScreen ? "none" : "flex",
                                     }}
                                     onClick={() => navigate("/")}
                                 />
                                 <Grid container spacing={5} sx={{ display: isMediumScreen ? "none" : "flex" }}>
                                     {actions.map((action) => (
-                                        <Paper
-                                            key={action.label}
-                                            elevation={6}
-                                            sx={{ borderRadius: "10px", bgcolor: theme.palette.primary.light }}
+                                        <Button
+                                            variant="text"
+                                            color="secondary"
+                                            style={{ fontSize: "18px", padding: "10px", borderRadius: "0px" }}
+                                            startIcon={action.icon}
+                                            sx={{ textTransform: "capitalize", borderBottom: "3px solid black" }}
+                                            onClick={action.onClick}
                                         >
-                                            <Button
-                                                variant="text"
-                                                color="secondary"
-                                                style={{ fontSize: "18px", padding: "10px", borderRadius: "10px" }}
-                                                startIcon={action.icon}
-                                                sx={{ textTransform: "capitalize" }}
-                                                onClick={action.onClick}
-                                            >
-                                                {action.label}
-                                            </Button>
-                                        </Paper>
+                                            {action.label}
+                                        </Button>
                                     ))}
                                 </Grid>
                             </Grid>
