@@ -11,7 +11,7 @@ import UserOwnProfilePage from "../pages/User/UserOwnProfilePage";
 import UserProfilePage from "../pages/Common/UserProfilePage";
 import AvailableOrdersPage from "../pages/User/AvailableOrdersPage";
 import UserOrdersPage from "../pages/User/OrdersInProgressPage";
-import OrderDetailsPage from "../pages/User/OrderDetailsPage";
+import UserOrderDetailsPage from "../pages/User/UserOrderDetailsPage";
 
 export const userRoutes = [
     {
@@ -20,7 +20,7 @@ export const userRoutes = [
     },
     {
         path: ORDER_DETAILS_ROUTE,
-        Component: OrderDetailsPage,
+        Component: UserOrderDetailsPage,
     },
     {
         path: MY_ORDERS_ROUTE,

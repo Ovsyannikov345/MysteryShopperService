@@ -13,7 +13,7 @@ import MapModal from "../../components/modals/MapModal";
 import UserOrderActions from "../../components/OrderActions/UserOrderActions";
 import { COMPANY_PROFILE_ROUTE } from "../../router/consts";
 
-const OrderDetailsPage = () => {
+const UserOrderDetailsPage = () => {
     const theme = useTheme();
 
     const isMediumScreen = useMediaQuery(theme.breakpoints.down("md"));
@@ -293,4 +293,4 @@ const OrderDetailsPage = () => {
     );
 };
 
-export default OrderDetailsPage;
+export default UserOrderDetailsPage;
