@@ -3,7 +3,7 @@ using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.BlobStorages;
 using MysteryShopper.DAL.BlobStorages.Entities;
 
-namespace MysteryShopper.BLL.ImageServices;
+namespace MysteryShopper.BLL.FileServices;
 
 public interface IFileService
 {

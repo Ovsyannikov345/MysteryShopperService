@@ -32,11 +32,7 @@ public class OrderModel
 
     public virtual ICollection<Report> Reports { get; set; } = [];
 
-    public virtual ICollection<Dispute> Disputes { get; set; } = [];
-
     public virtual ICollection<CompanyReview> CompanyReviews { get; set; } = [];
 
     public virtual ICollection<UserReview> UserReviews { get; set; } = [];
-
-    public virtual ICollection<OrderTag> Tags { get; set; } = [];
 }

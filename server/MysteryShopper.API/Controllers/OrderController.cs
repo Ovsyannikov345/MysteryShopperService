@@ -42,7 +42,7 @@ namespace MysteryShopper.API.Controllers
         [Authorize(Roles = "Company")]
         public async Task<IEnumerable<OrderViewModel>> GetCompanyOrders(CancellationToken cancellationToken)
         {
-            var orders = await orderService.GetCompanyOrdersAsync(HttpContext.GetIdFromContext());
+            var orders = await orderService.GetCompanyOrdersAsync(HttpContext.GetIdFromContext(), cancellationToken);
 
             return mapper.Map<IEnumerable<OrderModel>, IEnumerable<OrderViewModel>>(orders);
         }

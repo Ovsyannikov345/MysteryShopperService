@@ -5,7 +5,6 @@ using Minio;
 using MysteryShopper.DAL.BlobStorages;
 using MysteryShopper.DAL.Data;
 using MysteryShopper.DAL.Repositories;
-using MysteryShopper.DAL.Repositories.IRepositories;
 using Npgsql;
 
 namespace MysteryShopper.DAL.DI
@@ -23,13 +22,10 @@ namespace MysteryShopper.DAL.DI
                     .AddScoped<IUserOrderRepository, UserOrderRepository>()
                     .AddScoped<IReportRepository, ReportRepository>()
                     .AddScoped<IReportCorrectionRepository, ReportCorrectionRepository>()
-                    .AddScoped<IDisputeRepository, DisputeRepository>()
                     .AddScoped<ICompanyReviewRepository, CompanyReviewRepository>()
                     .AddScoped<IUserReviewRepository, UserReviewRepository>()
                     .AddScoped<ISupportRequestRepository, SupportRequestRepository>()
-                    .AddScoped<INotificationRepository, NotificationRepository>()
-                    .AddScoped<ICategoryRepository, CategoryRepository>()
-                    .AddScoped<IOrderTagRepository, OrderTagRepository>();
+                    .AddScoped<INotificationRepository, NotificationRepository>();
 
             services.AddMinio(configureClient => configureClient
                 .WithEndpoint(configuration["Minio:Endpoint"])

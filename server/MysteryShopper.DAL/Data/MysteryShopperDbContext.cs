@@ -15,8 +15,6 @@ namespace MysteryShopper.DAL.Data
 
         public virtual DbSet<ContactPerson> ContactPeople { get; set; }
 
-        public virtual DbSet<Dispute> Disputes { get; set; }
-
         public virtual DbSet<Notification> Notifications { get; set; }
 
         public virtual DbSet<Order> Orders { get; set; }
@@ -34,10 +32,6 @@ namespace MysteryShopper.DAL.Data
         public virtual DbSet<UserReview> UserReviews { get; set; }
 
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
-
-        public virtual DbSet<Category> Categories { get; set; }
-
-        public virtual DbSet<OrderTag> OrderTags { get; set; }
 
         public override int SaveChanges()
         {

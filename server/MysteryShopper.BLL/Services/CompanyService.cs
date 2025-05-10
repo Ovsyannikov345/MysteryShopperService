@@ -3,7 +3,7 @@ using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.Entities.Models;
-using MysteryShopper.DAL.Repositories.IRepositories;
+using MysteryShopper.DAL.Repositories;
 
 namespace MysteryShopper.BLL.Services
 {

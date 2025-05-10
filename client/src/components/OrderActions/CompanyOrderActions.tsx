@@ -21,7 +21,6 @@ import useReportCorrectionApi, { Correction } from "../../hooks/useReportCorrect
 import CorrectionModal, { CorrectionFormValues } from "../modals/CorrectionModal";
 import CorrectionDisplayModal from "../modals/CorrectionDisplayModal";
 
-// TODO Remove disputes from everywhere
 // TODO Removbe patronymics from everywhere
 
 interface CompanyOrderActionsProps {

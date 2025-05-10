@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.BlobStorages;
-using MysteryShopper.DAL.Repositories.IRepositories;
+using MysteryShopper.DAL.Repositories;
 using SixLabors.ImageSharp;
 
-namespace MysteryShopper.BLL.ImageServices;
+namespace MysteryShopper.BLL.FileServices;
 
 public interface IUserImageService : IFileService
 {

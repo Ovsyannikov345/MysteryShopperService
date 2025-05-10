@@ -5,7 +5,7 @@ using MysteryShopper.BLL.Utilities.Constants;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Models;
-using MysteryShopper.DAL.Repositories.IRepositories;
+using MysteryShopper.DAL.Repositories;
 using Serilog;
 
 namespace MysteryShopper.BLL.Services

@@ -29,13 +29,6 @@ export interface Order {
         companyReviews: Review[];
     };
     reports: Report[];
-    disputes: {
-        id: string;
-        userText?: string;
-        companyText?: string;
-        createdAt: Moment;
-        resolvedAt?: Moment;
-    }[];
     userReviews: Review[];
     companyReviews: Review[];
 }
@@ -70,13 +63,6 @@ export interface CompanyOrder {
         reportCorrection?: {
             id: string;
         };
-    }[];
-    disputes: {
-        id: string;
-        userText?: string;
-        companyText?: string;
-        createdAt: Moment;
-        resolvedAt?: Moment;
     }[];
 }
 

@@ -8,6 +8,5 @@
         Rejected = 3,
         Completed = 4,
         Expired = 5,
-        ForceClosed = 6,
     }
 }

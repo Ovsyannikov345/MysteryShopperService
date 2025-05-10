@@ -1,11 +1,11 @@
 ﻿using MysteryShopper.DAL.Data;
 using MysteryShopper.DAL.Entities.Models;
-using MysteryShopper.DAL.Repositories.IRepositories;
 using Serilog;
 
-namespace MysteryShopper.DAL.Repositories
+namespace MysteryShopper.DAL.Repositories;
+
+public interface IRefreshTokenRepository : IGenericRepository<RefreshToken>;
+
+public class RefreshTokenRepository(MysteryShopperDbContext context, ILogger logger) : GenericRepository<RefreshToken>(context, logger), IRefreshTokenRepository
 {
-    public class RefreshTokenRepository(MysteryShopperDbContext context, ILogger logger) : GenericRepository<RefreshToken>(context, logger), IRefreshTokenRepository
-    {
-    }
 }

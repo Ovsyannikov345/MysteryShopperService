@@ -19,8 +19,6 @@ namespace MysteryShopper.BLL.Utilities.Mapping
             CreateMap<ReportModel, Report>().ReverseMap();
             CreateMap<ReportCorrectionModel, ReportCorrection>().ReverseMap();
 
-            CreateMap<Dispute, DisputeModel>().ReverseMap();
-
             CreateMap<CompanyReview, ReviewModel>().ReverseMap();
             CreateMap<UserReview, ReviewModel>().ReverseMap();
 

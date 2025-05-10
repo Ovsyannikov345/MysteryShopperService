@@ -6,7 +6,7 @@ using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Constants;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.Entities.Models;
-using MysteryShopper.DAL.Repositories.IRepositories;
+using MysteryShopper.DAL.Repositories;
 using Serilog;
 using System.Security.Claims;
 using System.Text;

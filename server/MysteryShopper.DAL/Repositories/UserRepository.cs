@@ -1,12 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MysteryShopper.DAL.Data;
 using MysteryShopper.DAL.Entities.Models;
-using MysteryShopper.DAL.Repositories.IRepositories;
 using Serilog;
 using System.Linq.Expressions;
 
 namespace MysteryShopper.DAL.Repositories
 {
+    public interface IUserRepository : IGenericRepository<User>
+    {
+        Task<User?> GetUserWithReviewsAsync(Expression<Func<User, bool>> filter, CancellationToken cancellationToken = default);
+    }
+
     public class UserRepository(MysteryShopperDbContext context, ILogger logger) : GenericRepository<User>(context, logger), IUserRepository
     {
         private readonly MysteryShopperDbContext _context = context;

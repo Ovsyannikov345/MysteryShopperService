@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MysteryShopper.API.Extensions;
-using MysteryShopper.BLL.ImageServices;
+using MysteryShopper.BLL.FileServices;
 
-namespace MysteryShopper.API.ImageControllers;
+namespace MysteryShopper.API.FileControllers;
 
 [ApiController]
 [Route("api/[controller]")]

@@ -1,11 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MysteryShopper.DAL.Data;
 using MysteryShopper.DAL.Entities.Models;
-using MysteryShopper.DAL.Repositories.IRepositories;
 using Serilog;
 using System.Linq.Expressions;
 
 namespace MysteryShopper.DAL.Repositories;
+
+public interface IGenericRepository<TEntity> where TEntity : EntityBase
+{
+    Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+    Task<int> CountAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default);
+
+    Task<TEntity?> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellation = default);
+
+    Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default);
+
+    Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> filter, bool disableTracking = true, CancellationToken cancellationToken = default);
+
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
+
+    Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+}
 
 public class GenericRepository<TEntity>(MysteryShopperDbContext context, ILogger logger) : IGenericRepository<TEntity> where TEntity : EntityBase
 {

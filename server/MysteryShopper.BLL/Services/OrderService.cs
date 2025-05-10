@@ -8,7 +8,7 @@ using MysteryShopper.BLL.Utilities.Querying;
 using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
-using MysteryShopper.DAL.Repositories.IRepositories;
+using MysteryShopper.DAL.Repositories;
 using MysteryShopper.DAL.Utilities.Pagination;
 using System.Linq.Expressions;
 
@@ -19,7 +19,6 @@ namespace MysteryShopper.BLL.Services
         IOrderRepository orderRepository,
         IUserRepository userRepository,
         IUserOrderRepository userOrderRepository,
-        ICategorizationService categorizationService,
         IMapper mapper,
         OrderCreationValidator orderValidator) : IOrderService
     {
@@ -80,8 +79,6 @@ namespace MysteryShopper.BLL.Services
                 return mapper.Map<OrderModel>(createdOrder);
             }
 
-            await categorizationService.CategorizeOrder(createdOrder, cancellationToken);
-
             var updatedOrder = await orderRepository.UpdateAsync(createdOrder, cancellationToken);
 
             return mapper.Map<OrderModel>(updatedOrder);
@@ -111,7 +108,7 @@ namespace MysteryShopper.BLL.Services
 
             var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken)!;
 
-            userOrderToUpdate.Status = UserOrderStatus.Requested;
+            userOrderToUpdate!.Status = UserOrderStatus.Requested;
             userOrderToUpdate.RequestedAt = DateTime.UtcNow;
 
             await userOrderRepository.SaveChangesAsync(cancellationToken);

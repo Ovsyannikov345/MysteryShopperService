@@ -193,47 +193,6 @@ public static class DataGenerator
 
         return reports;
     }
-
-    public static Dispute GenerateDispute(Guid userId, Guid orderId)
-    {
-        var disputeFaker = new Faker<Dispute>()
-            .RuleFor(d => d.Id, f => Guid.NewGuid())
-            .RuleFor(d => d.CompanyText, f => f.PickRandom(f.Lorem.Sentences(5), null))
-            .RuleFor(d => d.UserText, (f, current) => string.IsNullOrEmpty(current.CompanyText)
-                ? f.Lorem.Sentences(5)
-                : f.PickRandom(f.Lorem.Sentences(5), null))
-            .RuleFor(d => d.ResolvedAt, f => null)
-            .RuleFor(d => d.OrderId, f => orderId)
-            .RuleFor(d => d.UserId, f => userId);
-
-        return disputeFaker.Generate(1)[0];
-    }
-
-    public static List<Dispute> GenerateDisputes(List<UserOrder> userOrders)
-    {
-        Random random = new();
-
-        var disputes = new List<Dispute>();
-
-        foreach (var userOrder in userOrders)
-        {
-            if (userOrder.Status == UserOrderStatus.InProgress && random.NextDouble() > 0.7)
-            {
-                disputes.Add(GenerateDispute(userOrder.UserId, userOrder.OrderId));
-            }
-
-            if (userOrder.Status == UserOrderStatus.ForceClosed)
-            {
-                var dispute = GenerateDispute(userOrder.UserId, userOrder.OrderId);
-
-                dispute.ResolvedAt = DateTime.UtcNow;
-                disputes.Add(dispute);
-            }
-        }
-
-        return disputes;
-    }
-
     public static void GenerateAndSeedDatabase(MysteryShopperDbContext context)
     {
         // Generate Users
@@ -246,12 +205,12 @@ public static class DataGenerator
         context.SaveChanges();
 
         // Generate Orders
-        var orders = GenerateOrders(400, companies.Select(c => c.Id).ToList());
+        var orders = GenerateOrders(400, [.. companies.Select(c => c.Id)]);
         context.Orders.AddRange(orders);
         context.SaveChanges();
 
         // Generate UserOrders
-        var userOrders = GenerateUserOrders(users.Select(u => u.Id).ToList(), orders.Select(o => o.Id).ToList());
+        var userOrders = GenerateUserOrders([.. users.Select(u => u.Id)], [.. orders.Select(o => o.Id)]);
         context.UserOrders.AddRange(userOrders);
         context.SaveChanges();
 
@@ -260,17 +219,12 @@ public static class DataGenerator
         context.Reports.AddRange(reports);
         context.SaveChanges();
 
-        // Genrate disputes
-        var disputes = GenerateDisputes(userOrders);
-        context.Disputes.AddRange(disputes);
-        context.SaveChanges();
-
         // Generate User Reviews
         var userReviews = GenerateUserReviews(
             200,
-            users.Select(u => u.Id).ToList(),
-            companies.Select(c => c.Id).ToList(),
-            orders.Select(o => o.Id).ToList()
+            [.. users.Select(u => u.Id)],
+            [.. companies.Select(c => c.Id)],
+            [.. orders.Select(o => o.Id)]
         );
         context.UserReviews.AddRange(userReviews);
         context.SaveChanges();
@@ -278,9 +232,9 @@ public static class DataGenerator
         // Generate Company Reviews
         var companyReviews = GenerateCompanyReviews(
             200,
-            users.Select(u => u.Id).ToList(),
-            companies.Select(c => c.Id).ToList(),
-            orders.Select(o => o.Id).ToList()
+            [.. users.Select(u => u.Id)],
+            [.. companies.Select(c => c.Id)],
+            [.. orders.Select(o => o.Id)]
         );
         context.CompanyReviews.AddRange(companyReviews);
         context.SaveChanges();
@@ -288,8 +242,8 @@ public static class DataGenerator
         // Generate Notifications
         var notifications = GenerateNotifications(
             150,
-            users.Select(u => u.Id).ToList(),
-            companies.Select(c => c.Id).ToList()
+            [.. users.Select(u => u.Id)],
+            [.. companies.Select(c => c.Id)]
         );
         context.Notifications.AddRange(notifications);
         context.SaveChanges();

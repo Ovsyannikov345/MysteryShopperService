@@ -6,7 +6,7 @@ using MysteryShopper.BLL.Utilities.Messages;
 using MysteryShopper.BLL.Utilities.Validators;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
-using MysteryShopper.DAL.Repositories.IRepositories;
+using MysteryShopper.DAL.Repositories;
 
 namespace MysteryShopper.BLL.Services
 {

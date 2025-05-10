@@ -32,8 +32,6 @@ public class OrderViewModel
 
     public required List<ReportViewModel> Reports { get; set; }
 
-    public required List<DisputeViewModel> Disputes { get; set; }
-
     public required List<UserReview> UserReviews { get; set; }
 
     public required List<CompanyReview> CompanyReviews { get; set; }
