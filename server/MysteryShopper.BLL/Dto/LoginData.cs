@@ -1,6 +1,5 @@
-﻿namespace MysteryShopper.BLL.Dto
+﻿namespace MysteryShopper.BLL.Dto;
+
+public record LoginData(string Email, string Password)
 {
-    public record LoginData(string Email, string Password)
-    {
-    }
 }

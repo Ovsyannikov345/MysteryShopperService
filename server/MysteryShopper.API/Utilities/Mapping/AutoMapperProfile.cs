@@ -3,42 +3,41 @@ using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.DAL.Entities.Models;
 
-namespace MysteryShopper.API.Utilities.Mapping
+namespace MysteryShopper.API.Utilities.Mapping;
+
+public class AutoMapperProfile : Profile
 {
-    public class AutoMapperProfile : Profile
+    public AutoMapperProfile()
     {
-        public AutoMapperProfile()
-        {
-            CreateMap<User, UserProfileViewModel>();
-            CreateMap<UserToUpdateViewModel, UserToUpdateModel>();
+        CreateMap<User, UserProfileViewModel>();
+        CreateMap<UserToUpdateViewModel, UserToUpdateModel>();
 
-            CreateMap<Company, CompanyProfileViewModel>();
-            CreateMap<ContactPerson, ContactPersonViewModel>();
-            CreateMap<CompanyToUpdateViewModel, CompanyToUpdateModel>();
-            CreateMap<ContactPersonToUpdateViewModel, ContactPersonToUpdateModel>();
+        CreateMap<Company, CompanyProfileViewModel>();
+        CreateMap<ContactPerson, ContactPersonViewModel>();
+        CreateMap<CompanyToUpdateViewModel, CompanyToUpdateModel>();
+        CreateMap<ContactPersonToUpdateViewModel, ContactPersonToUpdateModel>();
 
-            CreateMap<Order, OrderViewModel>();
-            CreateMap<OrderModel, OrderViewModel>();
+        CreateMap<Order, OrderViewModel>();
+        CreateMap<OrderModel, OrderViewModel>();
 
-            CreateMap<Company, OrderCompanyViewModel>();
-            CreateMap<OrderToCreateViewModel, OrderModel>();
+        CreateMap<Company, OrderCompanyViewModel>();
+        CreateMap<OrderToCreateViewModel, OrderModel>();
 
-            CreateMap<CompanyReview, OrderCompanyReviewViewModel>();
-            CreateMap<UserOrder, UserOrderViewModel>();
+        CreateMap<CompanyReview, OrderCompanyReviewViewModel>();
+        CreateMap<UserOrder, UserOrderViewModel>();
 
-            CreateMap<ReportToCreateViewModel, ReportModel>();
-            CreateMap<ReportModel, ReportViewModel>();
-            CreateMap<Report, ReportViewModel>().ReverseMap();
+        CreateMap<ReportToCreateViewModel, ReportModel>();
+        CreateMap<ReportModel, ReportViewModel>();
+        CreateMap<Report, ReportViewModel>().ReverseMap();
 
-            CreateMap<ReportCorrectionToCreateViewModel, ReportCorrectionModel>();
-            CreateMap<ReportCorrectionModel, ReportCorrectionViewModel>();
+        CreateMap<ReportCorrectionToCreateViewModel, ReportCorrectionModel>();
+        CreateMap<ReportCorrectionModel, ReportCorrectionViewModel>();
 
-            CreateMap<CompanyReviewToCreateViewModel, ReviewModel>();
-            CreateMap<UserReviewToCreateViewModel, ReviewModel>();
-            CreateMap<ReviewModel, ReviewViewModel>();
-            CreateMap<ReviewModel, ReviewViewModel>();
+        CreateMap<CompanyReviewToCreateViewModel, ReviewModel>();
+        CreateMap<UserReviewToCreateViewModel, ReviewModel>();
+        CreateMap<ReviewModel, ReviewViewModel>();
+        CreateMap<ReviewModel, ReviewViewModel>();
 
-            CreateMap<TokenPair, TokenPairViewModel>();
-        }
+        CreateMap<TokenPair, TokenPairViewModel>();
     }
 }

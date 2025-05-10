@@ -3,29 +3,28 @@ using MysteryShopper.BLL.Dto;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Utilities.Pagination;
 
-namespace MysteryShopper.BLL.Utilities.Mapping
+namespace MysteryShopper.BLL.Utilities.Mapping;
+
+public class AutoMapperProfile : Profile
 {
-    public class AutoMapperProfile : Profile
+    public AutoMapperProfile()
     {
-        public AutoMapperProfile()
-        {
-            CreateMap<UserRegistrationCredentials, User>();
-            CreateMap<CompanyRegistrationCredentials, Company>()
-                .ForMember(dest => dest.ContactPerson, opt => opt.MapFrom(src => src.CompanyContactPerson));
-            CreateMap<CompanyContactPersonCredentials, ContactPerson>();
-            CreateMap<ContactPersonToUpdateModel, ContactPerson>();
+        CreateMap<UserRegistrationCredentials, User>();
+        CreateMap<CompanyRegistrationCredentials, Company>()
+            .ForMember(dest => dest.ContactPerson, opt => opt.MapFrom(src => src.CompanyContactPerson));
+        CreateMap<CompanyContactPersonCredentials, ContactPerson>();
+        CreateMap<ContactPersonToUpdateModel, ContactPerson>();
 
-            CreateMap<OrderModel, Order>().ReverseMap();
-            CreateMap<ReportModel, Report>().ReverseMap();
-            CreateMap<ReportCorrectionModel, ReportCorrection>().ReverseMap();
+        CreateMap<OrderModel, Order>().ReverseMap();
+        CreateMap<ReportModel, Report>().ReverseMap();
+        CreateMap<ReportCorrectionModel, ReportCorrection>().ReverseMap();
 
-            CreateMap<CompanyReview, ReviewModel>().ReverseMap();
-            CreateMap<UserReview, ReviewModel>().ReverseMap();
+        CreateMap<CompanyReview, ReviewModel>().ReverseMap();
+        CreateMap<UserReview, ReviewModel>().ReverseMap();
 
-            CreateMap<NotificationModel, Notification>().ReverseMap();
+        CreateMap<NotificationModel, Notification>().ReverseMap();
 
-            CreateMap(typeof(PagedResult<>), typeof(PagedResult<>))
-                .ForMember(nameof(PagedResult<object>.PageContent), opt => opt.MapFrom(nameof(PagedResult<object>.PageContent)));
-        }
+        CreateMap(typeof(PagedResult<>), typeof(PagedResult<>))
+            .ForMember(nameof(PagedResult<object>.PageContent), opt => opt.MapFrom(nameof(PagedResult<object>.PageContent)));
     }
 }

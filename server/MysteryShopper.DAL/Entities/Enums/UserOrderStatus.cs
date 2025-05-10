@@ -1,12 +1,11 @@
-﻿namespace MysteryShopper.DAL.Entities.Enums
+﻿namespace MysteryShopper.DAL.Entities.Enums;
+
+public enum UserOrderStatus
 {
-    public enum UserOrderStatus
-    {
-        None = 0,
-        Requested = 1,
-        InProgress = 2,
-        Rejected = 3,
-        Completed = 4,
-        Expired = 5,
-    }
+    None = 0,
+    Requested = 1,
+    InProgress = 2,
+    Rejected = 3,
+    Completed = 4,
+    Expired = 5,
 }

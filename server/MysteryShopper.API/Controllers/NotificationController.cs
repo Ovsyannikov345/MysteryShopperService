@@ -6,38 +6,37 @@ using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services;
 
-namespace MysteryShopper.API.Controllers
+namespace MysteryShopper.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class NotificationController(INotificationService notificationService, IMapper mapper) : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class NotificationController(INotificationService notificationService, IMapper mapper) : ControllerBase
+    [HttpGet]
+    public async Task<IEnumerable<NotificationViewModel>> GetNotifications(CancellationToken cancellationToken)
     {
-        [HttpGet]
-        public async Task<IEnumerable<NotificationViewModel>> GetNotifications(CancellationToken cancellationToken)
+        var id = HttpContext.GetIdFromContext();
+
+        var notifications = HttpContext.GetRoleFromContext() == "User"
+            ? await notificationService.GetUserNotificationsAsync(id, cancellationToken)
+            : await notificationService.GetCompanyNotificationsAsync(id, cancellationToken);
+
+        return mapper.Map<IEnumerable<NotificationModel>, IEnumerable<NotificationViewModel>>(notifications);
+    }
+
+    [HttpPut("{notificationId}/read")]
+    public async Task ReadNotification(Guid notificationId, CancellationToken cancellationToken)
+    {
+        var id = HttpContext.GetIdFromContext();
+
+        if (HttpContext.GetRoleFromContext() == "User")
         {
-            var id = HttpContext.GetIdFromContext();
-
-            var notifications = HttpContext.GetRoleFromContext() == "User"
-                ? await notificationService.GetUserNotificationsAsync(id, cancellationToken)
-                : await notificationService.GetCompanyNotificationsAsync(id, cancellationToken);
-
-            return mapper.Map<IEnumerable<NotificationModel>, IEnumerable<NotificationViewModel>>(notifications);
+            await notificationService.ReadUserNotificationAsync(notificationId, id, cancellationToken);
         }
-
-        [HttpPut("{notificationId}/read")]
-        public async Task ReadNotification(Guid notificationId, CancellationToken cancellationToken)
+        else
         {
-            var id = HttpContext.GetIdFromContext();
-
-            if (HttpContext.GetRoleFromContext() == "User")
-            {
-                await notificationService.ReadUserNotificationAsync(notificationId, id, cancellationToken);
-            }
-            else
-            {
-                await notificationService.ReadCompanyNotificationAsync(notificationId, id, cancellationToken);
-            }
+            await notificationService.ReadCompanyNotificationAsync(notificationId, id, cancellationToken);
         }
     }
 }

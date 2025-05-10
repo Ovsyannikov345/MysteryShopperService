@@ -10,186 +10,185 @@ using Serilog;
 using System.Security.Claims;
 using System.Text;
 
-namespace MysteryShopper.BLL.Services
+namespace MysteryShopper.BLL.Services;
+
+public interface ITokenService
 {
-    public interface ITokenService
+    Task<TokenPair> GetTokensAsync(Company company, CancellationToken cancellationToken = default);
+
+    Task<TokenPair> GetTokensAsync(User user, CancellationToken cancellationToken = default);
+
+    Task<TokenPair> RefreshTokensAsync(string refreshToken, CancellationToken cancellationToken = default);
+
+    Task RemoveRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
+}
+
+public class TokenService(IConfiguration configuration, IRefreshTokenRepository refreshTokenRepository, ILogger logger) : ITokenService
+{
+    private readonly IConfiguration _configuration = configuration;
+
+    private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
+
+    private readonly ILogger _logger = logger;
+
+    public async Task<TokenPair> GetTokensAsync(User user, CancellationToken cancellationToken = default)
     {
-        Task<TokenPair> GetTokensAsync(Company company, CancellationToken cancellationToken = default);
+        var claims = GetClaims(user);
 
-        Task<TokenPair> GetTokensAsync(User user, CancellationToken cancellationToken = default);
+        TokenPair tokens = await CreateTokensAsync(claims, cancellationToken);
 
-        Task<TokenPair> RefreshTokensAsync(string refreshToken, CancellationToken cancellationToken = default);
+        _logger.Information("Tokens created for user {0}", user.Id);
 
-        Task RemoveRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
+        return tokens;
     }
 
-    public class TokenService(IConfiguration configuration, IRefreshTokenRepository refreshTokenRepository, ILogger logger) : ITokenService
+    public async Task<TokenPair> GetTokensAsync(Company company, CancellationToken cancellationToken = default)
     {
-        private readonly IConfiguration _configuration = configuration;
+        var claims = GetClaims(company);
 
-        private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
+        TokenPair tokens = await CreateTokensAsync(claims, cancellationToken);
 
-        private readonly ILogger _logger = logger;
+        _logger.Information("Tokens created for company {0}", company.Id);
 
-        public async Task<TokenPair> GetTokensAsync(User user, CancellationToken cancellationToken = default)
+        return tokens;
+    }
+
+    public async Task<TokenPair> RefreshTokensAsync(string refreshToken, CancellationToken cancellationToken = default)
+    {
+        var refreshTokenEntity = await _refreshTokenRepository.GetAsync(token => token.Token == refreshToken, disableTracking: false, cancellationToken)
+            ?? throw new NotFoundException("Provided refresh token is not found");
+
+        var tokenHandler = new JsonWebTokenHandler();
+
+        var tokenValidationParameters = new TokenValidationParameters
         {
-            var claims = GetClaims(user);
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:RefreshSecretKey"]!)),
+            ValidateIssuer = true,
+            ValidIssuer = _configuration["Jwt:Issuer"],
+            ValidateAudience = true,
+            ValidAudiences = _configuration.GetSection("Jwt:Audiences").Get<string[]>(),
+            ValidateLifetime = true,
+        };
 
-            TokenPair tokens = await CreateTokensAsync(claims, cancellationToken);
+        TokenValidationResult validationResult = await tokenHandler.ValidateTokenAsync(refreshTokenEntity.Token, tokenValidationParameters);
 
-            _logger.Information("Tokens created for user {0}", user.Id);
+        if (!validationResult.IsValid)
+        {
+            _logger.Information("Failed to refresh tokens. Exception: {0}", validationResult.Exception.Message);
+            _logger.Information("Provided token: {0}", refreshTokenEntity.Token);
 
-            return tokens;
+            await _refreshTokenRepository.DeleteAsync(refreshTokenEntity.Id, cancellationToken);
+
+            throw new ForbiddenException("Provided refresh token is invalid");
         }
 
-        public async Task<TokenPair> GetTokensAsync(Company company, CancellationToken cancellationToken = default)
+        string newAccessToken = GenerateToken(validationResult.ClaimsIdentity.Claims,
+            DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:AccessMinutesExpire"]!)),
+            _configuration["Jwt:AccessSecretKey"]!);
+
+        string newRefreshToken = GenerateToken(validationResult.ClaimsIdentity.Claims,
+            DateTime.UtcNow.AddDays(int.Parse(_configuration["Jwt:RefreshDaysExpire"]!)),
+            _configuration["Jwt:RefreshSecretKey"]!);
+
+        try
         {
-            var claims = GetClaims(company);
+            await _refreshTokenRepository.DeleteAsync(refreshTokenEntity.Id, cancellationToken);
+            await _refreshTokenRepository.AddAsync(new RefreshToken() { Token = newRefreshToken }, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Error during token change");
 
-            TokenPair tokens = await CreateTokensAsync(claims, cancellationToken);
-
-            _logger.Information("Tokens created for company {0}", company.Id);
-
-            return tokens;
+            throw new InternalServerErrorException("Error while changing refresh token in database");
         }
 
-        public async Task<TokenPair> RefreshTokensAsync(string refreshToken, CancellationToken cancellationToken = default)
+        _logger.Information("Tokens refreshed for user {0}", validationResult.ClaimsIdentity.Name);
+
+        return new TokenPair(newAccessToken, newRefreshToken);
+    }
+
+    public async Task RemoveRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+    {
+        var token = await _refreshTokenRepository.GetAsync(t => t.Token == refreshToken, disableTracking: false, cancellationToken);
+
+        if (token == null)
         {
-            var refreshTokenEntity = await _refreshTokenRepository.GetAsync(token => token.Token == refreshToken, disableTracking: false, cancellationToken)
-                ?? throw new NotFoundException("Provided refresh token is not found");
-
-            var tokenHandler = new JsonWebTokenHandler();
-
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:RefreshSecretKey"]!)),
-                ValidateIssuer = true,
-                ValidIssuer = _configuration["Jwt:Issuer"],
-                ValidateAudience = true,
-                ValidAudiences = _configuration.GetSection("Jwt:Audiences").Get<string[]>(),
-                ValidateLifetime = true,
-            };
-
-            TokenValidationResult validationResult = await tokenHandler.ValidateTokenAsync(refreshTokenEntity.Token, tokenValidationParameters);
-
-            if (!validationResult.IsValid)
-            {
-                _logger.Information("Failed to refresh tokens. Exception: {0}", validationResult.Exception.Message);
-                _logger.Information("Provided token: {0}", refreshTokenEntity.Token);
-
-                await _refreshTokenRepository.DeleteAsync(refreshTokenEntity.Id, cancellationToken);
-
-                throw new ForbiddenException("Provided refresh token is invalid");
-            }
-
-            string newAccessToken = GenerateToken(validationResult.ClaimsIdentity.Claims,
-                DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:AccessMinutesExpire"]!)),
-                _configuration["Jwt:AccessSecretKey"]!);
-
-            string newRefreshToken = GenerateToken(validationResult.ClaimsIdentity.Claims,
-                DateTime.UtcNow.AddDays(int.Parse(_configuration["Jwt:RefreshDaysExpire"]!)),
-                _configuration["Jwt:RefreshSecretKey"]!);
-
-            try
-            {
-                await _refreshTokenRepository.DeleteAsync(refreshTokenEntity.Id, cancellationToken);
-                await _refreshTokenRepository.AddAsync(new RefreshToken() { Token = newRefreshToken }, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Error during token change");
-
-                throw new InternalServerErrorException("Error while changing refresh token in database");
-            }
-
-            _logger.Information("Tokens refreshed for user {0}", validationResult.ClaimsIdentity.Name);
-
-            return new TokenPair(newAccessToken, newRefreshToken);
+            _logger.Error("Provided refresh token is not found");
+            throw new NotFoundException("Provided refresh token is not found");
         }
 
-        public async Task RemoveRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+        await _refreshTokenRepository.DeleteAsync(token.Id, cancellationToken);
+        _logger.Information("Refresh token removed for user");
+    }
+
+    private async Task<TokenPair> CreateTokensAsync(List<Claim> claims, CancellationToken cancellationToken = default)
+    {
+        var accessToken = GenerateToken(claims,
+            DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:AccessMinutesExpire"]!)),
+            _configuration["Jwt:AccessSecretKey"]!);
+
+        var refreshToken = GenerateToken(claims,
+            DateTime.UtcNow.AddDays(int.Parse(_configuration["Jwt:RefreshDaysExpire"]!)),
+            _configuration["Jwt:RefreshSecretKey"]!);
+
+        try
         {
-            var token = await _refreshTokenRepository.GetAsync(t => t.Token == refreshToken, disableTracking: false, cancellationToken);
+            await _refreshTokenRepository.AddAsync(new RefreshToken() { Token = refreshToken }, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error(ex, "Error during token save");
 
-            if (token == null)
-            {
-                _logger.Error("Provided refresh token is not found");
-                throw new NotFoundException("Provided refresh token is not found");
-            }
-
-            await _refreshTokenRepository.DeleteAsync(token.Id, cancellationToken);
-            _logger.Information("Refresh token removed for user");
+            throw new InternalServerErrorException("Error while saving new refresh token");
         }
 
-        private async Task<TokenPair> CreateTokensAsync(List<Claim> claims, CancellationToken cancellationToken = default)
+        return new TokenPair(accessToken, refreshToken);
+    }
+
+    private string GenerateToken(IEnumerable<Claim> claims, DateTime expirationDate, string secretKey)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
-            var accessToken = GenerateToken(claims,
-                DateTime.UtcNow.AddMinutes(int.Parse(_configuration["Jwt:AccessMinutesExpire"]!)),
-                _configuration["Jwt:AccessSecretKey"]!);
+            Subject = new ClaimsIdentity(claims),
+            Expires = expirationDate,
+            Issuer = _configuration["Jwt:Issuer"],
+            Audience = _configuration.GetSection("Jwt:Audiences:0").Value,
+            SigningCredentials = credentials
+        };
 
-            var refreshToken = GenerateToken(claims,
-                DateTime.UtcNow.AddDays(int.Parse(_configuration["Jwt:RefreshDaysExpire"]!)),
-                _configuration["Jwt:RefreshSecretKey"]!);
+        var tokenHandler = new JsonWebTokenHandler();
 
-            try
-            {
-                await _refreshTokenRepository.AddAsync(new RefreshToken() { Token = refreshToken }, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Error during token save");
+        var token = tokenHandler.CreateToken(tokenDescriptor);
 
-                throw new InternalServerErrorException("Error while saving new refresh token");
-            }
+        return token;
+    }
 
-            return new TokenPair(accessToken, refreshToken);
-        }
-
-        private string GenerateToken(IEnumerable<Claim> claims, DateTime expirationDate, string secretKey)
+    private static List<Claim> GetClaims(User user)
+    {
+        var claims = new List<Claim>()
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            new("Id", user.Id.ToString()),
+            new(ClaimTypes.Role, Role.User.ToString()),
+            new(JwtRegisteredClaimNames.Sub, user.Email),
+        };
 
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        return claims;
+    }
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = expirationDate,
-                Issuer = _configuration["Jwt:Issuer"],
-                Audience = _configuration.GetSection("Jwt:Audiences:0").Value,
-                SigningCredentials = credentials
-            };
-
-            var tokenHandler = new JsonWebTokenHandler();
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return token;
-        }
-
-        private static List<Claim> GetClaims(User user)
+    private static List<Claim> GetClaims(Company company)
+    {
+        var claims = new List<Claim>()
         {
-            var claims = new List<Claim>()
-            {
-                new("Id", user.Id.ToString()),
-                new(ClaimTypes.Role, Role.User.ToString()),
-                new(JwtRegisteredClaimNames.Sub, user.Email),
-            };
+            new("Id", company.Id.ToString()),
+            new(ClaimTypes.Role, Role.Company.ToString()),
+            new(JwtRegisteredClaimNames.Sub, company.Email),
+        };
 
-            return claims;
-        }
-
-        private static List<Claim> GetClaims(Company company)
-        {
-            var claims = new List<Claim>()
-            {
-                new("Id", company.Id.ToString()),
-                new(ClaimTypes.Role, Role.Company.ToString()),
-                new(JwtRegisteredClaimNames.Sub, company.Email),
-            };
-
-            return claims;
-        }
+        return claims;
     }
 }

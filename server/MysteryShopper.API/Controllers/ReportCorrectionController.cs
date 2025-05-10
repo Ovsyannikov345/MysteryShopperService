@@ -6,24 +6,23 @@ using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services;
 
-namespace MysteryShopper.API.Controllers
+namespace MysteryShopper.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class ReportCorrectionController(IReportCorrectionService reportCorrectionService, IMapper mapper) : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class ReportCorrectionController(IReportCorrectionService reportCorrectionService, IMapper mapper) : ControllerBase
+    [HttpPost]
+    [Authorize(Roles = "Company")]
+    public async Task<ReportCorrectionViewModel> CreateReportCorrection(ReportCorrectionToCreateViewModel correctionData, CancellationToken cancellationToken)
     {
-        [HttpPost]
-        [Authorize(Roles = "Company")]
-        public async Task<ReportCorrectionViewModel> CreateReportCorrection(ReportCorrectionToCreateViewModel correctionData, CancellationToken cancellationToken)
-        {
-            var correctionToCreate = mapper.Map<ReportCorrectionModel>(correctionData);
+        var correctionToCreate = mapper.Map<ReportCorrectionModel>(correctionData);
 
-            var companyId = HttpContext.GetIdFromContext();
+        var companyId = HttpContext.GetIdFromContext();
 
-            var createdCorrection = await reportCorrectionService.CreateReportCorrectionAsync(correctionToCreate, companyId, cancellationToken);
+        var createdCorrection = await reportCorrectionService.CreateReportCorrectionAsync(correctionToCreate, companyId, cancellationToken);
 
-            return mapper.Map<ReportCorrectionViewModel>(createdCorrection);
-        }
+        return mapper.Map<ReportCorrectionViewModel>(createdCorrection);
     }
 }

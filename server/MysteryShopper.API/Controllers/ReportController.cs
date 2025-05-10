@@ -6,24 +6,23 @@ using MysteryShopper.API.ViewModels;
 using MysteryShopper.BLL.Dto;
 using MysteryShopper.BLL.Services;
 
-namespace MysteryShopper.API.Controllers
+namespace MysteryShopper.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[Authorize]
+public class ReportController(IReportService reportService, IMapper mapper) : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    [Authorize]
-    public class ReportController(IReportService reportService, IMapper mapper) : ControllerBase
+    [HttpPost]
+    [Authorize(Roles = "User")]
+    public async Task<ReportViewModel> CreateReport(ReportToCreateViewModel reportData, CancellationToken cancellationToken)
     {
-        [HttpPost]
-        [Authorize(Roles = "User")]
-        public async Task<ReportViewModel> CreateReport(ReportToCreateViewModel reportData, CancellationToken cancellationToken)
-        {
-            var reportToCreate = mapper.Map<ReportModel>(reportData);
+        var reportToCreate = mapper.Map<ReportModel>(reportData);
 
-            reportToCreate.UserId = HttpContext.GetIdFromContext();
+        reportToCreate.UserId = HttpContext.GetIdFromContext();
 
-            var createdReport = await reportService.CreateReportAsync(reportToCreate, cancellationToken);
+        var createdReport = await reportService.CreateReportAsync(reportToCreate, cancellationToken);
 
-            return mapper.Map<ReportViewModel>(createdReport);
-        }
+        return mapper.Map<ReportViewModel>(createdReport);
     }
 }

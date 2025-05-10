@@ -1,6 +1,5 @@
-﻿namespace MysteryShopper.BLL.Dto
+﻿namespace MysteryShopper.BLL.Dto;
+
+public record CompanyRegistrationCredentials(string Name, string Email, string Password, CompanyContactPersonCredentials CompanyContactPerson)
 {
-    public record CompanyRegistrationCredentials(string Name, string Email, string Password, CompanyContactPersonCredentials CompanyContactPerson)
-    {
-    }
 }

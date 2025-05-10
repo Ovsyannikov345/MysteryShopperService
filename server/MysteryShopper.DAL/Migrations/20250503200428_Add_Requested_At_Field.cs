@@ -2,27 +2,26 @@
 
 #nullable disable
 
-namespace MysteryShopper.DAL.Migrations
+namespace MysteryShopper.DAL.Migrations;
+
+/// <inheritdoc />
+public partial class Add_Requested_At_Field : Migration
 {
     /// <inheritdoc />
-    public partial class Add_Requested_At_Field : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<DateTime>(
-                name: "RequestedAt",
-                table: "UserOrders",
-                type: "timestamp with time zone",
-                nullable: true);
-        }
+        migrationBuilder.AddColumn<DateTime>(
+            name: "RequestedAt",
+            table: "UserOrders",
+            type: "timestamp with time zone",
+            nullable: true);
+    }
 
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "RequestedAt",
-                table: "UserOrders");
-        }
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropColumn(
+            name: "RequestedAt",
+            table: "UserOrders");
     }
 }

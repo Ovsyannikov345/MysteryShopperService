@@ -1,8 +1,7 @@
-﻿namespace MysteryShopper.DAL.Entities.Enums
+﻿namespace MysteryShopper.DAL.Entities.Enums;
+
+public enum GenderType
 {
-    public enum GenderType
-    {
-        Male = 0,
-        Female = 1,
-    }
+    Male = 0,
+    Female = 1,
 }
