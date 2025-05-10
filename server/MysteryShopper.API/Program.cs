@@ -2,7 +2,6 @@ using MysteryShopper.API.DI;
 using MysteryShopper.API.Middleware;
 using MysteryShopper.API.Utilities.Mapping;
 using MysteryShopper.BLL.DI;
-using MysteryShopper.DAL.Data;
 using MysteryShopper.DAL.DI;
 using Serilog;
 using System.Reflection;

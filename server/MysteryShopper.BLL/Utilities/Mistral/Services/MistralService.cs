@@ -1,8 +1,8 @@
 ﻿using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.BLL.Utilities.Mistral.Models;
-using System.Text.Json;
 using MysteryShopper.BLL.Utilities.Mistral.Utils;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace MysteryShopper.BLL.Utilities.Mistral.Services
 {

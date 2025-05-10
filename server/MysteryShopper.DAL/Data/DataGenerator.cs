@@ -1,10 +1,6 @@
-﻿using BCrypt.Net;
-using Bogus;
-using Microsoft.EntityFrameworkCore;
+﻿using Bogus;
 using MysteryShopper.DAL.Entities.Enums;
 using MysteryShopper.DAL.Entities.Models;
-using System;
-using System.Collections.Generic;
 
 namespace MysteryShopper.DAL.Data;
 
