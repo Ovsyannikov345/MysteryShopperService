@@ -12,14 +12,7 @@ import useOrderApi, { UserOrder } from "../../hooks/useOrderApi";
 import { useDialogs, useNotifications } from "@toolpad/core";
 import { useState } from "react";
 import PulseDot from "react-pulse-dot";
-import {
-    AccessTime,
-    CallMade,
-    CallReceived,
-    Close,
-    Done,
-    Star,
-} from "@mui/icons-material";
+import { AccessTime, CallMade, CallReceived, Close, Done } from "@mui/icons-material";
 import { Report } from "../../hooks/useReportApi";
 import ReportDisplayModal from "../modals/ReportDisplayModal";
 import ReviewModal, { ReviewFormValues } from "../modals/ReviewModal";
@@ -28,7 +21,6 @@ import useReportCorrectionApi, { Correction } from "../../hooks/useReportCorrect
 import CorrectionModal, { CorrectionFormValues } from "../modals/CorrectionModal";
 import CorrectionDisplayModal from "../modals/CorrectionDisplayModal";
 
-// TODO Display user-sent review
 // TODO Remove disputes from everywhere
 
 interface CompanyOrderActionsProps {
@@ -126,13 +118,14 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
     };
 
     const getAvailableAction = () => {
-        if (
-            orderData.status === UserOrderStatus.Completed &&
-            !orderData.order.userReviews.some((r) => r.userId === orderData.user.id)
-        ) {
-            return (
+        if (orderData.status === UserOrderStatus.Completed) {
+            return !orderData.order.userReviews.some((r) => r.userId === orderData.user.id) ? (
                 <Button variant="contained" sx={{ mt: "-6px", width: "205px" }} onClick={() => setReviewModalOpen(true)}>
                     Leave review
+                </Button>
+            ) : (
+                <Button variant="contained" color="success" startIcon={<Done/>} sx={{ mt: "-6px", width: "205px" }} disabled>
+                    Review is sent
                 </Button>
             );
         }
@@ -341,8 +334,6 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
             </TimelineItem>
         );
 
-        const review = orderData.order.userReviews.find((r) => r.userId === orderData.user.id);
-
         var completedOrderAction =
             orderData.status === UserOrderStatus.Completed ? (
                 <TimelineItem>
@@ -353,29 +344,12 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                         <TimelineDot color="success">
                             <Done sx={{ width: "20px", height: "20px" }} />
                         </TimelineDot>
-                        {review && <TimelineConnector />}
                     </TimelineSeparator>
                     <TimelineContent>
                         <Typography sx={{ p: 0, mt: 1 }}>Order was marked as completed</Typography>
                     </TimelineContent>
                 </TimelineItem>
             ) : null;
-
-        const reviewAction = review ? (
-            <TimelineItem>
-                <TimelineOppositeContent>
-                    <Typography sx={{ p: 0, mt: 1 }}>{moment(review.createdAt).calendar()}</Typography>
-                </TimelineOppositeContent>
-                <TimelineSeparator>
-                    <TimelineDot color="primary">
-                        <Star sx={{ width: "20px", height: "20px" }} />
-                    </TimelineDot>
-                </TimelineSeparator>
-                <TimelineContent>
-                    <Typography sx={{ p: 0, mt: 1 }}>Review was created</Typography>
-                </TimelineContent>
-            </TimelineItem>
-        ) : null;
 
         var reportActions = orderData.order.reports.map((report) => (
             <>
@@ -426,7 +400,6 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
             <>
                 {reportActions}
                 {completedOrderAction || pendingReportAction || pendingCompanyAction}
-                {reviewAction}
             </>
         );
     };
