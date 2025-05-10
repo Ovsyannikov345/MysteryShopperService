@@ -189,6 +189,7 @@ public static class DataGenerator
 
         return reports;
     }
+
     public static void GenerateAndSeedDatabase(MysteryShopperDbContext context)
     {
         // Generate Users
@@ -245,4 +246,3 @@ public static class DataGenerator
         context.SaveChanges();
     }
 }
-

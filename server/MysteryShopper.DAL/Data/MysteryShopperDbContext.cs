@@ -5,9 +5,12 @@ namespace MysteryShopper.DAL.Data;
 
 public class MysteryShopperDbContext : DbContext
 {
-    public MysteryShopperDbContext() { }
+    public MysteryShopperDbContext()
+    { }
 
-    public MysteryShopperDbContext(DbContextOptions<MysteryShopperDbContext> options) : base(options) { }
+    public MysteryShopperDbContext(DbContextOptions<MysteryShopperDbContext> options) : base(options)
+    {
+    }
 
     public virtual DbSet<Company> Companies { get; set; }
 

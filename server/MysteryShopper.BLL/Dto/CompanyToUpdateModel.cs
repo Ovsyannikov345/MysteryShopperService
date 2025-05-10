@@ -1,5 +1,4 @@
-﻿
-namespace MysteryShopper.BLL.Dto;
+﻿namespace MysteryShopper.BLL.Dto;
 
 public class CompanyToUpdateModel
 {

@@ -1,3 +1,4 @@
 ﻿namespace MysteryShopper.DAL.Entities.Models;
 
-public partial class UserReview : ReviewBase { }
+public partial class UserReview : ReviewBase
+{ }

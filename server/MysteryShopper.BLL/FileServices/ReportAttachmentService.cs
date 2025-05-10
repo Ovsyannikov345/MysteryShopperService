@@ -10,7 +10,7 @@ public interface IReportAttachmentService : IFileService
     Task UploadFileAsync(Guid reportId, Guid userId, IFormFile file, CancellationToken cancellationToken = default);
 }
 
-class ReportAttachmentService(IReportAttachmentStorage reportAttachmentMinioStorage, IReportRepository reportRepository)
+public class ReportAttachmentService(IReportAttachmentStorage reportAttachmentMinioStorage, IReportRepository reportRepository)
     : FileService(reportAttachmentMinioStorage), IReportAttachmentService
 {
     protected override string[] SupportedExtensions => [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".pdf", ".doc", ".docx"];

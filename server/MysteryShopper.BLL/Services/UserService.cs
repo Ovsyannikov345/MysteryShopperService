@@ -57,4 +57,3 @@ public class UserService(IUserRepository userRepository) : IUserService
         return await GetProfileAsync(user.Id, cancellationToken);
     }
 }
-
