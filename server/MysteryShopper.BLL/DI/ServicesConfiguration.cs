@@ -3,10 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MysteryShopper.BLL.FileServices;
 using MysteryShopper.BLL.Services;
-using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Mapping;
 using MysteryShopper.BLL.Utilities.Mistral.Services;
-using MysteryShopper.BLL.Utilities.Mistral.Services.IServices;
 using MysteryShopper.BLL.Utilities.Validators;
 using System.Reflection;
 

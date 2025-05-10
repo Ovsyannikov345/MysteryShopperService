@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MysteryShopper.BLL.Dto;
-using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Constants;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.BLL.Utilities.Validators;
@@ -10,14 +9,29 @@ using Serilog;
 
 namespace MysteryShopper.BLL.Services
 {
+    public interface IAuthService
+    {
+        Task<bool> IsEmailAvailableAsync(string email, CancellationToken cancellationToken = default);
+
+        Task<AuthCredentials> LoginAsync(string email, string password, CancellationToken cancellationToken = default);
+
+        Task LogoutAsync(string refreshToken, CancellationToken cancellationToken = default);
+
+        Task<TokenPair> RefreshTokensAsync(string refreshToken, CancellationToken cancellationToken = default);
+
+        Task<AuthCredentials> RegisterCompany(CompanyRegistrationCredentials companyData, CancellationToken cancellationToken = default);
+
+        Task<AuthCredentials> RegisterUser(UserRegistrationCredentials userData, CancellationToken cancellationToken = default);
+    }
+
     public class AuthService(
-        ILogger logger,
-        IMapper mapper,
-        IUserRepository userRepository,
-        ICompanyRepository companyRepository,
-        ITokenService tokenService,
-        UserRegistrationValidator userRegistrationValidator,
-        CompanyRegistrationValidator companyRegistrationValidator) : IAuthService
+            ILogger logger,
+            IMapper mapper,
+            IUserRepository userRepository,
+            ICompanyRepository companyRepository,
+            ITokenService tokenService,
+            UserRegistrationValidator userRegistrationValidator,
+            CompanyRegistrationValidator companyRegistrationValidator) : IAuthService
     {
         private readonly IUserRepository _userRepository = userRepository;
 

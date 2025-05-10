@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MysteryShopper.API.Extensions;
 using MysteryShopper.API.ViewModels;
-using MysteryShopper.BLL.Services.IServices;
+using MysteryShopper.BLL.Services;
 using MysteryShopper.BLL.Dto;
 
 namespace MysteryShopper.API.Controllers

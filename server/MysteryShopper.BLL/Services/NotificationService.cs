@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MysteryShopper.BLL.Dto;
-using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories;
@@ -8,6 +7,19 @@ using Serilog;
 
 namespace MysteryShopper.BLL.Services
 {
+    public interface INotificationService
+    {
+        Task CreateNotificationAsync(NotificationModel notificationData, CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<NotificationModel>> GetCompanyNotificationsAsync(Guid companyId, CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<NotificationModel>> GetUserNotificationsAsync(Guid userId, CancellationToken cancellationToken = default);
+
+        Task ReadCompanyNotificationAsync(Guid notificationId, Guid companyId, CancellationToken cancellationToken = default);
+
+        Task ReadUserNotificationAsync(Guid notificationId, Guid userId, CancellationToken cancellationToken = default);
+    }
+
     public class NotificationService(INotificationRepository notificationRepository, IMapper mapper, ILogger logger) : INotificationService
     {
         public async Task CreateNotificationAsync(NotificationModel notificationData, CancellationToken cancellationToken = default)

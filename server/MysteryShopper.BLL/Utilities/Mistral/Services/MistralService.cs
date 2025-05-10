@@ -1,13 +1,16 @@
 ﻿using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.BLL.Utilities.Mistral.Models;
-using MysteryShopper.BLL.Utilities.Mistral.Services.IServices;
-using static System.Net.Mime.MediaTypeNames;
 using System.Text.Json;
-using System.Text;
 using MysteryShopper.BLL.Utilities.Mistral.Utils;
+using System.Net.Http.Json;
 
 namespace MysteryShopper.BLL.Utilities.Mistral.Services
 {
+    public interface IMistralService
+    {
+        Task<TagData> GetOrderTagsAsync(string orderDescription, string category, IEnumerable<string> existingTags, CancellationToken cancellationToken = default);
+    }
+
     public class MistralService(IHttpClientFactory httpClientFactory) : IMistralService
     {
         public async Task<TagData> GetOrderTagsAsync(
@@ -58,9 +61,7 @@ namespace MysteryShopper.BLL.Utilities.Mistral.Services
                 }
             };
 
-            var promptJson = new StringContent(JsonSerializer.Serialize(prompt), Encoding.UTF8, Application.Json);
-
-            var httpResponseMessage = await httpMistralClient.PostAsync("v1/chat/completions", promptJson, cancellationToken);
+            var httpResponseMessage = await httpMistralClient.PostAsJsonAsync("v1/chat/completions", JsonSerializer.Serialize(prompt), cancellationToken);
 
             if (!httpResponseMessage.IsSuccessStatusCode)
             {

@@ -1,10 +1,16 @@
 ﻿using MysteryShopper.BLL.Dto;
-using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories;
 
 namespace MysteryShopper.BLL.Services;
+
+public interface IUserService
+{
+    Task<User> GetProfileAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<User> UpdateProfileInfoAsync(Guid currentUserId, UserToUpdateModel userData, CancellationToken cancellationToken = default);
+}
 
 public class UserService(IUserRepository userRepository) : IUserService
 {

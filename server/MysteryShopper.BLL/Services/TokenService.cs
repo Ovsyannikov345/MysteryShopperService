@@ -2,7 +2,6 @@
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using MysteryShopper.BLL.Dto;
-using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Constants;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.Entities.Models;
@@ -13,6 +12,17 @@ using System.Text;
 
 namespace MysteryShopper.BLL.Services
 {
+    public interface ITokenService
+    {
+        Task<TokenPair> GetTokensAsync(Company company, CancellationToken cancellationToken = default);
+
+        Task<TokenPair> GetTokensAsync(User user, CancellationToken cancellationToken = default);
+
+        Task<TokenPair> RefreshTokensAsync(string refreshToken, CancellationToken cancellationToken = default);
+
+        Task RemoveRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
+    }
+
     public class TokenService(IConfiguration configuration, IRefreshTokenRepository refreshTokenRepository, ILogger logger) : ITokenService
     {
         private readonly IConfiguration _configuration = configuration;

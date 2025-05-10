@@ -1,60 +1,65 @@
 ﻿using AutoMapper;
 using MysteryShopper.BLL.Dto;
-using MysteryShopper.BLL.Services.IServices;
 using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.DAL.Entities.Models;
 using MysteryShopper.DAL.Repositories;
 
-namespace MysteryShopper.BLL.Services
+namespace MysteryShopper.BLL.Services;
+
+public interface ICompanyService
 {
-    public class CompanyService(ICompanyRepository companyRepository, IMapper mapper) : ICompanyService
+    Task<Company> GetProfileAsync(Guid id, CancellationToken cancellationToken = default);
+
+    Task<Company> UpdateProfileInfoAsync(Guid currentCompanyId, CompanyToUpdateModel companyData, CancellationToken cancellationToken = default);
+}
+
+public class CompanyService(ICompanyRepository companyRepository, IMapper mapper) : ICompanyService
+{
+    public async Task<Company> GetProfileAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        public async Task<Company> GetProfileAsync(Guid id, CancellationToken cancellationToken = default)
+        return await companyRepository.GetCompanyWithReviewsAsync(c => c.Id == id, cancellationToken)
+            ?? throw new NotFoundException("Company is not found");
+    }
+
+    public async Task<Company> UpdateProfileInfoAsync(Guid currentCompanyId, CompanyToUpdateModel companyData, CancellationToken cancellationToken = default)
+    {
+        if (currentCompanyId != companyData.Id)
         {
-            return await companyRepository.GetCompanyWithReviewsAsync(c => c.Id == id, cancellationToken)
-                ?? throw new NotFoundException("Company is not found");
+            throw new ForbiddenException("You can't update other company's profile");
         }
 
-        public async Task<Company> UpdateProfileInfoAsync(Guid currentCompanyId, CompanyToUpdateModel companyData, CancellationToken cancellationToken = default)
+        var company = await companyRepository.GetAsync(c => c.Id == companyData.Id, disableTracking: false, cancellationToken)
+            ?? throw new NotFoundException("Company is not found");
+
+        var companyProperties = typeof(Company).GetProperties();
+
+        foreach (var modelProperty in typeof(CompanyToUpdateModel).GetProperties())
         {
-            if (currentCompanyId != companyData.Id)
+            if (modelProperty.Name == nameof(Company.ContactPerson))
             {
-                throw new ForbiddenException("You can't update other company's profile");
+                continue;
             }
 
-            var company = await companyRepository.GetAsync(c => c.Id == companyData.Id, disableTracking: false, cancellationToken)
-                ?? throw new NotFoundException("Company is not found");
+            var companyProperty = Array.Find(companyProperties, p => p.Name == modelProperty.Name);
 
-            var companyProperties = typeof(Company).GetProperties();
-
-            foreach (var modelProperty in typeof(CompanyToUpdateModel).GetProperties())
+            if (companyProperty is not null && companyProperty.CanWrite)
             {
-                if (modelProperty.Name == nameof(Company.ContactPerson))
+                var value = modelProperty.GetValue(companyData);
+
+                if (value is string stringValue && string.IsNullOrWhiteSpace(stringValue))
                 {
+                    companyProperty.SetValue(company, null);
                     continue;
                 }
 
-                var companyProperty = Array.Find(companyProperties, p => p.Name == modelProperty.Name);
-
-                if (companyProperty is not null && companyProperty.CanWrite)
-                {
-                    var value = modelProperty.GetValue(companyData);
-
-                    if (value is string stringValue && string.IsNullOrWhiteSpace(stringValue))
-                    {
-                        companyProperty.SetValue(company, null);
-                        continue;
-                    }
-
-                    companyProperty.SetValue(company, value);
-                }
+                companyProperty.SetValue(company, value);
             }
-
-            company.ContactPerson = mapper.Map<ContactPerson>(companyData.ContactPerson);
-
-            await companyRepository.UpdateAsync(company, cancellationToken);
-
-            return await GetProfileAsync(company.Id, cancellationToken);
         }
+
+        company.ContactPerson = mapper.Map<ContactPerson>(companyData.ContactPerson);
+
+        await companyRepository.UpdateAsync(company, cancellationToken);
+
+        return await GetProfileAsync(company.Id, cancellationToken);
     }
 }
