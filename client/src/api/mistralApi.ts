@@ -1,5 +1,7 @@
 import { aiServer } from ".";
 
+// TODO Move to hook
+
 const completionTimePrompt =
     "The following will be the text of an order on a mystery shopper search site. Your task is to determine " +
     "the time that the mystery shopper will spend to fulfill this order. Only the time when the mystery shopper is doing " +

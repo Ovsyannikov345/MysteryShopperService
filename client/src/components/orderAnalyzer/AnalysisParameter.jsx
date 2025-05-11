@@ -6,6 +6,8 @@ import SentimentNeutralIcon from "@mui/icons-material/SentimentNeutral";
 import SentimentSatisfiedIcon from "@mui/icons-material/SentimentSatisfied";
 import SentimentVerySatisfiedIcon from "@mui/icons-material/SentimentVerySatisfied";
 
+// TODO rework
+
 const AnalysisParameter = ({ name, value }) => {
     const getIcon = (value) => {
         switch (value) {

@@ -3,6 +3,8 @@ import { Typography, Grid, Button, CircularProgress } from "@mui/material";
 import { getCompletionTime, getCompatibility } from "../../api/mistralApi";
 import AnalysisParameter from "./AnalysisParameter";
 
+// TODO rework
+
 const OrderAnalyzer = ({ orderText, errorHandler }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [analysis, setAnalysis] = useState(null);

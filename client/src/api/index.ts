@@ -1,5 +1,8 @@
 import axios, { AxiosInstance } from "axios";
 
+// TODO Move to hook
+// TODO Compress background image
+
 export interface ApiError {
     status: number;
     message: string;
