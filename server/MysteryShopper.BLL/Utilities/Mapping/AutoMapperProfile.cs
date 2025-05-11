@@ -24,6 +24,8 @@ public class AutoMapperProfile : Profile
 
         CreateMap<NotificationModel, Notification>().ReverseMap();
 
+        CreateMap<SupportRequestModel, SupportRequest>().ReverseMap();
+
         CreateMap(typeof(PagedResult<>), typeof(PagedResult<>))
             .ForMember(nameof(PagedResult<object>.PageContent), opt => opt.MapFrom(nameof(PagedResult<object>.PageContent)));
     }

@@ -213,7 +213,7 @@ const UserOrderDetailsPage = () => {
                                                 <Grid container flexDirection={"column"} spacing={0}>
                                                     <Typography variant="body1">{orderData.order.company.name}</Typography>
                                                     <Typography variant="body2" color="text.secondary">
-                                                        {orderData.order.company.email}
+                                                        {orderData.order.company.contactPerson.email}
                                                     </Typography>
                                                     <Stack direction="row" alignItems="center" spacing={1}>
                                                         <Rating
@@ -279,7 +279,7 @@ const UserOrderDetailsPage = () => {
                 <MapModal
                     isOpen={mapModalOpen}
                     onClose={() => setMapModalOpen(false)}
-                    orderPosition={{ lat: orderData!.order.lat!, lng: orderData!.order.lng! }}
+                    orderPosition={{ lat: orderData.order.lat, lng: orderData.order.lng }}
                 />
             )}
         </>

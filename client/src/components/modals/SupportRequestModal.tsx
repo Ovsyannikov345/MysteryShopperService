@@ -1,85 +1,102 @@
 import React, { useState } from "react";
-import { Dialog, Typography, Grid, Button, TextField } from "@mui/material";
-//import { createRequest } from "../../api/supportRequestApi";
-
-// TODO Rework
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    TextField,
+    Button,
+    Box,
+    IconButton,
+    LinearProgress,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import useSupportRequestApi from "../../hooks/useSupportRequestApi";
+import { useNotifications } from "@toolpad/core";
 
 interface SupportRequestModalProps {
-    isOpen: boolean;
-    acceptHandler: Function;
-    declineHandler: Function;
-    errorHandler: Function;
+    open: boolean;
+    onClose: () => void;
 }
 
-const SupportRequestModal = ({ isOpen, acceptHandler, declineHandler, errorHandler }: SupportRequestModalProps) => {
-    const [request, setRequest] = useState({
-        text: "",
-    });
+const SupportRequestModal = ({ open, onClose }: SupportRequestModalProps) => {
+    const [message, setMessage] = useState("");
 
-    const closeModal = () => {
-        declineHandler();
-    };
+    const [isLoading, setIsLoading] = useState(false);
 
-    const sendRequest = async () => {
-        if (request.text === "") {
-            errorHandler("Заполните описание проблемы");
+    const notifications = useNotifications();
+
+    const { createSupportRequest } = useSupportRequestApi();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (message.length === 0) {
+            notifications.show("Provide the description", { severity: "error", autoHideDuration: 3000 });
             return;
         }
 
-        //const response = await createRequest(request.text);
+        setIsLoading(true);
 
-        // if (response.status >= 300) {
-        //     errorHandler("Сервис временно недоступен");
-        //     return;
-        // }
+        const response = await createSupportRequest({ text: message });
 
-        setRequest({
-            text: "",
-        });
-        acceptHandler();
+        setIsLoading(false);
+
+        if ("error" in response) {
+            notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
+            return;
+        }
+
+        notifications.show("Request is sent", { severity: "success", autoHideDuration: 3000 });
+        setMessage("");
+        onClose();
     };
 
     return (
-        <Dialog
-            open={isOpen}
-            onClose={closeModal}
-            PaperProps={{
-                style: { margin: 0, borderRadius: "10px" },
-                sx: { maxWidth: { xs: "310px", md: "483px" } },
-            }}
-        >
-            <Grid
-                container
-                item
-                flexDirection={"column"}
-                alignItems={"center"}
-                gap={"20px"}
-                sx={{
-                    width: { xs: "310px", md: "483px" },
-                    pl: { xs: "5px", md: "28px" },
-                    pr: { xs: "5px", md: "28px" },
-                    pb: { xs: "9px", md: "25px" },
-                }}
-            >
-                <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
-                    Опишите вашу проблему
-                </Typography>
-                <TextField
-                    variant="outlined"
-                    fullWidth
-                    label="Описание"
-                    multiline
-                    minRows={4}
-                    required
-                    value={request.text}
-                    onChange={(e) => setRequest({ ...request, text: e.target.value })}
-                />
-                <Grid container item>
-                    <Button variant="contained" fullWidth onClick={sendRequest}>
-                        ОТПРАВИТЬ
-                    </Button>
-                </Grid>
-            </Grid>
+        <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+            <DialogTitle>
+                Support Request
+                <IconButton
+                    aria-label="close"
+                    onClick={onClose}
+                    sx={{
+                        position: "absolute",
+                        right: 8,
+                        top: 8,
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+            <form onSubmit={handleSubmit}>
+                <DialogContent>
+                    <Box sx={{ mt: 1 }}>
+                        <TextField
+                            autoFocus
+                            multiline
+                            minRows={4}
+                            maxRows={10}
+                            fullWidth
+                            label="Describe your issue"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            variant="outlined"
+                        />
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    {!isLoading ? (
+                        <>
+                            <Button onClick={onClose}>Cancel</Button>
+                            <Button type="submit" variant="contained" color="primary">
+                                Send Request
+                            </Button>
+                        </>
+                    ) : (
+                        <LinearProgress sx={{ width: "100%" }} />
+                    )}
+                </DialogActions>
+            </form>
         </Dialog>
     );
 };

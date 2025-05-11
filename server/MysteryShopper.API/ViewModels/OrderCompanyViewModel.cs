@@ -10,5 +10,7 @@ public class OrderCompanyViewModel
 
     public DateTime? CreatedAt { get; set; }
 
+    public required ContactPersonViewModel ContactPerson { get; set; }
+
     public IEnumerable<OrderCompanyReviewViewModel> CompanyReviews { get; set; } = [];
 }

@@ -23,6 +23,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ProfileIcon from "@mui/icons-material/Person";
 import { OWN_PROFILE_ROUTE } from "../../router/consts";
 import useAuthApi from "../../hooks/useAuthApi";
+import SupportRequestModal from "../modals/SupportRequestModal";
 
 const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClick: () => void }[] }) => {
     const theme = useTheme();
@@ -36,6 +37,8 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
     const [profileMenuAnchorEl, setProfileMenuAnchorEl] = useState<Element | null>(null);
 
     const [actionsMenuAnchorEl, setActionsMenuAnchorEl] = useState<Element | null>(null);
+
+    const [supportRequestModalOpen, setSupportRequestModalOpen] = useState(false);
 
     const { logout } = useAuthApi();
 
@@ -61,21 +64,28 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                                 >
                                     <MenuIcon fontSize={isSmallScreen ? "medium" : "large"} />
                                 </IconButton>
-                                <img
-                                    src={logo}
-                                    alt="Logo"
-                                    style={{
-                                        maxWidth: isMediumScreen ? "130px" : "200px",
-                                        height: "auto",
-                                        cursor: "pointer",
-                                        borderRadius: "10px",
-                                        display: isMediumScreen ? "none" : "flex",
-                                    }}
+                                <Button
                                     onClick={() => navigate("/")}
-                                />
+                                    sx={{
+                                        p: 0,
+                                        display: isMediumScreen ? "none" : "flex",
+                                        minWidth: 'auto'
+                                    }}
+                                >
+                                    <img
+                                        src={logo}
+                                        alt="Logo"
+                                        style={{
+                                            maxWidth: isMediumScreen ? "130px" : "200px",
+                                            height: "auto",
+                                            borderRadius: "10px",
+                                        }}
+                                    />
+                                </Button>
                                 <Grid container spacing={5} sx={{ display: isMediumScreen ? "none" : "flex" }}>
                                     {actions.map((action) => (
                                         <Button
+                                            key={action.label}
                                             variant="text"
                                             color="secondary"
                                             style={{ fontSize: "18px", padding: "10px", borderRadius: "0px" }}
@@ -97,9 +107,8 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                                         <NotificationsRoundedIcon fontSize={isSmallScreen ? "medium" : "large"} />
                                     </IconButton>
                                 </Tooltip>
-                                {/* TODO implement */}
                                 <Tooltip title="Support">
-                                    <IconButton color="secondary">
+                                    <IconButton color="secondary" onClick={() => setSupportRequestModalOpen(true)}>
                                         <SupportAgentRoundedIcon fontSize={isSmallScreen ? "medium" : "large"} />
                                     </IconButton>
                                 </Tooltip>
@@ -153,6 +162,7 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                     </MenuItem>
                 ))}
             </Menu>
+            <SupportRequestModal open={supportRequestModalOpen} onClose={() => setSupportRequestModalOpen(false)} />
         </>
     );
 };

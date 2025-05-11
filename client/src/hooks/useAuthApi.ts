@@ -5,7 +5,7 @@ import AuthDataManager from "./utils/authDataManager";
 import { useCallback } from "react";
 
 export interface EmailAvailability {
-    available: Boolean;
+    available: boolean;
 }
 
 export interface UserRegistrationData {
@@ -69,7 +69,7 @@ const useAuthApi = () => {
             if (refreshToken) {
                 await client.post("logout", null, { params: { refreshToken: refreshToken } });
             }
-        } catch (error: any) {
+        } catch {
         } finally {
             AuthDataManager.clearAuthData();
             return null;

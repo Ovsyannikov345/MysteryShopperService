@@ -27,6 +27,12 @@ export interface Order {
         email: string;
         createdAt: Moment;
         companyReviews: Review[];
+        contactPerson: {
+            name: string;
+            surname: string;
+            email: string;
+            phone: string;
+        };
     };
     reports: Report[];
     userReviews: Review[];

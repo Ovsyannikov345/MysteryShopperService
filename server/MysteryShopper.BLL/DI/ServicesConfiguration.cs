@@ -38,7 +38,8 @@ public static class ServicesConfiguration
                 .AddScoped<IReportCorrectionService, ReportCorrectionService>()
                 .AddScoped<IReviewService, ReviewService>()
                 .AddScoped<INotificationService, NotificationService>()
-                .AddScoped<IMistralService, MistralService>();
+                .AddScoped<IMistralService, MistralService>()
+                .AddScoped<ISupportRequestService, SupportRequestService>();
 
         services.AddScoped<ICompanyImageService, CompanyImageService>()
                 .AddScoped<IUserImageService, UserImageService>()

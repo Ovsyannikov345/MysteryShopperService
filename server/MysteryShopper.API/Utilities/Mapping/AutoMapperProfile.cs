@@ -38,6 +38,8 @@ public class AutoMapperProfile : Profile
         CreateMap<ReviewModel, ReviewViewModel>();
         CreateMap<ReviewModel, ReviewViewModel>();
 
+        CreateMap<SupportRequestViewModel, SupportRequestModel>().ReverseMap();
+
         CreateMap<TokenPair, TokenPairViewModel>();
     }
 }
