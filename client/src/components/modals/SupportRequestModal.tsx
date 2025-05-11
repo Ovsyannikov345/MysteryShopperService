@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Dialog, Typography, Grid, Button, TextField } from "@mui/material";
-import { createRequest } from "../../api/supportRequestApi";
+//import { createRequest } from "../../api/supportRequestApi";
+
+// TODO Rework
 
 interface SupportRequestModalProps {
     isOpen: boolean;
@@ -24,12 +26,12 @@ const SupportRequestModal = ({ isOpen, acceptHandler, declineHandler, errorHandl
             return;
         }
 
-        const response = await createRequest(request.text);
+        //const response = await createRequest(request.text);
 
-        if (response.status >= 300) {
-            errorHandler("Сервис временно недоступен");
-            return;
-        }
+        // if (response.status >= 300) {
+        //     errorHandler("Сервис временно недоступен");
+        //     return;
+        // }
 
         setRequest({
             text: "",
