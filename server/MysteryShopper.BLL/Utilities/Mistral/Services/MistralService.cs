@@ -1,6 +1,9 @@
 ﻿using MysteryShopper.BLL.Utilities.Exceptions;
 using MysteryShopper.BLL.Utilities.Mistral.Models;
-using MysteryShopper.BLL.Utilities.Mistral.Utils;
+using MysteryShopper.BLL.Utilities.Mistral.Models.OrderAnalysis;
+using MysteryShopper.BLL.Utilities.Mistral.PromptTemplates;
+using MysteryShopper.DAL.Entities.Models;
+using MysteryShopper.DAL.Repositories;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -8,40 +11,76 @@ namespace MysteryShopper.BLL.Utilities.Mistral.Services;
 
 public interface IMistralService
 {
-    Task<TagData> GetOrderTagsAsync(string orderDescription, string category, IEnumerable<string> existingTags, CancellationToken cancellationToken = default);
+    Task<OrderAnalysisResult> GetOrderAnalysisAsync(Guid orderId, Guid userId, CancellationToken cancellationToken = default);
 }
 
-public class MistralService(IHttpClientFactory httpClientFactory) : IMistralService
+public class MistralService(IUserRepository userRepository, IOrderRepository orderRepository, IHttpClientFactory httpClientFactory) : IMistralService
 {
-    public async Task<TagData> GetOrderTagsAsync(
-        string orderDescription,
-        string category,
-        IEnumerable<string> existingTags,
-        CancellationToken cancellationToken = default)
+    public async Task<OrderAnalysisResult> GetOrderAnalysisAsync(Guid orderId, Guid userId, CancellationToken cancellationToken = default)
     {
-        MistralResponse mistralResponse;
+        var user = await userRepository.GetAsync(u => u.Id == userId, cancellationToken: cancellationToken)
+            ?? throw new NotFoundException("User is not found");
 
+        var order = await orderRepository.GetAsync(o => o.Id == orderId, cancellationToken: cancellationToken)
+            ?? throw new NotFoundException("Order is not found");
+
+        var compatibility = await GetCompatibilityAsync(user, order, cancellationToken);
+
+        return new()
+        {
+            Compatibility = compatibility,
+            TimeToComplete = null, // TODO implement
+        };
+    }
+
+    private async Task<Compatibility?> GetCompatibilityAsync(User user, Order order, CancellationToken cancellationToken = default)
+    {
         try
         {
-            mistralResponse = await SendRequestAsync(
-                PromptMessageTemplates.CategorizationMessage(orderDescription, category, existingTags), cancellationToken);
+            var compatibilityResponse = await SendRequestAsync(
+                PromptMessageTemplates.CompatibilityMessage(
+                    GetUserAge(user),
+                    user.Gender,
+                    user.WorkingExperience,
+                    user.Description,
+                    order.Description),
+                cancellationToken);
+
+            var content = compatibilityResponse.Choices[0].Message.Content;
+
+            string cleanedJson = content
+                .Replace("```json", "")
+                .Replace("```", "")
+                .Trim();
+
+            var compatibility = JsonSerializer.Deserialize<Compatibility>(cleanedJson);
+
+            return compatibility;
         }
         catch
         {
-            throw new InternalServerErrorException("Categorization failed");
+            return null;
         }
+    }
 
-        var content = mistralResponse.Choices[0].Message.Content.Trim('`');
-
-        if (content.StartsWith("json"))
+    private static int? GetUserAge(User user)
+    {
+        if (user.BirthDate is null)
         {
-            content = content[4..];
+            return null;
         }
 
-        var tagData = JsonSerializer.Deserialize<TagData>(content)
-            ?? throw new InternalServerErrorException("Tags can't be determined");
+        var birthDate = (DateTime)user.BirthDate;
 
-        return tagData;
+        var userAge = DateTime.Today.Year - birthDate.Year;
+
+        if (DateTime.Today.Month < birthDate.Month ||
+            (DateTime.Today.Month == birthDate.Month && DateTime.Today.Day < birthDate.Day))
+        {
+            userAge--;
+        }
+
+        return userAge;
     }
 
     private async Task<MistralResponse> SendRequestAsync(string promptText, CancellationToken cancellationToken = default)
@@ -61,7 +100,7 @@ public class MistralService(IHttpClientFactory httpClientFactory) : IMistralServ
             }
         };
 
-        var httpResponseMessage = await httpMistralClient.PostAsJsonAsync("v1/chat/completions", JsonSerializer.Serialize(prompt), cancellationToken);
+        var httpResponseMessage = await httpMistralClient.PostAsJsonAsync("v1/chat/completions", prompt, cancellationToken);
 
         if (!httpResponseMessage.IsSuccessStatusCode)
         {
