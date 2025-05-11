@@ -33,7 +33,12 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
 
             - name: Sonar Scan Front-end
               uses: sonarsource/sonarqube-scan-action@v4.0.0
