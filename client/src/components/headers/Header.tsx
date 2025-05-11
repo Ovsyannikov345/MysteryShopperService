@@ -16,14 +16,14 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 import logo from "../../images/logo-cropped2.png";
-import SupportAgentRoundedIcon from "@mui/icons-material/SupportAgentRounded";
-import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ProfileIcon from "@mui/icons-material/Person";
 import { OWN_PROFILE_ROUTE } from "../../router/consts";
 import useAuthApi from "../../hooks/useAuthApi";
 import SupportRequestModal from "../modals/SupportRequestModal";
+import NotificationList from "../lists/NotificationMenu";
+import { SupportAgentOutlined } from "@mui/icons-material";
 
 const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClick: () => void }[] }) => {
     const theme = useTheme();
@@ -69,7 +69,7 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                                     sx={{
                                         p: 0,
                                         display: isMediumScreen ? "none" : "flex",
-                                        minWidth: 'auto'
+                                        minWidth: "auto",
                                     }}
                                 >
                                     <img
@@ -101,15 +101,10 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                         </Grid>
                         <Grid container>
                             <Grid container gap={isSmallScreen ? "0px" : "10px"} alignItems={"center"}>
-                                {/* TODO implement */}
-                                <Tooltip title="Notifications">
-                                    <IconButton color="secondary">
-                                        <NotificationsRoundedIcon fontSize={isSmallScreen ? "medium" : "large"} />
-                                    </IconButton>
-                                </Tooltip>
+                                <NotificationList />
                                 <Tooltip title="Support">
                                     <IconButton color="secondary" onClick={() => setSupportRequestModalOpen(true)}>
-                                        <SupportAgentRoundedIcon fontSize={isSmallScreen ? "medium" : "large"} />
+                                        <SupportAgentOutlined fontSize={isSmallScreen ? "medium" : "large"} />
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title="Account">
@@ -127,7 +122,7 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                 </AppBar>
             </Box>
             <Menu
-                id="menu"
+                id="profile-menu"
                 anchorEl={profileMenuAnchorEl}
                 open={Boolean(profileMenuAnchorEl)}
                 onClose={() => setProfileMenuAnchorEl(null)}
@@ -148,12 +143,12 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                 </MenuItem>
             </Menu>
             <Menu
-                id="menu"
+                id="actions-menu"
                 anchorEl={actionsMenuAnchorEl}
                 open={Boolean(actionsMenuAnchorEl)}
                 onClose={() => setActionsMenuAnchorEl(null)}
-                transformOrigin={{ horizontal: "right", vertical: "top" }}
-                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                transformOrigin={{ horizontal: "left", vertical: "top" }}
+                anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
             >
                 {actions.map((action) => (
                     <MenuItem key={action.label} onClick={action.onClick}>
@@ -162,6 +157,7 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                     </MenuItem>
                 ))}
             </Menu>
+
             <SupportRequestModal open={supportRequestModalOpen} onClose={() => setSupportRequestModalOpen(false)} />
         </>
     );

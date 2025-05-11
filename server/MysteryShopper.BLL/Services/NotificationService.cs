@@ -36,21 +36,26 @@ public class NotificationService(INotificationRepository notificationRepository,
 
     public async Task<IEnumerable<NotificationModel>> GetCompanyNotificationsAsync(Guid companyId, CancellationToken cancellationToken = default)
     {
-        var notifications = await notificationRepository.GetAllAsync(n => n.CompanyId == companyId, cancellationToken);
+        var notifications = await notificationRepository.GetCompanyNotifications(companyId, cancellationToken: cancellationToken);
+
+        foreach (var notification in notifications)
+        {
+            Console.WriteLine(notification.CreatedAt);
+        }
 
         return mapper.Map<IEnumerable<Notification>, IEnumerable<NotificationModel>>(notifications);
     }
 
     public async Task<IEnumerable<NotificationModel>> GetUserNotificationsAsync(Guid userId, CancellationToken cancellationToken = default)
     {
-        var notifications = await notificationRepository.GetAllAsync(n => n.UserId == userId, cancellationToken);
+        var notifications = await notificationRepository.GetUserNotifications(userId, cancellationToken: cancellationToken);
 
         return mapper.Map<IEnumerable<Notification>, IEnumerable<NotificationModel>>(notifications);
     }
 
     public async Task ReadCompanyNotificationAsync(Guid notificationId, Guid companyId, CancellationToken cancellationToken = default)
     {
-        var notification = await notificationRepository.GetAsync(n => n.Id == notificationId, disableTracking: false, cancellationToken)
+        var notification = await notificationRepository.GetAsync(n => n.Id == notificationId, disableTracking: true, cancellationToken)
             ?? throw new NotFoundException("Notification is not found");
 
         if (notification.CompanyId != companyId)
@@ -64,7 +69,7 @@ public class NotificationService(INotificationRepository notificationRepository,
 
     public async Task ReadUserNotificationAsync(Guid notificationId, Guid userId, CancellationToken cancellationToken = default)
     {
-        var notification = await notificationRepository.GetAsync(n => n.Id == notificationId, disableTracking: false, cancellationToken)
+        var notification = await notificationRepository.GetAsync(n => n.Id == notificationId, disableTracking: true, cancellationToken)
             ?? throw new NotFoundException("Notification is not found");
 
         if (notification.UserId != userId)

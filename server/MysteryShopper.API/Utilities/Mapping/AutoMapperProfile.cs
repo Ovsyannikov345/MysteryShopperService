@@ -40,6 +40,8 @@ public class AutoMapperProfile : Profile
 
         CreateMap<SupportRequestViewModel, SupportRequestModel>().ReverseMap();
 
+        CreateMap<NotificationModel, NotificationViewModel>().ReverseMap();
+
         CreateMap<TokenPair, TokenPairViewModel>();
     }
 }
