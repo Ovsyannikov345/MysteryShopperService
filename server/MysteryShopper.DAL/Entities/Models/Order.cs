@@ -9,7 +9,7 @@ public partial class Order : EntityBase
     public required string Title { get; set; }
 
     [Column(TypeName = "text")]
-    public string? Description { get; set; }
+    public required string Description { get; set; }
 
     [MaxLength(255)]
     public required string Place { get; set; }

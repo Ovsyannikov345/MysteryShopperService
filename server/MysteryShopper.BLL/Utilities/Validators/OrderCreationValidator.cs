@@ -11,6 +11,9 @@ public class OrderCreationValidator : AbstractValidator<OrderModel>
             .NotEmpty().WithMessage("Title is required.")
             .MaximumLength(100).WithMessage("Title cannot exceed 100 characters.");
 
+        RuleFor(order => order.Description)
+            .NotEmpty().WithMessage("Description is required.");
+
         RuleFor(order => order.Place)
             .NotEmpty().WithMessage("Place is required.")
             .MaximumLength(255).WithMessage("Place cannot exceed 255 characters.");

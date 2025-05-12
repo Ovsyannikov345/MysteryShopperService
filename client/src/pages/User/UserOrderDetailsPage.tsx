@@ -8,11 +8,12 @@ import NavigateBack from "../../components/buttons/NavigateBack";
 import { useNavigate, useParams } from "react-router-dom";
 import moment, { Duration } from "moment";
 import useCompanyApi from "../../hooks/useCompanyApi";
-import { ArrowRight } from "@mui/icons-material";
+import { ArrowDownward, ArrowRight, ArrowUpward, QueryStats } from "@mui/icons-material";
 import MapModal from "../../components/modals/MapModal";
 import UserOrderActions from "../../components/orderActions/UserOrderActions";
 import { COMPANY_PROFILE_ROUTE } from "../../router/consts";
 import UserOrderDetailsSkeleton from "../../components/skeletons/UserOrderDetailsSkeleton";
+import AISummaryModal from "../../components/modals/AISummaryModal";
 
 const UserOrderDetailsPage = () => {
     const theme = useTheme();
@@ -36,6 +37,8 @@ const UserOrderDetailsPage = () => {
     const [showFullDescription, setShowFullDescription] = useState(false);
 
     const [mapModalOpen, setMapModalOpen] = useState(false);
+
+    const [summaryModalOpen, setSummaryModalOpen] = useState(false);
 
     const [companyImageSrc, setCompanyImageSrc] = useState("");
 
@@ -103,8 +106,6 @@ const UserOrderDetailsPage = () => {
 
         return readableExpiration;
     };
-
-    // TODO Add AI analysis of description
 
     return (
         <>
@@ -246,25 +247,37 @@ const UserOrderDetailsPage = () => {
 
                                     {orderData.order.description && (
                                         <Grid container size={12} flexDirection={"column"}>
-                                            <Typography variant="h6" gutterBottom>
-                                                Description
-                                            </Typography>
+                                            <Grid container size={12} spacing={2}>
+                                                <Typography variant="h6" gutterBottom>
+                                                    Description
+                                                </Typography>
+                                            </Grid>
                                             <Typography variant="subtitle1" gutterBottom sx={{ whiteSpace: "pre-wrap" }}>
                                                 {orderData.order.description.length > 300 && !showFullDescription
                                                     ? orderData.order.description.slice(0, 300).trim() + "..."
                                                     : orderData.order.description}
                                             </Typography>
-                                            {orderData.order.description.length > 300 && (
-                                                <Grid>
+                                            <Grid container spacing={2}>
+                                                {orderData.order.description.length > 300 && (
                                                     <Button
-                                                        variant="contained"
+                                                        variant="text"
+                                                        sx={{ fontSize: "15px", color: (theme) => theme.palette.primary.dark }}
                                                         size="small"
+                                                        startIcon={showFullDescription ? <ArrowUpward /> : <ArrowDownward />}
                                                         onClick={() => setShowFullDescription((prev) => !prev)}
                                                     >
                                                         {showFullDescription ? "Show less" : "Show more"}
                                                     </Button>
-                                                </Grid>
-                                            )}
+                                                )}
+                                                <Button
+                                                    variant="contained"
+                                                    sx={{ height: "35px" }}
+                                                    startIcon={<QueryStats />}
+                                                    onClick={() => setSummaryModalOpen(true)}
+                                                >
+                                                    AI Summary
+                                                </Button>
+                                            </Grid>
                                         </Grid>
                                     )}
 
@@ -281,6 +294,9 @@ const UserOrderDetailsPage = () => {
                     onClose={() => setMapModalOpen(false)}
                     orderPosition={{ lat: orderData.order.lat, lng: orderData.order.lng }}
                 />
+            )}
+            {orderData && (
+                <AISummaryModal open={summaryModalOpen} onClose={() => setSummaryModalOpen(false)} orderId={orderData.order.id} />
             )}
         </>
     );

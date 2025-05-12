@@ -13,7 +13,7 @@ public class AnalysisController(IMistralService mistralService) : ControllerBase
 {
     [HttpGet("order/{orderId}")]
     [Authorize(Roles = "User")]
-    public async Task<OrderAnalysisResult> GetOrderAnalysis(Guid orderId, CancellationToken cancellationToken = default)
+    public async Task<OrderAnalysisResult> GetOrderAnalysisAsync(Guid orderId, CancellationToken cancellationToken = default)
     {
         var userId = HttpContext.GetIdFromContext();
 

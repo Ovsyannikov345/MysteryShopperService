@@ -16,6 +16,8 @@ public interface IMistralService
 
 public class MistralService(IUserRepository userRepository, IOrderRepository orderRepository, IHttpClientFactory httpClientFactory) : IMistralService
 {
+    private readonly int _retryCount = 3;
+
     public async Task<OrderAnalysisResult> GetOrderAnalysisAsync(Guid orderId, Guid userId, CancellationToken cancellationToken = default)
     {
         var user = await userRepository.GetAsync(u => u.Id == userId, cancellationToken: cancellationToken)
@@ -24,17 +26,26 @@ public class MistralService(IUserRepository userRepository, IOrderRepository ord
         var order = await orderRepository.GetAsync(o => o.Id == orderId, cancellationToken: cancellationToken)
             ?? throw new NotFoundException("Order is not found");
 
-        var compatibility = await GetCompatibilityAsync(user, order, cancellationToken);
+        var compatibility = await GetCompatibilityAsync(user, order, cancellationToken: cancellationToken);
+
+        var timeToComplete = await GetTimeToCompleteAsync(order, cancellationToken: cancellationToken);
 
         return new()
         {
             Compatibility = compatibility,
-            TimeToComplete = null, // TODO implement
+            TimeToComplete = timeToComplete,
         };
     }
 
-    private async Task<Compatibility?> GetCompatibilityAsync(User user, Order order, CancellationToken cancellationToken = default)
+    private async Task<Compatibility?> GetCompatibilityAsync(User user, Order order, int retryNumber = 0, CancellationToken cancellationToken = default)
     {
+        if (retryNumber > _retryCount)
+        {
+            return null;
+        }
+
+        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+
         try
         {
             var compatibilityResponse = await SendRequestAsync(
@@ -59,7 +70,32 @@ public class MistralService(IUserRepository userRepository, IOrderRepository ord
         }
         catch
         {
+            return await GetCompatibilityAsync(user, order, retryNumber + 1, cancellationToken);
+        }
+    }
+
+    private async Task<double?> GetTimeToCompleteAsync(Order order, int retryNumber = 0, CancellationToken cancellationToken = default)
+    {
+        if (retryNumber > _retryCount)
+        {
             return null;
+        }
+
+        await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+
+        try
+        {
+            var timeToCompleteResponse = await SendRequestAsync(PromptMessageTemplates.TimeToCompleteMessage(order.Description), cancellationToken);
+
+            var content = timeToCompleteResponse.Choices[0].Message.Content;
+
+            Console.WriteLine($"\n\n\n\n\n{content}\n\n\n\n\n");
+
+            return double.Parse(content);
+        }
+        catch
+        {
+            return await GetTimeToCompleteAsync(order, retryNumber + 1, cancellationToken);
         }
     }
 
