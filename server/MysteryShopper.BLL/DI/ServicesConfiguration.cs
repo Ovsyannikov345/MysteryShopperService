@@ -6,6 +6,9 @@ using MysteryShopper.BLL.Services;
 using MysteryShopper.BLL.Utilities.Mapping;
 using MysteryShopper.BLL.Utilities.Mistral.Services;
 using MysteryShopper.BLL.Utilities.Validators;
+using Polly;
+using Polly.Extensions.Http;
+using System.Net;
 using System.Reflection;
 
 namespace MysteryShopper.BLL.DI;
@@ -15,15 +18,20 @@ public static class ServicesConfiguration
     public static void AddBusinessLogicDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpClient("MistralAPIClient")
-        .ConfigureHttpClient(client =>
-        {
-            var apiKey = configuration["MistralAPI:Key"];
+            .ConfigureHttpClient(client =>
+            {
+                var apiKey = configuration["MistralAPI:Key"];
 
-            var apiUri = new Uri(configuration["MistralAPI:Uri"]!);
+                var apiUri = new Uri(configuration["MistralAPI:Uri"]!);
 
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
-            client.BaseAddress = apiUri;
-        });
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+                client.BaseAddress = apiUri;
+            })
+            .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+            .AddPolicyHandler(
+                HttpPolicyExtensions.HandleTransientHttpError()
+                .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
+                .WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(5)));
 
         services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
 
