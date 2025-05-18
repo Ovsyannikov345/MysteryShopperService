@@ -183,7 +183,7 @@ public class AuthService(
         {
             AccessToken = tokens.AccessToken,
             RefreshToken = tokens.RefreshToken,
-            Role = Role.User,
+            Role = Role.Company,
         };
     }
 
