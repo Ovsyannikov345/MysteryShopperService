@@ -12,5 +12,7 @@ public class AlwaysValidValidatorCustomization : ICustomization
             new AlwaysValidUserValidator());
         fixture.Register<CompanyRegistrationValidator>(() =>
             new AlwaysValidCompanyValidator());
+        fixture.Register<OrderCreationValidator>(() =>
+            new AlwaysValidOrderValidator());
     }
 }

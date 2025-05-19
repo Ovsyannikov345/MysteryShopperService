@@ -64,7 +64,7 @@ public class OrderService(
 
         Expression<Func<Order, bool>> predicate = (order) =>
             (string.IsNullOrEmpty(filter.Text) || EF.Functions.ILike(order.Title, $"%{filter.Text}%")
-                || EF.Functions.ILike(order.Place, $"%{filter.Text}%")) &&
+                || (order.Place != null && EF.Functions.ILike(order.Place, $"%{filter.Text}%"))) &&
             (!filter.MaxPrice.HasValue || order.Price <= filter.MaxPrice) &&
             (!filter.MinPrice.HasValue || order.Price >= filter.MinPrice) &&
             (!filter.MaxTimeToComplete.HasValue || order.TimeToComplete <= filter.MaxTimeToComplete) &&
@@ -100,14 +100,7 @@ public class OrderService(
 
         var createdOrder = await orderRepository.AddAsync(mapper.Map<Order>(orderData), cancellationToken);
 
-        if (createdOrder.Description is null)
-        {
-            return mapper.Map<OrderModel>(createdOrder);
-        }
-
-        var updatedOrder = await orderRepository.UpdateAsync(createdOrder, cancellationToken);
-
-        return mapper.Map<OrderModel>(updatedOrder);
+        return mapper.Map<OrderModel>(createdOrder);
     }
 
     public async Task<IEnumerable<UserOrder>> GetUserOrdersAsync(Guid userId, CancellationToken cancellationToken = default)
