@@ -5,8 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useNotifications } from "@toolpad/core";
 import backgroundImage from "../../images/background.jpg";
 import OrderCreationForm, { OrderCreationData } from "../../components/forms/OrderCreationForm";
-import useOrderApi from "../../hooks/useOrderApi";
-import { OrderToCreate } from "../../hooks/useOrderApi";
+import useOrderApi, { OrderToCreate } from "../../hooks/useOrderApi";
 import { ORDER_DETAILS_ROUTE } from "../../router/consts";
 
 const CreateOrderPage = () => {

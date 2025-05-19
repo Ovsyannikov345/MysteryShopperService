@@ -28,7 +28,7 @@ export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
                 </Typography>
                 <Grid container wrap="nowrap" spacing={1}>
                     <Map />
-                    <Typography variant="body1">{order.place}</Typography>
+                    <Typography variant="body1">{order.place ? order.place : "No address"}</Typography>
                 </Grid>
                 {!order.isClosed && (
                     <>

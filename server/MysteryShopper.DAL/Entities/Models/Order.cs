@@ -12,7 +12,7 @@ public partial class Order : EntityBase
     public required string Description { get; set; }
 
     [MaxLength(255)]
-    public required string Place { get; set; }
+    public string? Place { get; set; }
 
     public TimeSpan? TimeToComplete { get; set; }
 

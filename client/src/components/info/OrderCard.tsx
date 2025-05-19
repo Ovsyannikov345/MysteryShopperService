@@ -41,7 +41,7 @@ const OrderCard = ({ orderData }: { orderData: Order }) => {
                 </Typography>
                 <Grid container wrap="nowrap" spacing={1}>
                     <PlaceOutlined />
-                    <Typography variant="body1">{orderData.place}</Typography>
+                    <Typography variant="body1">{orderData.place ? orderData.place : "No address"}</Typography>
                 </Grid>
                 <Grid container wrap="nowrap" spacing={1} mt={1}>
                     <Schedule />
@@ -51,16 +51,12 @@ const OrderCard = ({ orderData }: { orderData: Order }) => {
                             {moment.duration(orderData.timeToComplete).hours()} hours
                         </Typography>
                     ) : (
-                        <Typography variant="body1">-</Typography>
+                        <Typography variant="body1">Not limited</Typography>
                     )}
                 </Grid>
                 <Grid container wrap="nowrap" spacing={1} mt={1}>
                     <MonetizationOn color="success" />
-                    {orderData.price ? (
-                        <Typography variant="body1">{orderData.price} BYN</Typography>
-                    ) : (
-                        <Typography>-</Typography>
-                    )}
+                    <Typography variant="body1">{orderData.price ? orderData.price + " BYN" : "No price"} </Typography>
                 </Grid>
             </CardContent>
             <CardActions sx={{ flexGrow: 1, alignItems: "flex-end", justifyContent: "flex-end" }}>

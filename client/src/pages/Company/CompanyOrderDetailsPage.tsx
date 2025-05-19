@@ -97,7 +97,7 @@ const CompanyOrderDetailsPage = () => {
                             notification: null,
                         };
 
-                        var userReports = order.reports.filter((r) => r.userId === userOrder.user.id);
+                        const userReports = order.reports.filter((r) => r.userId === userOrder.user.id);
 
                         if (
                             userOrder.status !== UserOrderStatus.Completed &&
@@ -255,16 +255,16 @@ const CompanyOrderDetailsPage = () => {
                                                 }
                                                 onClick={() => setMapModalOpen(true)}
                                             >
-                                                <strong>Location:</strong> {orderData.place}
+                                                <strong>Address:</strong> {orderData.place ? orderData.place : "No address"}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Price:</strong> {orderData.price ? orderData.price + " BYN" : "-"}
+                                                <strong>Price:</strong> {orderData.price ? orderData.price + " BYN" : "No price"}
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Time to complete:</strong>{" "}
                                                 {orderData.timeToComplete
                                                     ? getExpirationString(moment.duration(orderData.timeToComplete))
-                                                    : "-"}
+                                                    : "Not limited"}
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Status:</strong> {orderData.isClosed ? "Closed" : "Open"}

@@ -27,8 +27,6 @@ export default function OwnOrdersPage() {
                 return;
             }
 
-            console.log(response)
-
             setOrders(response);
         };
 

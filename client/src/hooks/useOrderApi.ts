@@ -12,8 +12,8 @@ import { Review } from "./useReviewApi";
 export interface Order {
     id: string;
     title: string;
-    description?: string;
-    place: string;
+    description: string;
+    place?: string;
     timeToComplete?: string;
     price?: number;
     createdAt: Moment;
@@ -53,8 +53,8 @@ export interface UserOrder {
 export interface CompanyOrder {
     id: string;
     title: string;
-    description?: string;
-    place: string;
+    description: string;
+    place?: string;
     timeToComplete?: string;
     price?: number;
     createdAt: Moment;
@@ -82,8 +82,8 @@ export interface OrderQueryFilter {
 
 export interface OrderToCreate {
     title: string;
-    description?: string;
-    place: string;
+    description: string;
+    place?: string;
     timeToComplete?: string;
     price?: number;
     lat?: number;

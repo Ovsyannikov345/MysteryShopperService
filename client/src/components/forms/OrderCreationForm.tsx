@@ -8,7 +8,7 @@ import orderCreateValidationSchema from "./validation/orderCreateValidationSchem
 export interface OrderCreationData {
     title: string;
     description: string;
-    place: string;
+    place: string | undefined;
     lng: number | undefined;
     lat: number | undefined;
     daysToComplete: number | undefined;
@@ -49,9 +49,6 @@ export default function OrderCreationForm({
                 initialValues={initialValues}
                 validationSchema={orderCreateValidationSchema}
                 onSubmit={(values, errors) => {
-                    console.log(1);
-                    console.log(errors);
-
                     submitHandler(values);
                 }}
             >
@@ -167,11 +164,6 @@ export default function OrderCreationForm({
                                         placeholder="Set a location on the map"
                                         as={TextField}
                                         fullWidth
-                                        slotProps={{
-                                            input: {
-                                                readOnly: true,
-                                            },
-                                        }}
                                         error={touched.place && Boolean(errors.place)}
                                         helperText={touched.place && errors.place}
                                     />

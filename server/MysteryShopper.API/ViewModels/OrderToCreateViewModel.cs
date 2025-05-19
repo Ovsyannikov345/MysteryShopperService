@@ -6,7 +6,7 @@ public class OrderToCreateViewModel
 
     public required string Description { get; set; }
 
-    public required string Place { get; set; }
+    public string? Place { get; set; }
 
     public TimeSpan? TimeToComplete { get; set; }
 

@@ -177,17 +177,18 @@ const UserOrderDetailsPage = () => {
                                                 }
                                                 onClick={() => setMapModalOpen(true)}
                                             >
-                                                <strong>Location:</strong> {orderData.order.place}
+                                                <strong>Address:</strong>{" "}
+                                                {orderData.order.place ? orderData.order.place : "No address"}
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Price:</strong>{" "}
-                                                {orderData.order.price ? orderData.order.price + " BYN" : "-"}
+                                                {orderData.order.price ? orderData.order.price + " BYN" : "No price"}
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Time to complete:</strong>{" "}
                                                 {orderData.order.timeToComplete
                                                     ? getExpirationString(moment.duration(orderData.order.timeToComplete))
-                                                    : "-"}
+                                                    : "Not limited"}
                                             </Typography>
                                             <Typography variant="body1">
                                                 <strong>Status:</strong> {orderData.order.isClosed ? "Closed" : "Open"}

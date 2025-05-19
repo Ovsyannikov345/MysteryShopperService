@@ -6,7 +6,7 @@ const orderCreateValidationSchema = Yup.object({
     hoursToComplete: Yup.number().positive("Must be a positive number").integer("Must be an integer").max(24, "Cannot exceed 24"),
     daysToComplete: Yup.number().positive("Must be a positive number").integer("Must be an integer").max(30, "Cannot exceed 30"),
     price: Yup.number().positive("Price must be a positive number"),
-    place: Yup.string().required("Select location on the map").max(255, "Place cannot exceed 250 characters"),
+    place: Yup.string().max(255, "Place cannot exceed 250 characters"),
 });
 
 export default orderCreateValidationSchema;
