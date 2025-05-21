@@ -15,7 +15,7 @@ public class ReviewController(IReviewService reviewService, IMapper mapper) : Co
 {
     [HttpPost("company/{id}")]
     [Authorize(Roles = "User")]
-    public async Task<ReviewViewModel> CreateCompanyReview(Guid id, CompanyReviewToCreateViewModel reviewData, CancellationToken cancellationToken)
+    public async Task<ReviewViewModel> CreateCompanyReviewAsync(Guid id, CompanyReviewToCreateViewModel reviewData, CancellationToken cancellationToken)
     {
         var reviewToCreate = mapper.Map<ReviewModel>(reviewData);
 
@@ -29,7 +29,7 @@ public class ReviewController(IReviewService reviewService, IMapper mapper) : Co
 
     [HttpPost("user/{id}")]
     [Authorize(Roles = "Company")]
-    public async Task<ReviewViewModel> CreateUserReview(Guid id, UserReviewToCreateViewModel reviewData, CancellationToken cancellationToken)
+    public async Task<ReviewViewModel> CreateCompanyReviewAsync(Guid id, UserReviewToCreateViewModel reviewData, CancellationToken cancellationToken)
     {
         var reviewToCreate = mapper.Map<ReviewModel>(reviewData);
 

@@ -15,7 +15,7 @@ public class ReportController(IReportService reportService, IMapper mapper) : Co
 {
     [HttpPost]
     [Authorize(Roles = "User")]
-    public async Task<ReportViewModel> CreateReport(ReportToCreateViewModel reportData, CancellationToken cancellationToken)
+    public async Task<ReportViewModel> CreateReportAsync(ReportToCreateViewModel reportData, CancellationToken cancellationToken)
     {
         var reportToCreate = mapper.Map<ReportModel>(reportData);
 

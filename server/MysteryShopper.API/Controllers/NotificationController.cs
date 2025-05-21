@@ -14,7 +14,7 @@ namespace MysteryShopper.API.Controllers;
 public class NotificationController(INotificationService notificationService, IMapper mapper) : ControllerBase
 {
     [HttpGet]
-    public async Task<IEnumerable<NotificationViewModel>> GetNotifications(CancellationToken cancellationToken)
+    public async Task<IEnumerable<NotificationViewModel>> GetNotificationsAsync(CancellationToken cancellationToken)
     {
         var id = HttpContext.GetIdFromContext();
 
@@ -26,7 +26,7 @@ public class NotificationController(INotificationService notificationService, IM
     }
 
     [HttpPut("{notificationId}/read")]
-    public async Task ReadNotification(Guid notificationId, CancellationToken cancellationToken)
+    public async Task ReadNotificationAsync(Guid notificationId, CancellationToken cancellationToken)
     {
         var id = HttpContext.GetIdFromContext();
 

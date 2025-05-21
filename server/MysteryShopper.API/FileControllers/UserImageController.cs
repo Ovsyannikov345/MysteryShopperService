@@ -11,13 +11,13 @@ namespace MysteryShopper.API.FileControllers;
 public class UserImageController(IUserImageService userImageService) : ControllerBase
 {
     [HttpGet("{userId}/exists")]
-    public async Task<bool> AvatarExists(Guid userId, CancellationToken cancellationToken)
+    public async Task<bool> AvatarExistsAsync(Guid userId, CancellationToken cancellationToken)
     {
         return await userImageService.FileExistsAsync(userId.ToString(), cancellationToken);
     }
 
     [HttpGet("{userId}")]
-    public async Task<FileStreamResult> GetAvatar(Guid userId, CancellationToken cancellationToken)
+    public async Task<FileStreamResult> GetAvatarAsync(Guid userId, CancellationToken cancellationToken)
     {
         var blobObject = await userImageService.GetFileAsync(userId.ToString(), cancellationToken);
 
@@ -26,7 +26,7 @@ public class UserImageController(IUserImageService userImageService) : Controlle
 
     [HttpPost]
     [Authorize(Roles = "User")]
-    public async Task UploadAvatar(IFormFile file, CancellationToken cancellationToken)
+    public async Task UploadAvatarAsync(IFormFile file, CancellationToken cancellationToken)
     {
         var currentUserId = HttpContext.GetIdFromContext();
 

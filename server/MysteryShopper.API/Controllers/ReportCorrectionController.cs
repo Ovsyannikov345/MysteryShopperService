@@ -15,7 +15,7 @@ public class ReportCorrectionController(IReportCorrectionService reportCorrectio
 {
     [HttpPost]
     [Authorize(Roles = "Company")]
-    public async Task<ReportCorrectionViewModel> CreateReportCorrection(ReportCorrectionToCreateViewModel correctionData, CancellationToken cancellationToken)
+    public async Task<ReportCorrectionViewModel> CreateReportCorrectionAsync(ReportCorrectionToCreateViewModel correctionData, CancellationToken cancellationToken)
     {
         var correctionToCreate = mapper.Map<ReportCorrectionModel>(correctionData);
 

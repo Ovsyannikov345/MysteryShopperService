@@ -12,14 +12,14 @@ public class RequestController(IOrderService orderService) : ControllerBase
 {
     [HttpPost("{id}/accept")]
     [Authorize(Roles = "Company")]
-    public async Task AcceptRequest(Guid id, CancellationToken cancellationToken)
+    public async Task AcceptRequestAsync(Guid id, CancellationToken cancellationToken)
     {
         await orderService.AcceptRequestAsync(HttpContext.GetIdFromContext(), id, cancellationToken);
     }
 
     [HttpPost("{id}/reject")]
     [Authorize(Roles = "Company")]
-    public async Task RejectRequest(Guid id, CancellationToken cancellationToken)
+    public async Task RejectRequestAsync(Guid id, CancellationToken cancellationToken)
     {
         await orderService.RejectRequestAsync(HttpContext.GetIdFromContext(), id, cancellationToken);
     }

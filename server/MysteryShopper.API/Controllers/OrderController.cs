@@ -18,7 +18,7 @@ public class OrderController(IOrderService orderService, IMapper mapper) : Contr
 {
     [HttpGet]
     [Authorize(Roles = "User")]
-    public async Task<PagedResult<OrderViewModel>> GetOrderList(
+    public async Task<PagedResult<OrderViewModel>> GetOrderListAsync(
         [FromQuery] OrderSortOptions sortOption,
         [FromQuery] OrderQueryFilter queryFilter,
         [FromQuery] Pagination pagination,
@@ -31,7 +31,7 @@ public class OrderController(IOrderService orderService, IMapper mapper) : Contr
 
     [HttpGet("in-progress")]
     [Authorize(Roles = "User")]
-    public async Task<IEnumerable<UserOrderViewModel>> GetUserOrders(CancellationToken cancellationToken)
+    public async Task<IEnumerable<UserOrderViewModel>> GetUserOrdersAsync(CancellationToken cancellationToken)
     {
         var orderList = await orderService.GetUserOrdersAsync(HttpContext.GetIdFromContext(), cancellationToken);
 
@@ -40,7 +40,7 @@ public class OrderController(IOrderService orderService, IMapper mapper) : Contr
 
     [HttpGet("my")]
     [Authorize(Roles = "Company")]
-    public async Task<IEnumerable<OrderViewModel>> GetCompanyOrders(CancellationToken cancellationToken)
+    public async Task<IEnumerable<OrderViewModel>> GetCompanyOrdersAsync(CancellationToken cancellationToken)
     {
         var orders = await orderService.GetCompanyOrdersAsync(HttpContext.GetIdFromContext(), cancellationToken);
 
@@ -48,7 +48,7 @@ public class OrderController(IOrderService orderService, IMapper mapper) : Contr
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetOrderDetails(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetOrderDetailsAsync(Guid id, CancellationToken cancellationToken)
     {
         var role = HttpContext.GetRoleFromContext();
 
@@ -64,7 +64,7 @@ public class OrderController(IOrderService orderService, IMapper mapper) : Contr
 
     [HttpPost]
     [Authorize(Roles = "Company")]
-    public async Task<OrderViewModel> CreateOrder(OrderToCreateViewModel orderData, CancellationToken cancellationToken)
+    public async Task<OrderViewModel> CreateOrderAsync(OrderToCreateViewModel orderData, CancellationToken cancellationToken)
     {
         var orderToCreate = mapper.Map<OrderModel>(orderData);
 
@@ -77,28 +77,28 @@ public class OrderController(IOrderService orderService, IMapper mapper) : Contr
 
     [HttpPost("{id}/request")]
     [Authorize(Roles = "User")]
-    public async Task SendOrderRequest(Guid id, CancellationToken cancellationToken)
+    public async Task SendOrderRequestAsync(Guid id, CancellationToken cancellationToken)
     {
         await orderService.SendOrderRequestAsync(HttpContext.GetIdFromContext(), id, cancellationToken);
     }
 
     [HttpPost("{id}/complete")]
     [Authorize(Roles = "Company")]
-    public async Task CompleteOrder(Guid id, Guid userId, CancellationToken cancellationToken)
+    public async Task CompleteOrderAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
         await orderService.AcceptOrderAsync(HttpContext.GetIdFromContext(), userId, id, cancellationToken);
     }
 
     [HttpPost("{id}/expire")]
     [Authorize(Roles = "Company")]
-    public async Task ExpireOrder(Guid id, Guid userId, CancellationToken cancellationToken)
+    public async Task ExpireOrderAsync(Guid id, Guid userId, CancellationToken cancellationToken)
     {
         await orderService.ExpireOrderAsync(HttpContext.GetIdFromContext(), userId, id, cancellationToken);
     }
 
     [HttpPost("{id}/finish")]
     [Authorize(Roles = "Company")]
-    public async Task FinishOrder(Guid id, CancellationToken cancellationToken)
+    public async Task FinishOrderAsync(Guid id, CancellationToken cancellationToken)
     {
         await orderService.FinishOrderAsync(HttpContext.GetIdFromContext(), id, cancellationToken);
     }

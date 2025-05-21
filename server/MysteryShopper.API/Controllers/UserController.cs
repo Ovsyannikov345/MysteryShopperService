@@ -16,7 +16,7 @@ public class UserController(IUserService userService, IMapper mapper) : Controll
 {
     [HttpGet("my")]
     [Authorize(Roles = "User")]
-    public async Task<UserProfileViewModel> GetOwnProfile(CancellationToken cancellationToken)
+    public async Task<UserProfileViewModel> GetOwnProfileAsync(CancellationToken cancellationToken)
     {
         var id = HttpContext.GetIdFromContext();
 
@@ -26,7 +26,7 @@ public class UserController(IUserService userService, IMapper mapper) : Controll
     }
 
     [HttpGet("{id}")]
-    public async Task<UserProfileViewModel> GetProfile(Guid id, CancellationToken cancellationToken)
+    public async Task<UserProfileViewModel> GetProfilesync(Guid id, CancellationToken cancellationToken)
     {
         var profile = await userService.GetProfileAsync(id, cancellationToken);
 
@@ -35,7 +35,7 @@ public class UserController(IUserService userService, IMapper mapper) : Controll
 
     [HttpPut("{id}")]
     [Authorize(Roles = "User")]
-    public async Task<UserProfileViewModel> UpdateProfileInfo(Guid id, UserToUpdateViewModel userToUpdate, CancellationToken cancellationToken)
+    public async Task<UserProfileViewModel> UpdateProfileInfosync(Guid id, UserToUpdateViewModel userToUpdate, CancellationToken cancellationToken)
     {
         var currentUserId = HttpContext.GetIdFromContext();
 

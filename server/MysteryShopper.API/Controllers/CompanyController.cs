@@ -16,7 +16,7 @@ public class CompanyController(ICompanyService companyService, IMapper mapper) :
 {
     [HttpGet("my")]
     [Authorize(Roles = "Company")]
-    public async Task<CompanyProfileViewModel> GetOwnProfile(CancellationToken cancellationToken)
+    public async Task<CompanyProfileViewModel> GetOwnProfileAsync(CancellationToken cancellationToken)
     {
         var id = HttpContext.GetIdFromContext();
 
@@ -26,7 +26,7 @@ public class CompanyController(ICompanyService companyService, IMapper mapper) :
     }
 
     [HttpGet("{id}")]
-    public async Task<CompanyProfileViewModel> GetProfile(Guid id, CancellationToken cancellationToken)
+    public async Task<CompanyProfileViewModel> GetProfileAsync(Guid id, CancellationToken cancellationToken)
     {
         var profile = await companyService.GetProfileAsync(id, cancellationToken);
 
@@ -35,7 +35,7 @@ public class CompanyController(ICompanyService companyService, IMapper mapper) :
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Company")]
-    public async Task<CompanyProfileViewModel> UpdateProfileInfo(Guid id, CompanyToUpdateViewModel companyToUpdate, CancellationToken cancellationToken)
+    public async Task<CompanyProfileViewModel> UpdateProfileInfoAsync(Guid id, CompanyToUpdateViewModel companyToUpdate, CancellationToken cancellationToken)
     {
         var currentCompanyId = HttpContext.GetIdFromContext();
 
