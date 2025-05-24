@@ -258,7 +258,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     <TimelineContent sx={{ pl: 0.5 }}>
                         <Typography>Ждем вашего отчета...</Typography>
                         {endTime && endTime.isAfter(moment.utc()) ? (
-                            <Typography>осталось {moment.duration(moment.utc().diff(endTime)).humanize()}</Typography>
+                            <Typography>{moment.duration(moment.utc().diff(endTime)).humanize()} до истечения</Typography>
                         ) : endTime ? (
                             <Typography color="error">
                                 Срок выполнения истек {moment.duration(endTime.diff(moment.utc())).humanize()} назад

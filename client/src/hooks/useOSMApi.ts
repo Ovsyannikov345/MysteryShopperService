@@ -50,7 +50,7 @@ const useOSMApi = () => {
                         `${OsmQueryParamNames.LATITUDE}=${location.lat}`,
                         `${OsmQueryParamNames.LONGITUDE}=${location.lng}`,
                         `${OsmQueryParamNames.RESPONSE_FORMAT}=json`,
-                        `${OsmQueryParamNames.RESPONSE_LANGUAGE}=en-us`,
+                        `${OsmQueryParamNames.RESPONSE_LANGUAGE}=ru-ru`,
                     ].join("&")
             );
 
