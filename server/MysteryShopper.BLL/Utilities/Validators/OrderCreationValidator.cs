@@ -8,27 +8,32 @@ public class OrderCreationValidator : AbstractValidator<OrderModel>
     public OrderCreationValidator()
     {
         RuleFor(order => order.Title)
-            .NotEmpty().WithMessage("Title is required.")
-            .MaximumLength(100).WithMessage("Title cannot exceed 100 characters.");
+            .NotEmpty().WithMessage("Заголовок обязателен.")
+            .MaximumLength(100).WithMessage("Заголовок не должен превышать 100 символов.");
 
         RuleFor(order => order.Description)
-            .NotEmpty().WithMessage("Description is required.");
+            .NotEmpty().WithMessage("Описание обязательно.");
 
         RuleFor(order => order.Place)
-            .MaximumLength(255).WithMessage("Place cannot exceed 255 characters.");
+            .MaximumLength(255).WithMessage("Адрес не должен превышать 255 символов.");
 
         RuleFor(order => order.TimeToComplete)
-            .GreaterThan(TimeSpan.Zero).When(order => order.TimeToComplete.HasValue).WithMessage("TimeToComplete must be greater than zero.");
+            .GreaterThan(TimeSpan.Zero).When(order => order.TimeToComplete.HasValue)
+            .WithMessage("Время выполнения должно быть больше нуля.");
 
         RuleFor(order => order.Price)
-            .GreaterThan(0).When(order => order.Price.HasValue).WithMessage("Price must be greater than zero.");
+            .GreaterThan(0).When(order => order.Price.HasValue)
+            .WithMessage("Цена должна быть больше нуля.");
 
         RuleFor(order => order.Lat)
-            .GreaterThan(0).When(order => order.Lat != null).WithMessage("Lat must be a valid number.");
+            .GreaterThan(0).When(order => order.Lat != null)
+            .WithMessage("Широта должна быть допустимым числом.");
+
         RuleFor(order => order.Lng)
-            .GreaterThan(0).When(order => order.Lng != null).WithMessage("Lng must be a valid number.");
+            .GreaterThan(0).When(order => order.Lng != null)
+            .WithMessage("Долгота должна быть допустимым числом.");
 
         RuleFor(order => order.CompanyId)
-            .NotEmpty().WithMessage("CompanyId is required.");
+            .NotEmpty().WithMessage("Идентификатор компании обязателен.");
     }
 }

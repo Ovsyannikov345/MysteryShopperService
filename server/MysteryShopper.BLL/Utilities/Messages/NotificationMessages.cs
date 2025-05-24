@@ -2,19 +2,17 @@
 
 public static class NotificationMessages
 {
-    public const string NewDispute = "You have a new despute. Please, describe the problem.";
+    public const string NewRequest = "У вас новая заявка на выполнение заказа.";
 
-    public const string NewRequest = "You have a new order request.";
+    public const string RequestAccepted = "Ваш запрос на выполнение заказа был принят.";
 
-    public const string RequestAccepted = "Your order request was accepted.";
+    public const string RequestRejected = "Ваш запрос на выполнение заказа был отклонён.";
 
-    public const string RequestRejected = "Your order request was rejected.";
+    public const string NewReport = "У вас новый отчёт по заказу.";
 
-    public const string NewReport = "You have a new order report.";
+    public const string NewReportCorrection = "У вас новые правки на отчёт по заказу.";
 
-    public const string NewReportCorrection = "You have a new order report correction.";
+    public const string OrderCompleted = "Ваш отчёт по заказу был принят. Пожалуйста, оставьте отзыв.";
 
-    public const string OrderCompleted = "Your order report was accepted. Please leave a review.";
-
-    public const string OrderExpired = "Your order has expired.";
+    public const string OrderExpired = "Срок выполнения заказа истёк.";
 }

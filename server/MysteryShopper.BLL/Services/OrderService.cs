@@ -118,11 +118,11 @@ public class OrderService(
     public async Task SendOrderRequestAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
     {
         var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken)
-            ?? throw new NotFoundException("Order status is not defined");
+            ?? throw new NotFoundException("Ваш статус заказа не определен");
 
         if (userOrder.Status != UserOrderStatus.None)
         {
-            throw new BadRequestException("You can't send request to this order");
+            throw new BadRequestException("Вы не можете отправить заявку на этот заказ");
         }
 
         var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken)!;
@@ -142,10 +142,10 @@ public class OrderService(
     public async Task<UserOrder> GetOrderDetailsForUserAsync(Guid userId, Guid orderId, CancellationToken cancellationToken = default)
     {
         var order = await orderRepository.GetAsync(o => o.Id == orderId, disableTracking: false, cancellationToken)
-            ?? throw new NotFoundException("Order is not found");
+            ?? throw new NotFoundException("Заказ не найден");
 
         var user = await userRepository.GetAsync(u => u.Id == userId, disableTracking: false, cancellationToken)
-            ?? throw new NotFoundException("User is not found");
+            ?? throw new NotFoundException("Пользователь не найден");
 
         var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken);
 
@@ -173,11 +173,11 @@ public class OrderService(
     public async Task<OrderModel> GetOrderDetailsForCompanyAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default)
     {
         var order = await orderRepository.GetFullOrderDetailsAsync(orderId, cancellationToken)
-            ?? throw new NotFoundException("Order is not found");
+            ?? throw new NotFoundException("Заказ не найден");
 
         if (order.CompanyId != companyId)
         {
-            throw new ForbiddenException("You are not the owner of the order");
+            throw new ForbiddenException("Вы не владелец этого заказа");
         }
 
         var orderModel = mapper.Map<OrderModel>(order);
@@ -190,16 +190,16 @@ public class OrderService(
     public async Task AcceptRequestAsync(Guid companyId, Guid id, CancellationToken cancellationToken = default)
     {
         var userOrder = await userOrderRepository.GetUserOrderAsync(id, cancellationToken)
-            ?? throw new NotFoundException("Order status for user is not specified");
+            ?? throw new NotFoundException("Статус заказа не определен");
 
         if (userOrder.Order.Company.Id != companyId)
         {
-            throw new ForbiddenException("You can't accept this request");
+            throw new ForbiddenException("Вы не можете принять этот запрос");
         }
 
         if (userOrder.Status != UserOrderStatus.Requested)
         {
-            throw new BadRequestException("You can't accept this request");
+            throw new BadRequestException("Вы не можете принять этот запрос");
         }
 
         var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken);
@@ -219,16 +219,16 @@ public class OrderService(
     public async Task RejectRequestAsync(Guid companyId, Guid id, CancellationToken cancellationToken = default)
     {
         var userOrder = await userOrderRepository.GetUserOrderAsync(id, cancellationToken)
-            ?? throw new NotFoundException("Order status for user is not specified");
+            ?? throw new NotFoundException("Статус заказа не определен");
 
         if (userOrder.Order.Company.Id != companyId)
         {
-            throw new ForbiddenException("You can't reject this request");
+            throw new ForbiddenException("Вы не можете отклонить этот запрос");
         }
 
         if (userOrder.Status != UserOrderStatus.Requested)
         {
-            throw new BadRequestException("You can't reject this request");
+            throw new BadRequestException("Вы не можете отклонить этот запрос");
         }
 
         var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken);
@@ -246,12 +246,12 @@ public class OrderService(
     public async Task ExpireOrderAsync(Guid companyId, Guid userId, Guid orderId, CancellationToken cancellationToken = default)
     {
         var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken)
-            ?? throw new NotFoundException("Order status for user is not specified");
+            ?? throw new NotFoundException("Статус заказа не определен");
 
         if (userOrder.Order.Company.Id != companyId ||
             userOrder.Status != UserOrderStatus.InProgress)
         {
-            throw new ForbiddenException("You can't expire this order");
+            throw new ForbiddenException("Вы не можете отметить заказ как истекший");
         }
 
         var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken);
@@ -269,16 +269,16 @@ public class OrderService(
     public async Task AcceptOrderAsync(Guid companyId, Guid userId, Guid orderId, CancellationToken cancellationToken = default)
     {
         var userOrder = await userOrderRepository.GetUserOrderAsync(userId, orderId, cancellationToken)
-            ?? throw new NotFoundException("Order status for user is not specified");
+            ?? throw new NotFoundException("Статус заказа не определен");
 
         if (userOrder.Order.Company.Id != companyId)
         {
-            throw new ForbiddenException("You can't finish this order");
+            throw new ForbiddenException("Вы не можете принять этот заказ");
         }
 
         if (userOrder.Status != UserOrderStatus.InProgress)
         {
-            throw new BadRequestException("You can't finish this order");
+            throw new BadRequestException("Вы не можете принять этот заказ");
         }
 
         var userOrderToUpdate = await userOrderRepository.GetAsync(u => u.Id == userOrder.Id, disableTracking: false, cancellationToken: cancellationToken);
@@ -296,18 +296,18 @@ public class OrderService(
     public async Task FinishOrderAsync(Guid companyId, Guid orderId, CancellationToken cancellationToken = default)
     {
         var order = await orderRepository.GetAsync(o => o.Id == orderId, disableTracking: false, cancellationToken)
-            ?? throw new NotFoundException("Order is not found");
+            ?? throw new NotFoundException("Статус заказа не определен");
 
         if (order.CompanyId != companyId)
         {
-            throw new ForbiddenException("You can't finish this order");
+            throw new ForbiddenException("Вы не можете завершить этот заказ");
         }
 
         var userOrders = await userOrderRepository.GetAllAsync(u => u.OrderId == orderId, cancellationToken);
 
         if (userOrders.Any(u => u.Status == UserOrderStatus.InProgress))
         {
-            throw new BadRequestException("Some users are currently working on this order");
+            throw new BadRequestException("Тайные покупатели выполняют заказ");
         }
 
         order.IsClosed = true;

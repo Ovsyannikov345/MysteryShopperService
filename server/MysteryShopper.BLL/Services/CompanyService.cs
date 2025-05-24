@@ -18,18 +18,18 @@ public class CompanyService(ICompanyRepository companyRepository, IMapper mapper
     public async Task<Company> GetProfileAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await companyRepository.GetCompanyWithReviewsAsync(c => c.Id == id, cancellationToken)
-            ?? throw new NotFoundException("Company is not found");
+            ?? throw new NotFoundException("Компания не найдена");
     }
 
     public async Task<Company> UpdateProfileInfoAsync(Guid currentCompanyId, CompanyToUpdateModel companyData, CancellationToken cancellationToken = default)
     {
         if (currentCompanyId != companyData.Id)
         {
-            throw new ForbiddenException("You can't update other company's profile");
+            throw new ForbiddenException("Вы не можете обновить чужой профиль");
         }
 
         var company = await companyRepository.GetAsync(c => c.Id == companyData.Id, disableTracking: false, cancellationToken)
-            ?? throw new NotFoundException("Company is not found");
+            ?? throw new NotFoundException("Компания не найдена");
 
         var companyProperties = typeof(Company).GetProperties();
 

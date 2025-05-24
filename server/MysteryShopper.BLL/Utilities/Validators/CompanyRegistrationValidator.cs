@@ -8,21 +8,21 @@ public class CompanyRegistrationValidator : AbstractValidator<CompanyRegistratio
     public CompanyRegistrationValidator()
     {
         RuleFor(c => c.Name)
-            .NotEmpty().WithMessage("Company name should not be empty")
-            .MinimumLength(3).WithMessage("Company name should be from 3 to 255 symbols")
-            .MaximumLength(255).WithMessage("Company name should be from 3 to 255 symbols");
+            .NotEmpty().WithMessage("Название компании не должно быть пустым")
+            .MinimumLength(3).WithMessage("Название компании должно содержать от 3 до 255 символов")
+            .MaximumLength(255).WithMessage("Название компании должно содержать от 3 до 255 символов");
 
         RuleFor(c => c.Email)
-            .NotEmpty().WithMessage("Company email should not be empty")
-            .EmailAddress().WithMessage("Company email has invalid format");
+            .NotEmpty().WithMessage("Email компании не должен быть пустым")
+            .EmailAddress().WithMessage("Неверный формат почты");
 
         RuleFor(c => c.Password)
-            .NotEmpty().WithMessage("Password should not be empty")
-            .MaximumLength(20).WithMessage("Password should be shorter than 20 symbols")
-            .MinimumLength(8).WithMessage("Password should be longer than 8 symbols");
+            .NotEmpty().WithMessage("Пароль не должен быть пустым")
+            .MaximumLength(20).WithMessage("Пароль должен содержать не более 20 символов")
+            .MinimumLength(8).WithMessage("Пароль должен содержать не менее 8 символов");
 
         RuleFor(c => c.CompanyContactPerson)
-            .NotNull().WithMessage("Contact person should be defined")
+            .NotNull().WithMessage("Контактное лицо должно быть указано")
             .SetValidator(new ContactPersonValidator());
     }
 }

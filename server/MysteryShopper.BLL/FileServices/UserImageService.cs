@@ -19,23 +19,23 @@ public class UserImageService(IUserAvatarStorage userAvatarStorage, IUserReposit
     public async Task UploadImageAsync(Guid userId, IFormFile file, CancellationToken cancellationToken = default)
     {
         _ = await userRepository.GetAsync(c => c.Id == userId, disableTracking: true, cancellationToken)
-            ?? throw new NotFoundException("User is not found");
+            ?? throw new NotFoundException("Пользователь не найден");
 
         if (file == null || file.Length == 0)
         {
-            throw new BadRequestException("File is empty");
+            throw new BadRequestException("Файл пуст");
         }
 
         var fileExtension = Path.GetExtension(file.FileName).ToLower();
 
         if (!SupportedExtensions.Contains(fileExtension))
         {
-            throw new BadRequestException($"Acceptable formats: {string.Join(", ", SupportedExtensions)}");
+            throw new BadRequestException($"Допустимые форматы: {string.Join(", ", SupportedExtensions)}");
         }
 
         if (file.Length > MaxFileSizeInBytes)
         {
-            throw new BadRequestException($"Max file size is {MaxFileSizeInMBytes} Mb");
+            throw new BadRequestException($"Максимальный размер файла: {MaxFileSizeInMBytes} МБ");
         }
 
         using var fileStream = file.OpenReadStream();

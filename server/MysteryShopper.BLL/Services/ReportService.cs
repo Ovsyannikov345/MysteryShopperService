@@ -34,7 +34,7 @@ public class ReportService(
 
         if (userOrder is null || userOrder.Status != UserOrderStatus.InProgress)
         {
-            throw new ForbiddenException("You are not allowed to send reports to this order");
+            throw new ForbiddenException("Вы не можете отправить отчет по этому заказу");
         }
 
         var createdReport = await reportRepository.AddAsync(mapper.Map<Report>(reportData), cancellationToken);

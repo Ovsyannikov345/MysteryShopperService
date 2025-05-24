@@ -25,7 +25,7 @@ public class SupportRequestService(
 
         if (!isUserExists && !isCompanyExists)
         {
-            throw new BadRequestException("Sender of the support request is not found");
+            throw new BadRequestException("Отправитель заявки не найден");
         }
 
         var createdRequest = await supportRequestRepository.AddAsync(mapper.Map<SupportRequest>(requestData), cancellationToken);

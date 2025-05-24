@@ -59,14 +59,14 @@ public class AuthService(
             {
                 _logger.Warning("User or company with email {0} is not found", email);
 
-                throw new UnauthorizedException("Provided credentials are invalid");
+                throw new UnauthorizedException("Пользователь не найден");
             }
 
             if (!BCrypt.Net.BCrypt.Verify(password, company.Password))
             {
                 _logger.Warning("Invalid credentials for company {0}", company.Id);
 
-                throw new UnauthorizedException("Provided credentials are invalid");
+                throw new UnauthorizedException("Пользователь не найден");
             }
 
             _logger.Information("Company {0} logged in successfully", company.Id);
@@ -85,7 +85,7 @@ public class AuthService(
         {
             _logger.Warning("Invalid credentials for user {0}", user.Id);
 
-            throw new UnauthorizedException("Provided credentials are invalid");
+            throw new UnauthorizedException("Пользователь не найден");
         }
 
         _logger.Information("User {0} logged in successfully", user.Id);
@@ -130,7 +130,7 @@ public class AuthService(
         {
             _logger.Information("User email {0} is taken", userData.Email);
 
-            throw new BadRequestException("Email is taken");
+            throw new BadRequestException("Адрес эл. почты уже занят");
         }
 
         var user = _mapper.Map<User>(userData);
@@ -166,7 +166,7 @@ public class AuthService(
         {
             _logger.Information("Company email {0} is taken", companyData.Email);
 
-            throw new BadRequestException("Company email is taken");
+            throw new BadRequestException("Адрес эл. почты уже занят");
         }
 
         var company = _mapper.Map<Company>(companyData);
@@ -189,9 +189,9 @@ public class AuthService(
 
     public async Task<bool> IsEmailAvailableAsync(string email, CancellationToken cancellationToken = default)
     {
-        bool a = await _userRepository.ExistsAsync(u => u.Email == email, cancellationToken);
+        bool isUserFound = await _userRepository.ExistsAsync(u => u.Email == email, cancellationToken);
 
-        if (a)
+        if (isUserFound)
         {
             return false;
         }

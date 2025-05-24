@@ -8,19 +8,20 @@ public class ReportValidator : AbstractValidator<ReportModel>
     public ReportValidator()
     {
         RuleFor(report => report.Title)
-            .NotEmpty().WithMessage("Title is required.")
-            .MaximumLength(100).WithMessage("Title cannot exceed 100 characters.");
+            .NotEmpty().WithMessage("Заголовок обязателен для заполнения.")
+            .MaximumLength(100).WithMessage("Заголовок не должен превышать 100 символов.");
 
         RuleFor(report => report.Description)
-            .NotEmpty().WithMessage("Description is required.");
+            .NotEmpty().WithMessage("Описание обязательно для заполнения.");
 
         RuleFor(report => report.Grade)
-            .InclusiveBetween((short)0, (short)5).WithMessage("Grade must be between 0 and 5.");
+            .InclusiveBetween((short)0, (short)5)
+            .WithMessage("Оценка должна быть от 0 до 5.");
 
         RuleFor(report => report.UserId)
-            .NotEmpty().WithMessage("UserId is required.");
+            .NotEmpty().WithMessage("Идентификатор пользователя обязателен.");
 
         RuleFor(report => report.OrderId)
-            .NotEmpty().WithMessage("OrderId is required.");
+            .NotEmpty().WithMessage("Идентификатор заказа обязателен.");
     }
 }

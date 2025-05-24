@@ -8,43 +8,44 @@ public class UserRegistrationValidator : AbstractValidator<UserRegistrationCrede
     public UserRegistrationValidator()
     {
         RuleFor(u => u.Name)
-            .NotEmpty().WithMessage("Name should not be empty")
-            .MaximumLength(50).WithMessage("Name should be from 3 to 50 symbols")
-            .MinimumLength(3).WithMessage("Name should be from 3 to 50 symbols");
+            .NotEmpty().WithMessage("Имя не должно быть пустым")
+            .MaximumLength(50).WithMessage("Имя должно содержать от 3 до 50 символов")
+            .MinimumLength(3).WithMessage("Имя должно содержать от 3 до 50 символов");
 
         RuleFor(u => u.Surname)
-            .NotEmpty().WithMessage("Surname should not be empty")
-            .MaximumLength(50).WithMessage("Surname should be from 3 to 50 symbols")
-            .MinimumLength(3).WithMessage("Surname should be from 3 to 50 symbols");
+            .NotEmpty().WithMessage("Фамилия не должна быть пустой")
+            .MaximumLength(50).WithMessage("Фамилия должна содержать от 3 до 50 символов")
+            .MinimumLength(3).WithMessage("Фамилия должна содержать от 3 до 50 символов");
 
         RuleFor(u => u.BirthDate)
             .InclusiveBetween(DateTime.Now.AddYears(-100), DateTime.Now)
-            .When(u => u.BirthDate != null);
+            .When(u => u.BirthDate != null)
+            .WithMessage("Некорректная дата рождения");
 
         RuleFor(u => u.City)
-            .MaximumLength(100).WithMessage("City should be from 3 to 50 symbols")
-            .MinimumLength(3).WithMessage("City should be from 3 to 50 symbols")
+            .MaximumLength(100).WithMessage("Город должен содержать от 3 до 50 символов")
+            .MinimumLength(3).WithMessage("Город должен содержать от 3 до 50 символов")
             .When(u => u.City != null);
 
         RuleFor(u => u.Gender)
-            .IsInEnum().WithMessage("Gender should be specified");
+            .IsInEnum().WithMessage("Пол должен быть указан");
 
         RuleFor(u => u.Phone)
-            .NotEmpty().WithMessage("Phone should not be empty")
-            .Matches(@"^\+?375\([1-9]{2}\)[0-9\-]{7,14}$").WithMessage("Invalid phone format");
+            .NotEmpty().WithMessage("Телефон не должен быть пустым")
+            .Matches(@"^\+?375\([1-9]{2}\)[0-9\-]{7,14}$").WithMessage("Неверный формат номера телефона");
 
         RuleFor(u => u.Description)
-            .MaximumLength(500).WithMessage("Description should be from 3 to 500 symbols")
-            .MinimumLength(3).WithMessage("Description should be from 3 to 500 symbols")
+            .MaximumLength(500).WithMessage("Описание должно содержать от 3 до 500 символов")
+            .MinimumLength(3).WithMessage("Описание должно содержать от 3 до 500 символов")
             .When(u => u.Description != null);
 
         RuleFor(u => u.Email)
-            .NotEmpty().WithMessage("Email should not be empty")
-            .EmailAddress().WithMessage("Email has invalid format");
+            .NotEmpty().WithMessage("Email не должен быть пустым")
+            .EmailAddress().WithMessage("Неверный формат email");
 
         RuleFor(u => u.Password)
-            .NotEmpty().WithMessage("Password should not be empty")
-            .MaximumLength(20).WithMessage("Password should be shorter than 20 symbols")
-            .MinimumLength(8).WithMessage("Password should be longer than 8 symbols");
+            .NotEmpty().WithMessage("Пароль не должен быть пустым")
+            .MaximumLength(20).WithMessage("Пароль должен содержать не более 20 символов")
+            .MinimumLength(8).WithMessage("Пароль должен содержать не менее 8 символов");
     }
 }

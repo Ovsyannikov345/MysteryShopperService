@@ -8,10 +8,10 @@ public class ReportCorrectionValidator : AbstractValidator<ReportCorrectionModel
     public ReportCorrectionValidator()
     {
         RuleFor(x => x.Description)
-            .NotEmpty().WithMessage("Description is required.")
-            .MaximumLength(500).WithMessage("Description cannot exceed 500 characters.");
+            .NotEmpty().WithMessage("Описание обязательно для заполнения.")
+            .MaximumLength(500).WithMessage("Описание не должно превышать 500 символов.");
 
         RuleFor(x => x.ReportId)
-            .NotEmpty().WithMessage("ReportId is required.");
+            .NotEmpty().WithMessage("Идентификатор отчёта обязателен.");
     }
 }

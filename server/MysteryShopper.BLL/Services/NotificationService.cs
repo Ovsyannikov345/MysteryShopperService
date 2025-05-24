@@ -38,11 +38,6 @@ public class NotificationService(INotificationRepository notificationRepository,
     {
         var notifications = await notificationRepository.GetCompanyNotifications(companyId, cancellationToken: cancellationToken);
 
-        foreach (var notification in notifications)
-        {
-            Console.WriteLine(notification.CreatedAt);
-        }
-
         return mapper.Map<IEnumerable<Notification>, IEnumerable<NotificationModel>>(notifications);
     }
 
@@ -56,11 +51,11 @@ public class NotificationService(INotificationRepository notificationRepository,
     public async Task ReadCompanyNotificationAsync(Guid notificationId, Guid companyId, CancellationToken cancellationToken = default)
     {
         var notification = await notificationRepository.GetAsync(n => n.Id == notificationId, disableTracking: true, cancellationToken)
-            ?? throw new NotFoundException("Notification is not found");
+            ?? throw new NotFoundException("Уведомление не найдено");
 
         if (notification.CompanyId != companyId)
         {
-            throw new ForbiddenException("You can't access this notification");
+            throw new ForbiddenException("Вы не можете прочитать чужое уведомление");
         }
 
         notification.IsRead = true;
@@ -70,11 +65,11 @@ public class NotificationService(INotificationRepository notificationRepository,
     public async Task ReadUserNotificationAsync(Guid notificationId, Guid userId, CancellationToken cancellationToken = default)
     {
         var notification = await notificationRepository.GetAsync(n => n.Id == notificationId, disableTracking: true, cancellationToken)
-            ?? throw new NotFoundException("Notification is not found");
+            ?? throw new NotFoundException("Уведомление не найдено");
 
         if (notification.UserId != userId)
         {
-            throw new ForbiddenException("You can't access this notification");
+            throw new ForbiddenException("Вы не можете прочитать чужое уведомление");
         }
 
         notification.IsRead = true;

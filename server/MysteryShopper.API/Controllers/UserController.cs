@@ -41,7 +41,7 @@ public class UserController(IUserService userService, IMapper mapper) : Controll
 
         if (id != userToUpdate.Id)
         {
-            throw new BadRequestException("User id in route doesn't match with provided in body");
+            throw new BadRequestException("ID пользователя в пути и в теле запроса не совпадают");
         }
 
         var updatedUser = await userService.UpdateProfileInfoAsync(currentUserId, mapper.Map<UserToUpdateModel>(userToUpdate), cancellationToken);

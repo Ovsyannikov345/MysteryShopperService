@@ -30,16 +30,16 @@ public class ReportCorrectionService(
         }
 
         var report = await reportRepository.GetReportDetailsAsync(correctionData.ReportId, cancellationToken)
-            ?? throw new NotFoundException("Report is not found");
+            ?? throw new NotFoundException("Отчет не найден");
 
         if (report.Order.CompanyId != currentCompanyId)
         {
-            throw new ForbiddenException("You can't create a correction to report for other company's order");
+            throw new ForbiddenException("Вы не можете создать правки на этот отчет");
         }
 
         if (report.ReportCorrection is not null)
         {
-            throw new BadRequestException("Report already has a correction");
+            throw new BadRequestException("Правки на отчет уже существуют");
         }
 
         var createdCorrection = await reportCorrectionRepository.AddAsync(mapper.Map<ReportCorrection>(correctionData), cancellationToken);

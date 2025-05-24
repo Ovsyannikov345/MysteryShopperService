@@ -39,26 +39,26 @@ public abstract class FileService(IMinioStorage imageStorage) : IFileService
     public virtual async Task<BlobObject> GetFileAsync(string fileName, CancellationToken cancellationToken = default)
     {
         return await Storage.GetObjectAsync(fileName, cancellationToken)
-            ?? throw new NotFoundException("File not found");
+            ?? throw new NotFoundException("Файл не найден");
     }
 
     public virtual async Task UploadFileAsync(string fileName, IFormFile file, CancellationToken cancellationToken = default)
     {
         if (file == null || file.Length == 0)
         {
-            throw new BadRequestException("File is empty");
+            throw new BadRequestException("Файл пуст");
         }
 
         var fileExtension = Path.GetExtension(file.FileName).ToLower();
 
         if (!SupportedExtensions.Contains(fileExtension))
         {
-            throw new BadRequestException($"Acceptable formats: {string.Join(", ", SupportedExtensions)}");
+            throw new BadRequestException($"Допустимые форматы: {string.Join(", ", SupportedExtensions)}");
         }
 
         if (file.Length > MaxFileSizeInBytes)
         {
-            throw new BadRequestException($"Max file size is {MaxFileSizeInMBytes} Mb");
+            throw new BadRequestException($"Максимальный размер файла: {MaxFileSizeInMBytes} МБ");
         }
 
         using var fileStream = file.OpenReadStream();

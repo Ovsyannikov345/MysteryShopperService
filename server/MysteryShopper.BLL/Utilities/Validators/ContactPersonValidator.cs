@@ -8,17 +8,17 @@ public class ContactPersonValidator : AbstractValidator<CompanyContactPersonCred
     public ContactPersonValidator()
     {
         RuleFor(c => c.Name)
-            .NotEmpty().WithMessage("Contact person name should not be empty")
-            .MaximumLength(50).WithMessage("Contact person name should be from 3 to 50 symbols")
-            .MinimumLength(3).WithMessage("Contact person name should be from 3 to 50 symbols");
+        .NotEmpty().WithMessage("Имя контактного лица не должно быть пустым")
+        .MaximumLength(50).WithMessage("Имя контактного лица должно содержать от 3 до 50 символов")
+        .MinimumLength(3).WithMessage("Имя контактного лица должно содержать от 3 до 50 символов");
 
         RuleFor(c => c.Surname)
-            .NotEmpty().WithMessage("Contact person surname should not be empty")
-            .MaximumLength(50).WithMessage("Contact person surname should be from 3 to 50 symbols")
-            .MinimumLength(3).WithMessage("Contact person surname should be from 3 to 50 symbols");
+            .NotEmpty().WithMessage("Фамилия контактного лица не должна быть пустой")
+            .MaximumLength(50).WithMessage("Фамилия контактного лица должна содержать от 3 до 50 символов")
+            .MinimumLength(3).WithMessage("Фамилия контактного лица должна содержать от 3 до 50 символов");
 
         RuleFor(u => u.Email)
-            .NotEmpty().WithMessage("Contact person email should not be empty")
-            .EmailAddress().WithMessage("Contact person email has invalid format");
+            .NotEmpty().WithMessage("Email контактного лица не должен быть пустым")
+            .EmailAddress().WithMessage("Неверный формат почты контактного лица");
     }
 }

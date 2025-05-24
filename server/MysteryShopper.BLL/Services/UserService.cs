@@ -17,7 +17,7 @@ public class UserService(IUserRepository userRepository) : IUserService
     public async Task<User> GetProfileAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var user = await userRepository.GetUserWithReviewsAsync(u => u.Id == id, cancellationToken)
-            ?? throw new NotFoundException("User is not found");
+            ?? throw new NotFoundException("Пользователь не найден");
 
         return user;
     }
@@ -26,11 +26,11 @@ public class UserService(IUserRepository userRepository) : IUserService
     {
         if (currentUserId != userData.Id)
         {
-            throw new ForbiddenException("You can't update other person's profile");
+            throw new ForbiddenException("Вы не можете обновить чужой профиль");
         }
 
         var user = await userRepository.GetAsync(u => u.Id == userData.Id, disableTracking: false, cancellationToken)
-            ?? throw new NotFoundException("User is not found");
+            ?? throw new NotFoundException("Пользователь не найден");
 
         var userProperties = typeof(User).GetProperties();
 

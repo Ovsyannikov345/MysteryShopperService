@@ -41,7 +41,7 @@ public class CompanyController(ICompanyService companyService, IMapper mapper) :
 
         if (id != companyToUpdate.Id)
         {
-            throw new BadRequestException("Company id in route doesn't match with provided in body");
+            throw new BadRequestException("ID компании в пути и в теле запроса не совпадают");
         }
 
         var updatedCompany = await companyService.UpdateProfileInfoAsync(currentCompanyId, mapper.Map<CompanyToUpdateModel>(companyToUpdate), cancellationToken);

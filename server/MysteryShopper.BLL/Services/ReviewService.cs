@@ -25,19 +25,19 @@ public class ReviewService(
     {
         if (userId != reviewData.UserId)
         {
-            throw new BadRequestException("You can't post a review from other person");
+            throw new BadRequestException("Вы не можете отправить отзыв от лица другого человека");
         }
 
         var userOrder = await userOrderRepository.GetUserOrderAsync(userId, reviewData.OrderId, cancellationToken);
 
         if (userOrder is null || userOrder.Status != UserOrderStatus.Completed)
         {
-            throw new ForbiddenException("You can't post a review to this order");
+            throw new ForbiddenException("Вы не можете отправить отзыв на этот заказ");
         }
 
         if (await companyReviewRepository.ExistsAsync(r => r.OrderId == reviewData.OrderId && r.UserId == reviewData.UserId, cancellationToken))
         {
-            throw new BadRequestException("Review already exists");
+            throw new BadRequestException("Отзыв уже существует");
         }
 
         var createdReview = await companyReviewRepository.AddAsync(mapper.Map<CompanyReview>(reviewData), cancellationToken);
@@ -49,27 +49,27 @@ public class ReviewService(
     {
         if (companyId != reviewData.CompanyId)
         {
-            throw new BadRequestException("You can't post a review from other company");
+            throw new BadRequestException("Вы не можете отправить отзыв от лица другой компании");
         }
 
         var order = await orderRepository.GetAsync(o => o.Id == reviewData.OrderId, disableTracking: true, cancellationToken)
-            ?? throw new NotFoundException("Order is not found");
+            ?? throw new NotFoundException("Заказ не найден");
 
         if (order.CompanyId != companyId)
         {
-            throw new ForbiddenException("You can't post a review from other company");
+            throw new ForbiddenException("Вы не можете отправить отзыв на этот заказ");
         }
 
         var userOrder = await userOrderRepository.GetUserOrderAsync(reviewData.UserId, reviewData.OrderId, cancellationToken);
 
         if (userOrder is null || userOrder.Status != UserOrderStatus.Completed)
         {
-            throw new ForbiddenException("You can't post a review to this user");
+            throw new ForbiddenException("Вы не можете отправить отзыв на этот заказ");
         }
 
         if (await userReviewRepository.ExistsAsync(r => r.OrderId == reviewData.OrderId && r.UserId == reviewData.UserId, cancellationToken))
         {
-            throw new BadRequestException("Review already exists");
+            throw new BadRequestException("Отзыв уже существует");
         }
 
         var createdReview = await userReviewRepository.AddAsync(mapper.Map<UserReview>(reviewData), cancellationToken);

@@ -56,7 +56,7 @@ public class TokenService(IConfiguration configuration, IRefreshTokenRepository 
     public async Task<TokenPair> RefreshTokensAsync(string refreshToken, CancellationToken cancellationToken = default)
     {
         var refreshTokenEntity = await _refreshTokenRepository.GetAsync(token => token.Token == refreshToken, disableTracking: false, cancellationToken)
-            ?? throw new NotFoundException("Provided refresh token is not found");
+            ?? throw new NotFoundException("Токен обновления не найден");
 
         var tokenHandler = new JsonWebTokenHandler();
 
@@ -80,7 +80,7 @@ public class TokenService(IConfiguration configuration, IRefreshTokenRepository 
 
             await _refreshTokenRepository.DeleteAsync(refreshTokenEntity.Id, cancellationToken);
 
-            throw new ForbiddenException("Provided refresh token is invalid");
+            throw new ForbiddenException("Токен обновления не валиден");
         }
 
         string newAccessToken = GenerateToken(validationResult.ClaimsIdentity.Claims,
@@ -115,7 +115,7 @@ public class TokenService(IConfiguration configuration, IRefreshTokenRepository 
         if (token == null)
         {
             _logger.Error("Provided refresh token is not found");
-            throw new NotFoundException("Provided refresh token is not found");
+            throw new NotFoundException("Токен обновления не найден");
         }
 
         await _refreshTokenRepository.DeleteAsync(token.Id, cancellationToken);

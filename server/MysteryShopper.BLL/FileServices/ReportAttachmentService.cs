@@ -18,11 +18,11 @@ public class ReportAttachmentService(IReportAttachmentStorage reportAttachmentMi
     public async Task UploadFileAsync(Guid reportId, Guid userId, IFormFile file, CancellationToken cancellationToken = default)
     {
         var report = await reportRepository.GetReportDetailsAsync(reportId, cancellationToken)
-            ?? throw new NotFoundException("Report not found");
+            ?? throw new NotFoundException("Отчет не найден");
 
         if (report.UserId != userId)
         {
-            throw new ForbiddenException("You cannot upload files to this report");
+            throw new ForbiddenException("Вы не можете загрузить файл к этому отчету");
         }
 
         var fileName = $"{reportId}/{file.FileName}";
