@@ -135,7 +135,7 @@ const NotificationMenu = () => {
                                 onMouseEnter={() => readSelectedNotification(notification.id)}
                             >
                                 <ListItemText
-                                    primary={<Typography sx={{ textWrap: "balance" }}>{notification.text}</Typography>}
+                                    primary={<Typography sx={{ textWrap: "pretty" }}>{notification.text}</Typography>}
                                     secondary={
                                         <>
                                             {!notification.isRead && <PulseDot color="#e3bf00" style={{ marginLeft: "-6px" }} />}
