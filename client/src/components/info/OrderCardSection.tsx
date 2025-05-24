@@ -39,7 +39,7 @@ const OrderCardSection = ({ label, orders }: { label: string; orders: UserOrder[
                     sx={{ borderWidth: 2 }}
                     onClick={() => setShowAll((prev) => !prev)}
                 >
-                    {!showAll ? `Show more (${orders.length - shownOrders.length})` : "Show less"}
+                    {!showAll ? `Показать еще (${orders.length - shownOrders.length})` : "Скрыть"}
                 </Button>
             )}
         </>

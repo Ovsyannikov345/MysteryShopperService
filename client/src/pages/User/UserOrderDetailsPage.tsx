@@ -56,6 +56,10 @@ const UserOrderDetailsPage = () => {
     }, [orderData]);
 
     useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+
+    useEffect(() => {
         const loadOrderData = async () => {
             const response = await getOrderDetails(id!);
 
@@ -98,10 +102,10 @@ const UserOrderDetailsPage = () => {
 
         let readableExpiration = "";
         if (days > 0) {
-            readableExpiration += `${days} ${days > 1 ? "days" : "day"}`;
+            readableExpiration += `${days} дн.`;
         }
         if (hours > 0) {
-            readableExpiration += `${days > 0 ? " and " : ""}${hours} ${hours > 1 ? "hours" : "hour"}`;
+            readableExpiration += readableExpiration === "" ? `${hours} ч.` : ` ${hours} ч.`;
         }
 
         return readableExpiration;
@@ -166,7 +170,7 @@ const UserOrderDetailsPage = () => {
                                     <Grid container size={12} spacing={2} justifyContent={"space-between"}>
                                         <Grid size={{ xs: 12, md: 6 }}>
                                             <Typography variant="h6" gutterBottom>
-                                                Order Info
+                                                Детали заказа
                                             </Typography>
                                             <Typography
                                                 variant="body1"
@@ -177,31 +181,30 @@ const UserOrderDetailsPage = () => {
                                                 }
                                                 onClick={() => setMapModalOpen(true)}
                                             >
-                                                <strong>Address:</strong>{" "}
-                                                {orderData.order.place ? orderData.order.place : "No address"}
+                                                <strong>Адрес:</strong>{" "}
+                                                {orderData.order.place ? orderData.order.place : "Нет адреса"}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Price:</strong>{" "}
-                                                {orderData.order.price ? orderData.order.price + " BYN" : "No price"}
+                                                <strong>Цена:</strong>{" "}
+                                                {orderData.order.price ? orderData.order.price + " BYN" : "Нет цены"}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Time to complete:</strong>{" "}
+                                                <strong>Время на выполнение:</strong>{" "}
                                                 {orderData.order.timeToComplete
                                                     ? getExpirationString(moment.duration(orderData.order.timeToComplete))
-                                                    : "Not limited"}
+                                                    : "Не ограничено"}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Status:</strong> {orderData.order.isClosed ? "Closed" : "Open"}
+                                                <strong>Статус:</strong> {orderData.order.isClosed ? "Закрыт" : "Активен"}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Created:</strong>{" "}
-                                                {moment(orderData.order.createdAt).format("MMMM Do YYYY, HH:mm a")}
+                                                <strong>Создан:</strong> {moment(orderData.order.createdAt).format("LL, HH:mm")}
                                             </Typography>
                                         </Grid>
                                         <Grid size={{ xs: 12, md: 6 }}>
                                             <Grid container spacing={1} alignItems={"center"}>
                                                 <Typography variant="h6" gutterBottom>
-                                                    Company Info
+                                                    Компания
                                                 </Typography>
                                             </Grid>
                                             <Grid container wrap="nowrap" spacing={2}>
@@ -225,7 +228,7 @@ const UserOrderDetailsPage = () => {
                                                             size={isSmallScreen ? "small" : "medium"}
                                                         />
                                                         <Typography variant="body2">
-                                                            ({orderData.order.company.companyReviews.length} reviews)
+                                                            ({orderData.order.company.companyReviews.length} отзывов)
                                                         </Typography>
                                                     </Stack>
                                                     <Button
@@ -239,7 +242,7 @@ const UserOrderDetailsPage = () => {
                                                             )
                                                         }
                                                     >
-                                                        Profile
+                                                        Профиль
                                                     </Button>
                                                 </Grid>
                                             </Grid>
@@ -250,7 +253,7 @@ const UserOrderDetailsPage = () => {
                                         <Grid container size={12} flexDirection={"column"}>
                                             <Grid container size={12} spacing={2}>
                                                 <Typography variant="h6" gutterBottom>
-                                                    Description
+                                                    Описание
                                                 </Typography>
                                             </Grid>
                                             <Typography variant="subtitle1" gutterBottom sx={{ whiteSpace: "pre-wrap" }}>
@@ -267,7 +270,7 @@ const UserOrderDetailsPage = () => {
                                                         startIcon={showFullDescription ? <ArrowUpward /> : <ArrowDownward />}
                                                         onClick={() => setShowFullDescription((prev) => !prev)}
                                                     >
-                                                        {showFullDescription ? "Show less" : "Show more"}
+                                                        {showFullDescription ? "Скрыть" : "Показать"}
                                                     </Button>
                                                 )}
                                                 <Button
@@ -276,7 +279,7 @@ const UserOrderDetailsPage = () => {
                                                     startIcon={<QueryStats />}
                                                     onClick={() => setSummaryModalOpen(true)}
                                                 >
-                                                    AI Summary
+                                                    AI Анализ
                                                 </Button>
                                             </Grid>
                                         </Grid>

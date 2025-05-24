@@ -159,47 +159,53 @@ const CompanyOwnProfilePage = () => {
                                         {companyData.name}
                                     </Typography>
                                     <Typography variant="subtitle1">
-                                        Contact Person: {companyData.contactPerson.name} {companyData.contactPerson.surname}
+                                        Контактное лицо: {companyData.contactPerson.name} {companyData.contactPerson.surname}
                                     </Typography>
-                                    <Typography variant="subtitle1">Phone: {companyData.contactPerson.phone}</Typography>
-                                    <Typography variant="subtitle1">Email: {companyData.contactPerson.email}</Typography>
+                                    <Typography variant="subtitle1">Телефон: {companyData.contactPerson.phone}</Typography>
+                                    <Typography variant="subtitle1">Эл. почта: {companyData.contactPerson.email}</Typography>
                                 </Grid>
                             </Grid>
                             <Grid container spacing={1} mt={4}>
-                                <ProfileCard title="Member for" value={moment(companyData.createdAt).fromNow(true)} />
-                                <ProfileCard title="Orders" value={companyData.orders.length} />
-                                <ProfileCard title="Reviews" value={companyData.companyReviews.length} />
+                                <ProfileCard title="На платформе" value={moment(companyData.createdAt).fromNow(true)} />
+                                <ProfileCard title="Заказов" value={companyData.orders.length} />
+                                <ProfileCard title="Отзывов" value={companyData.companyReviews.length} />
                                 <ProfileCard
-                                    title="Rating"
+                                    title="Рейтинг"
                                     value={<Rating value={rating} precision={0.5} size="large" readOnly />}
                                 />
                             </Grid>
                             <Typography variant="h5" mt={4} ref={reviewHeaderRef}>
-                                User Reviews
+                                Отзывы от тайных покупателей
                             </Typography>
                             <Grid container spacing={3} mt={2} mb={3}>
-                                {paginatedReviews.map((review) => (
-                                    <ReviewCard
-                                        key={review.id}
-                                        sender={{
-                                            id: review.user.id,
-                                            name: review.user.name + " " + review.user.surname,
-                                            role: Roles.User,
-                                        }}
-                                        grade={review.grade}
-                                        text={review.text}
-                                        createdAt={review.createdAt}
+                                {paginatedReviews.length > 0 ? (
+                                    paginatedReviews.map((review) => (
+                                        <ReviewCard
+                                            key={review.id}
+                                            sender={{
+                                                id: review.user.id,
+                                                name: review.user.name + " " + review.user.surname,
+                                                role: Roles.User,
+                                            }}
+                                            grade={review.grade}
+                                            text={review.text}
+                                            createdAt={review.createdAt}
+                                        />
+                                    ))
+                                ) : (
+                                    <Typography variant="h6">Пока нет отзывов</Typography>
+                                )}
+                            </Grid>
+                            {paginatedReviews.length > 0 && (
+                                <Grid container justifyContent="center" mb={3}>
+                                    <Pagination
+                                        count={Math.ceil((companyData?.companyReviews.length || 0) / reviewsPerPage)}
+                                        page={currentPage}
+                                        onChange={handlePageChange}
+                                        color="primary"
                                     />
-                                ))}
-                            </Grid>
-                            <Grid container justifyContent="center" mb={3}>
-                                <Pagination
-                                    count={Math.ceil((companyData?.companyReviews.length || 0) / reviewsPerPage)}
-                                    page={currentPage}
-                                    onChange={handlePageChange}
-                                    color="primary"
-                                />
-                            </Grid>
+                                </Grid>
+                            )}
                         </>
                     )}
                 </Container>

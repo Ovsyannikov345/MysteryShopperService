@@ -54,7 +54,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                         <Grid size={{ xs: 12 }}>
                             <Field
                                 as={TextField}
-                                label="Company Name"
+                                label="Название компании"
                                 fullWidth
                                 name="companyName"
                                 value={values.companyName}
@@ -65,12 +65,12 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                             />
                         </Grid>
                         <Grid size={12}>
-                            <Typography>Contact person</Typography>
+                            <Typography>Контактное лицо</Typography>
                         </Grid>
                         <Grid size={{ xs: 12, sm: 6, md: 5 }}>
                             <Field
                                 as={TextField}
-                                label="Name"
+                                label="Имя"
                                 fullWidth
                                 name="contactPersonName"
                                 value={values.contactPersonName}
@@ -83,7 +83,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                         <Grid size={{ xs: 12, sm: 6, md: 5 }}>
                             <Field
                                 as={TextField}
-                                label="Surname"
+                                label="Фамилия"
                                 fullWidth
                                 name="contactPersonSurname"
                                 value={values.contactPersonSurname}
@@ -104,7 +104,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                                 {() => (
                                     <Field
                                         as={TextField}
-                                        label="Phone"
+                                        label="Телефон"
                                         fullWidth
                                         name="contactPersonPhone"
                                         value={values.contactPersonPhone}
@@ -119,7 +119,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                         <Grid size={{ xs: 12, sm: 6, md: 5 }}>
                             <Field
                                 as={TextField}
-                                label="Email"
+                                label="Эл. почта"
                                 fullWidth
                                 name="contactPersonEmail"
                                 value={values.contactPersonEmail}
@@ -136,7 +136,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                         )}
                         <Grid container>
                             <Button variant="contained" type="submit" disabled={loading}>
-                                Save
+                                Сохранить
                             </Button>
                             <Button
                                 type="reset"
@@ -144,7 +144,7 @@ const CompanyEditForm = ({ initialValues, onSubmit }: CompanyEditFormProps) => {
                                 disabled={loading}
                                 onClick={() => setFieldValue("initialValues", initialValues)}
                             >
-                                Cancel
+                                Отмена
                             </Button>
                         </Grid>
                     </Grid>

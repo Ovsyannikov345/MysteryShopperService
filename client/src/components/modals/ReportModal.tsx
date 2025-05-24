@@ -33,9 +33,9 @@ export interface ReportFormValues {
 }
 
 const validationSchema = Yup.object({
-    title: Yup.string().required("Title is required.").max(100, "Title cannot exceed 100 characters."),
-    description: Yup.string().required("Description is required."),
-    grade: Yup.number().min(1, "Grade is required.").max(5, "Grade is required.").required("Grade is required."),
+    title: Yup.string().required("Заголовок обязателен.").max(100, "Заголовок не может быть длиннее 100 символов."),
+    description: Yup.string().required("Описание обязательно."),
+    grade: Yup.number().min(1, "Оценка обязательна.").max(5, "Оценка обязательна.").required("Оценка обязательна."),
 });
 
 const ReportModal = ({ open, onClose, onSubmit }: ReportModalProps) => {
@@ -55,11 +55,10 @@ const ReportModal = ({ open, onClose, onSubmit }: ReportModalProps) => {
         onSubmit: async (values) => {
             setIsLoading(true);
 
-            const uniqueFileNames = files.map(f => f.name).filter(
-                (name, index, self) => index === self.indexOf(name));
+            const uniqueFileNames = files.map((f) => f.name).filter((name, index, self) => index === self.indexOf(name));
 
             if (files.length !== uniqueFileNames.length) {
-                notifications.show("File names must be unique.", { severity: "error", autoHideDuration: 3000 });
+                notifications.show("Названия файлов должны быть уникальны.", { severity: "error", autoHideDuration: 3000 });
                 setIsLoading(false);
                 return;
             }
@@ -105,7 +104,7 @@ const ReportModal = ({ open, onClose, onSubmit }: ReportModalProps) => {
             sx={{ "& .MuiDialog-paper": { borderRadius: "16px" } }}
         >
             <DialogTitle>
-                Report Information{" "}
+                Отправить отчет{" "}
                 <IconButton
                     aria-label="close"
                     onClick={() => {
@@ -128,7 +127,7 @@ const ReportModal = ({ open, onClose, onSubmit }: ReportModalProps) => {
                     <TextField
                         fullWidth
                         margin="normal"
-                        label="Title"
+                        label="Заголовок"
                         name="title"
                         value={formik.values.title}
                         onChange={formik.handleChange}
@@ -140,7 +139,7 @@ const ReportModal = ({ open, onClose, onSubmit }: ReportModalProps) => {
                     <TextField
                         fullWidth
                         margin="normal"
-                        label="Description"
+                        label="Описание"
                         name="description"
                         multiline
                         minRows={3}
@@ -154,7 +153,7 @@ const ReportModal = ({ open, onClose, onSubmit }: ReportModalProps) => {
 
                     <Box>
                         <Typography component="legend" variant="subtitle1" ml={0.5}>
-                            Grade
+                            Оценка
                         </Typography>
                         <Rating
                             size="large"
@@ -173,7 +172,7 @@ const ReportModal = ({ open, onClose, onSubmit }: ReportModalProps) => {
                     </Box>
 
                     <Box mt={1}>
-                        <Typography variant="subtitle1">Upload Attachments</Typography>
+                        <Typography variant="subtitle1">Прикрепить файлы</Typography>
 
                         <Box
                             {...getRootProps()}
@@ -188,10 +187,10 @@ const ReportModal = ({ open, onClose, onSubmit }: ReportModalProps) => {
                         >
                             <input {...getInputProps()} />
                             <Typography color="textSecondary">
-                                {isDragActive ? "Drop the files here ..." : "Drag and drop files here, or click to select"}
+                                {isDragActive ? "Перетащите файлы сюда ..." : "Перетащите файлы сюда или нажмите для выбора"}
                             </Typography>
                             <Typography variant="caption" color="textSecondary">
-                                (Accepted: images, PDF, DOC/DOCX)
+                                (Допустимые файлы: изображения, PDF, DOC/DOCX)
                             </Typography>
                         </Box>
 
@@ -238,7 +237,7 @@ const ReportModal = ({ open, onClose, onSubmit }: ReportModalProps) => {
                     <LinearProgress sx={{ width: "100%" }} />
                 ) : (
                     <Button type="submit" form="report-form" variant="contained" sx={{ borderRadius: "7px", mb: 0.5 }}>
-                        Submit
+                        Отправить
                     </Button>
                 )}
             </DialogActions>

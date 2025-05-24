@@ -18,7 +18,7 @@ import UserHeader from "../../components/headers/UserHeader";
 import backgroundImage from "../../images/background.jpg";
 import { useNotifications } from "@toolpad/core";
 import useOrderApi, { Order, OrderQueryFilter } from "../../hooks/useOrderApi";
-import { OrderSortOptions } from "../../utils/enums/orderSortOptions";
+import { OrderSortOptions, sortingLabels } from "../../utils/enums/orderSortOptions";
 import { FilterAlt } from "@mui/icons-material";
 import OrderFilter from "../../components/filters/OrderFilter";
 import { PagedResult } from "../../hooks/utils/responses";
@@ -68,10 +68,11 @@ const AvailableOrdersPage = () => {
     }, [currentPage, filter, getAvailableOrders, notifications, selectedSortOption]);
 
     const formatSortOption = (key: string): string => {
-        const isDescending = key.includes("Descending");
-        const field = key.replace("Descending", "").replace("Ascending", "");
-        const arrow = isDescending ? "↓" : "↑";
-        return `${field.trim()} ${arrow}`;
+        const option = OrderSortOptions[key as keyof typeof OrderSortOptions];
+
+        const arrow = key.includes("Descending") ? "↓" : "↑";
+
+        return `${sortingLabels[option]} ${arrow}`;
     };
 
     const changePage = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -121,13 +122,13 @@ const AvailableOrdersPage = () => {
                     >
                         <Grid container justifyContent={"space-between"} alignItems={"center"} size={12}>
                             <Typography ref={headerRef} variant="h4">
-                                Available orders
+                                Доступные заказы
                             </Typography>
                             <FormControl>
-                                <InputLabel id="sort-label">Order by</InputLabel>
+                                <InputLabel id="sort-label">Сортировка</InputLabel>
                                 <Select
                                     labelId="sort-label"
-                                    label="Order by"
+                                    label="Сортировка"
                                     value={selectedSortOption}
                                     onChange={changeSortOption}
                                     sx={{ width: "190px" }}
@@ -151,7 +152,7 @@ const AvailableOrdersPage = () => {
                                 startIcon={<FilterAlt />}
                                 onClick={() => setDisplayFilter(!displayFilter)}
                             >
-                                {displayFilter ? "Hide Filters" : "Show Filters"}
+                                {displayFilter ? "Скрыть фильтры" : "Показать фильтры"}
                             </Button>
                             <Collapse in={displayFilter}>
                                 <OrderFilter filter={filter} onFilterChange={changeFilter} />
@@ -166,7 +167,7 @@ const AvailableOrdersPage = () => {
                                         </Grid>
                                     ))
                                 ) : (
-                                    <Typography variant="h6">No orders found</Typography>
+                                    <Typography variant="h6">Заказы не найдены</Typography>
                                 )
                             ) : (
                                 [1, 2, 3, 4].map((id) => (

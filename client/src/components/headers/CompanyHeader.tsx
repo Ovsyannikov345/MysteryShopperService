@@ -11,8 +11,8 @@ const CompanyHeader = () => {
     return (
         <Header
             actions={[
-                { icon: <Add />, label: "Create Order", onClick: () => navigate(CREATE_ORDER_ROUTE) },
-                { icon: <FormatListBulletedIcon />, label: "My Orders", onClick: () => navigate(MY_ORDERS_ROUTE) },
+                { icon: <Add />, label: "Создать заказ", onClick: () => navigate(CREATE_ORDER_ROUTE) },
+                { icon: <FormatListBulletedIcon />, label: "Мои заказы", onClick: () => navigate(MY_ORDERS_ROUTE) },
             ]}
         />
     );

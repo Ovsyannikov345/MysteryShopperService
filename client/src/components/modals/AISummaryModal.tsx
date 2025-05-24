@@ -18,7 +18,7 @@ const AISummaryModal = ({ open, onClose, orderId }: AISummaryModalProps) => {
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const [isError, setIsError] = useState(false);
+    const [isError, setIsError] = useState(true);
 
     const [reload, setReload] = useState(false);
 
@@ -69,7 +69,7 @@ const AISummaryModal = ({ open, onClose, orderId }: AISummaryModalProps) => {
         <Grid container size={12} spacing={1}>
             {getParameterIcon(value)}
             <Typography variant="body1">
-                {label}: {value ? value + " of 5" : "-"}
+                {label}: {value ? value + " из 5" : "-"}
             </Typography>
         </Grid>
     );
@@ -79,14 +79,14 @@ const AISummaryModal = ({ open, onClose, orderId }: AISummaryModalProps) => {
             <Grid container size={12} flexDirection={"column"} paddingX={isSmallScreen ? 4 : 8} paddingTop={2} spacing={1}>
                 <Grid container size={12} justifyContent={"center"}>
                     <Typography variant="h6" gutterBottom textAlign={"center"}>
-                        AI Analysis Summary
+                        Результат AI анализа
                     </Typography>
                 </Grid>
                 {isLoading && (
                     <Grid container size={12} flexDirection={"column"} alignItems={"center"} mt={2} mb={1} spacing={2}>
                         <CircularProgress />
                         <Typography variant="body1" color="text.secondary" textAlign={"center"}>
-                            Generating your summary...
+                            Создаем ваш анализ...
                         </Typography>
                     </Grid>
                 )}
@@ -94,7 +94,7 @@ const AISummaryModal = ({ open, onClose, orderId }: AISummaryModalProps) => {
                     <Grid container size={12} flexDirection={"column"} alignItems={"center"} mt={2} mb={1} spacing={2}>
                         <SentimentDissatisfied color="error" sx={{ fontSize: 48 }} />
                         <Typography variant="body1" color="text.secondary" textAlign="center">
-                            Oops! Something went wrong while generating the summary.
+                            Упс! Что-то пошло не так.
                         </Typography>
                         <Button
                             variant="contained"
@@ -102,7 +102,7 @@ const AISummaryModal = ({ open, onClose, orderId }: AISummaryModalProps) => {
                             onClick={() => setReload((prev) => !prev)}
                             sx={{ mt: 1 }}
                         >
-                            Retry
+                            Повторить
                         </Button>
                     </Grid>
                 )}
@@ -110,26 +110,26 @@ const AISummaryModal = ({ open, onClose, orderId }: AISummaryModalProps) => {
                     <>
                         <Grid container size={12}>
                             <Typography variant="body1" color="text.secondary" gutterBottom>
-                                Compatibility Analysis
+                                Анализ совместимости
                             </Typography>
                         </Grid>
                         <Grid container size={12}>
-                            {renderCompatibility("Age", analysisResult.compatibility!.age)}
-                            {renderCompatibility("Gender", analysisResult.compatibility!.gender)}
-                            {renderCompatibility("Profession", analysisResult.compatibility!.profession)}
-                            {renderCompatibility("Experience", analysisResult.compatibility!.experience)}
+                            {renderCompatibility("Возраст", analysisResult.compatibility!.age)}
+                            {renderCompatibility("Пол", analysisResult.compatibility!.gender)}
+                            {renderCompatibility("Профессия", analysisResult.compatibility!.profession)}
+                            {renderCompatibility("Опыт", analysisResult.compatibility!.experience)}
                         </Grid>
                         <Grid container size={12} mt={2}>
                             <Grid container size={12}>
                                 <Typography variant="body1" color="text.secondary" gutterBottom>
-                                    Time to complete
+                                    Время выполнения
                                 </Typography>
                             </Grid>
                             <Grid container size={12} spacing={1}>
                                 <AccessTime />
                                 <Typography variant="body1">
                                     {analysisResult.timeToComplete !== null && analysisResult.timeToComplete !== 0
-                                        ? `${analysisResult.timeToComplete} hours`
+                                        ? `${analysisResult.timeToComplete} ч.`
                                         : "-"}
                                 </Typography>
                             </Grid>
@@ -139,7 +139,7 @@ const AISummaryModal = ({ open, onClose, orderId }: AISummaryModalProps) => {
             </Grid>
             <Grid container size={12} justifyContent={"flex-end"} m={2}>
                 <Button variant="contained" onClick={onClose}>
-                    Close
+                    Закрыть
                 </Button>
             </Grid>
         </Dialog>

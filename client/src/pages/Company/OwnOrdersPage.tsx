@@ -77,16 +77,16 @@ export default function OwnOrdersPage() {
                         mt={isMediumScreen ? 2 : 0}
                     >
                         <Grid container justifyContent={"flex-start"} alignItems={"center"} size={12}>
-                            <Typography variant="h4">Your orders</Typography>
+                            <Typography variant="h4">Ваши заказы</Typography>
                         </Grid>
                         {orders ? (
                             orders.length > 0 ? (
                                 <>
-                                    {activeOrders && <OrderCardSection label="Active" orders={activeOrders} />}
-                                    {finishedOrders && <OrderCardSection label="Finished" orders={finishedOrders} />}
+                                    {activeOrders && <OrderCardSection label="Активные" orders={activeOrders} />}
+                                    {finishedOrders && <OrderCardSection label="Завершенные" orders={finishedOrders} />}
                                 </>
                             ) : (
-                                <Typography variant="h6">You have no orders</Typography>
+                                <Typography variant="h6">Заказов пока нет</Typography>
                             )
                         ) : (
                             <Grid container size={12} spacing={2} alignContent={"stretch"}>

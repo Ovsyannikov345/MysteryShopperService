@@ -36,7 +36,7 @@ const OrderDetailsMap = ({ orderPosition, displayDistance = true }: OrderDetails
                             lng: position.coords.longitude,
                         });
                     },
-                    () => notifications.show("Geolocation permission denied", { severity: "error", autoHideDuration: 3000 })
+                    () => notifications.show("Геолокация запрещена", { severity: "error", autoHideDuration: 3000 })
                 );
             }
         };
@@ -65,18 +65,18 @@ const OrderDetailsMap = ({ orderPosition, displayDistance = true }: OrderDetails
 
     const getDistanceString = () => {
         if (routeLength === undefined) {
-            return "Calculating...";
+            return "Идет вычиление...";
         }
 
         if (routeLength === null) {
-            return "Distance not available";
+            return "Ошибка вычисления дистанции";
         }
 
         if (routeLength < 1000) {
-            return routeLength.toFixed(0) + " m.";
+            return routeLength.toFixed(0) + " м.";
         }
 
-        return (routeLength / 1000).toFixed(1) + " km.";
+        return (routeLength / 1000).toFixed(1) + " км.";
     };
 
     return (
@@ -95,7 +95,7 @@ const OrderDetailsMap = ({ orderPosition, displayDistance = true }: OrderDetails
             </MapContainer>
             {displayDistance && (
                 <Typography mb={2} ml={2}>
-                    Distance to order: {getDistanceString()}
+                    Растояние до заказа: {getDistanceString()}
                 </Typography>
             )}
         </>

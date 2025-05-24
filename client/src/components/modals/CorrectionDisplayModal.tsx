@@ -16,7 +16,7 @@ const CorrectionDisplayModal = ({ open, onClose, correction }: CorrectionDisplay
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle sx={{ m: 0, p: 2 }}>
-                Correction Details
+                Детали правок
                 <IconButton
                     aria-label="close"
                     onClick={onClose}
@@ -34,7 +34,7 @@ const CorrectionDisplayModal = ({ open, onClose, correction }: CorrectionDisplay
             <DialogContent dividers>
                 <Box display="flex" flexDirection="column" gap={2}>
                     <Box>
-                        <Typography variant="subtitle2">Description</Typography>
+                        <Typography variant="subtitle2">Описание</Typography>
                         <Typography variant="body1">{correction.description}</Typography>
                     </Box>
                 </Box>

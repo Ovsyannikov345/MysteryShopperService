@@ -11,8 +11,8 @@ const UserHeader = () => {
     return (
         <Header
             actions={[
-                { icon: <Search />, label: "Available Orders", onClick: () => navigate(AVAILABLE_ORDERS_ROUTE) },
-                { icon: <FormatListBulletedIcon />, label: "My Orders", onClick: () => navigate(MY_ORDERS_ROUTE) },
+                { icon: <Search />, label: "Доступные заказы", onClick: () => navigate(AVAILABLE_ORDERS_ROUTE) },
+                { icon: <FormatListBulletedIcon />, label: "Мои заказы", onClick: () => navigate(MY_ORDERS_ROUTE) },
             ]}
         />
     );

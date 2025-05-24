@@ -41,22 +41,22 @@ const OrderCard = ({ orderData }: { orderData: Order }) => {
                 </Typography>
                 <Grid container wrap="nowrap" spacing={1}>
                     <PlaceOutlined />
-                    <Typography variant="body1">{orderData.place ? orderData.place : "No address"}</Typography>
+                    <Typography variant="body1">{orderData.place ? orderData.place : "Нет адреса"}</Typography>
                 </Grid>
                 <Grid container wrap="nowrap" spacing={1} mt={1}>
                     <Schedule />
                     {orderData.timeToComplete ? (
                         <Typography variant="body1">
-                            {moment.duration(orderData.timeToComplete).days()} days{" "}
-                            {moment.duration(orderData.timeToComplete).hours()} hours
+                            {moment.duration(orderData.timeToComplete).days()} дн.{" "}
+                            {moment.duration(orderData.timeToComplete).hours()} ч.
                         </Typography>
                     ) : (
-                        <Typography variant="body1">Not limited</Typography>
+                        <Typography variant="body1">Нет ограничения</Typography>
                     )}
                 </Grid>
                 <Grid container wrap="nowrap" spacing={1} mt={1}>
                     <MonetizationOn color="success" />
-                    <Typography variant="body1">{orderData.price ? orderData.price + " BYN" : "No price"} </Typography>
+                    <Typography variant="body1">{orderData.price ? orderData.price + " BYN" : "Нет цены"} </Typography>
                 </Grid>
             </CardContent>
             <CardActions sx={{ flexGrow: 1, alignItems: "flex-end", justifyContent: "flex-end" }}>
@@ -65,7 +65,7 @@ const OrderCard = ({ orderData }: { orderData: Order }) => {
                     startIcon={<InfoOutlined />}
                     onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, orderData.id))}
                 >
-                    Details
+                    Подробнее
                 </Button>
             </CardActions>
         </Card>

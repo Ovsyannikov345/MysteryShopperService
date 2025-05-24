@@ -41,7 +41,7 @@ const RegistrationPage = () => {
 
     const [userType, setUserType] = useState<"user" | "company" | undefined>();
 
-    const steps = ["Auth data", "Account type", "Info"];
+    const steps = ["Данные для входа", "Тип аккаунта", "Информация"];
 
     const initialValues = {
         email: "",
@@ -162,7 +162,7 @@ const RegistrationPage = () => {
         >
             <Container maxWidth="xs" sx={{ zIndex: 1 }}>
                 <Button variant="contained" startIcon={<ArrowBack />} onClick={() => navigate("/login")}>
-                    Login
+                    Вход
                 </Button>
             </Container>
             <Container maxWidth="xs" sx={{ zIndex: 1 }}>
@@ -209,7 +209,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Email"
+                                                    label="Эл. почта"
                                                     fullWidth
                                                     name="email"
                                                     value={values.email}
@@ -222,7 +222,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Password"
+                                                    label="Пароль"
                                                     type="password"
                                                     fullWidth
                                                     name="password"
@@ -236,7 +236,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Repeat Password"
+                                                    label="Повторите пароль"
                                                     type="password"
                                                     fullWidth
                                                     name="passwordRepeat"
@@ -260,7 +260,7 @@ const RegistrationPage = () => {
                                                     handleSecondStep("user");
                                                 }}
                                             >
-                                                user
+                                                Тайный покупатель
                                             </Button>
                                             <Button
                                                 fullWidth
@@ -270,7 +270,7 @@ const RegistrationPage = () => {
                                                     handleSecondStep("company");
                                                 }}
                                             >
-                                                company
+                                                Компания
                                             </Button>
                                         </Grid>
                                     )}
@@ -280,7 +280,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Company Name"
+                                                    label="Название компании"
                                                     fullWidth
                                                     name="companyName"
                                                     value={values.companyName}
@@ -290,11 +290,11 @@ const RegistrationPage = () => {
                                                     error={touched.companyName && Boolean(errors.companyName)}
                                                 />
                                             </Grid>
-                                            <Typography>Contact person</Typography>
+                                            <Typography>Контактное лицо</Typography>
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Name"
+                                                    label="Имя"
                                                     fullWidth
                                                     name="contactPersonName"
                                                     value={values.contactPersonName}
@@ -307,7 +307,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Surname"
+                                                    label="Фамилия"
                                                     fullWidth
                                                     name="contactPersonSurname"
                                                     value={values.contactPersonSurname}
@@ -328,7 +328,7 @@ const RegistrationPage = () => {
                                                     {() => (
                                                         <Field
                                                             as={TextField}
-                                                            label="Phone"
+                                                            label="Телефон"
                                                             fullWidth
                                                             name="contactPersonPhone"
                                                             value={values.contactPersonPhone}
@@ -345,7 +345,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Email"
+                                                    label="Эл. почта"
                                                     fullWidth
                                                     name="contactPersonEmail"
                                                     value={values.contactPersonEmail}
@@ -363,7 +363,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Name"
+                                                    label="Имя"
                                                     fullWidth
                                                     name="name"
                                                     value={values.name}
@@ -376,7 +376,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Surname"
+                                                    label="Фамилия"
                                                     fullWidth
                                                     name="surname"
                                                     value={values.surname}
@@ -389,7 +389,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Birthdate (optional)"
+                                                    label="Дата рождения (необязательно)"
                                                     type="date"
                                                     fullWidth
                                                     name="birthDate"
@@ -403,7 +403,7 @@ const RegistrationPage = () => {
                                             </Grid>
                                             <Grid size={{ xs: 12 }}>
                                                 <FormControl>
-                                                    <FormLabel id="radio-buttons-group-label">Gender</FormLabel>
+                                                    <FormLabel id="radio-buttons-group-label">Пол</FormLabel>
                                                     <RadioGroup
                                                         aria-labelledby="radio-buttons-group-label"
                                                         defaultValue="male"
@@ -412,11 +412,11 @@ const RegistrationPage = () => {
                                                         value={values.gender}
                                                         onChange={(e) => setFieldValue("gender", e.target.value)}
                                                     >
-                                                        <FormControlLabel value={Genders.Male} control={<Radio />} label="Male" />
+                                                        <FormControlLabel value={Genders.Male} control={<Radio />} label="Мужской" />
                                                         <FormControlLabel
                                                             value={Genders.Female}
                                                             control={<Radio />}
-                                                            label="Female"
+                                                            label="Женский"
                                                         />
                                                     </RadioGroup>
                                                 </FormControl>
@@ -432,7 +432,7 @@ const RegistrationPage = () => {
                                                     {() => (
                                                         <Field
                                                             as={TextField}
-                                                            label="Phone"
+                                                            label="Телефон"
                                                             fullWidth
                                                             name="phone"
                                                             value={values.phone}
@@ -447,7 +447,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="City (optional)"
+                                                    label="Город (необязательно)"
                                                     fullWidth
                                                     name="city"
                                                     value={values.city}
@@ -460,7 +460,7 @@ const RegistrationPage = () => {
                                             <Grid size={{ xs: 12 }}>
                                                 <Field
                                                     as={TextField}
-                                                    label="Working Experience (optional)"
+                                                    label="Опыт работы (необязательно)"
                                                     fullWidth
                                                     name="workingExperience"
                                                     value={values.workingExperience}
@@ -480,11 +480,11 @@ const RegistrationPage = () => {
                                     ) : (
                                         <Grid container justifyContent={"flex-end"} spacing={2} sx={{ mt: 2 }}>
                                             <Button disabled={activeStep === 0} onClick={handleBack} variant="outlined">
-                                                Back
+                                                Назад
                                             </Button>
                                             {activeStep !== 1 && (
                                                 <Button type="submit" variant="contained">
-                                                    {activeStep === steps.length - 1 ? "Submit" : "Next"}
+                                                    {activeStep === steps.length - 1 ? "Завершить" : "Далее"}
                                                 </Button>
                                             )}
                                         </Grid>

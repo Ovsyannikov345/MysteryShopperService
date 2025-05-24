@@ -12,6 +12,7 @@ import { Roles } from "../../utils/enums/roles";
 import { useNavigate, useParams } from "react-router-dom";
 import ProfileCard from "../../components/info/ProfileCard";
 import CompanyHeader from "../../components/headers/CompanyHeader";
+import { formatAge } from "../../utils/enums/functions";
 
 const UserProfilePage = () => {
     const theme = useTheme();
@@ -122,7 +123,7 @@ const UserProfilePage = () => {
                             mt: isMediumScreen ? 0 : 2,
                         }}
                     >
-                        <NavigateBack to={-1} label="Back" />
+                        <NavigateBack to={-1} label="Назад" />
                     </Container>
                 )}
                 <Container
@@ -136,7 +137,7 @@ const UserProfilePage = () => {
                 >
                     {isMediumScreen && (
                         <Grid mt={3}>
-                            <NavigateBack to={-1} label="Back" />
+                            <NavigateBack to={-1} label="Назад" />
                         </Grid>
                     )}
                     {!userData ? (
@@ -162,7 +163,9 @@ const UserProfilePage = () => {
                                         {`${userData.name} ${userData.surname}`}
                                     </Typography>
                                     <Typography variant="subtitle1">
-                                        {userData.birthDate ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o." : ""}
+                                        {userData.birthDate
+                                            ? formatAge(moment.utc().diff(moment(userData.birthDate), "year"))
+                                            : ""}
                                         {userData.birthDate && userData.city && ", "}
                                         {userData.city ? userData.city : ""}
                                     </Typography>
@@ -180,41 +183,47 @@ const UserProfilePage = () => {
                             </Grid>
 
                             <Grid container spacing={1} mt={4}>
-                                <ProfileCard title="Member for" value={moment(userData.createdAt).fromNow(true)} />
-                                <ProfileCard title="Orders" value={userData.orders.length} />
-                                <ProfileCard title="Reviews" value={userData.userReviews.length} />
+                                <ProfileCard title="На платформе" value={moment(userData.createdAt).fromNow(true)} />
+                                <ProfileCard title="Заказов" value={userData.orders.length} />
+                                <ProfileCard title="Отзывов" value={userData.userReviews.length} />
                                 <ProfileCard
-                                    title="Rating"
+                                    title="Рейтинг"
                                     value={<Rating value={rating} precision={0.5} size="large" readOnly />}
                                 />
                             </Grid>
 
                             <Typography variant="h5" mt={4} ref={reviewHeaderRef}>
-                                Company Reviews
+                                Отзывы от компаний
                             </Typography>
                             <Grid container spacing={3} mt={2} mb={3}>
-                                {paginatedReviews.map((review) => (
-                                    <ReviewCard
-                                        key={review.id}
-                                        sender={{
-                                            id: review.company.id,
-                                            name: review.company.name,
-                                            role: Roles.Company,
-                                        }}
-                                        grade={review.grade}
-                                        text={review.text}
-                                        createdAt={review.createdAt}
+                                {paginatedReviews.length > 0 ? (
+                                    paginatedReviews.map((review) => (
+                                        <ReviewCard
+                                            key={review.id}
+                                            sender={{
+                                                id: review.company.id,
+                                                name: review.company.name,
+                                                role: Roles.Company,
+                                            }}
+                                            grade={review.grade}
+                                            text={review.text}
+                                            createdAt={review.createdAt}
+                                        />
+                                    ))
+                                ) : (
+                                    <Typography variant="h6">Пока нет отзывов</Typography>
+                                )}
+                            </Grid>
+                            {paginatedReviews.length > 0 && (
+                                <Grid container justifyContent="center" mb={3}>
+                                    <Pagination
+                                        count={Math.ceil((userData.userReviews.length || 0) / reviewsPerPage)}
+                                        page={currentPage}
+                                        onChange={handlePageChange}
+                                        color="primary"
                                     />
-                                ))}
-                            </Grid>
-                            <Grid container justifyContent="center" mb={3}>
-                                <Pagination
-                                    count={Math.ceil((userData.userReviews.length || 0) / reviewsPerPage)}
-                                    page={currentPage}
-                                    onChange={handlePageChange}
-                                    color="primary"
-                                />
-                            </Grid>
+                                </Grid>
+                            )}
                         </>
                     )}
                 </Container>

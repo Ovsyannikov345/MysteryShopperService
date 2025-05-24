@@ -30,6 +30,7 @@ import OrderRequest from "../../components/info/OrderRequest";
 import useRequestApi from "../../hooks/useRequestApi";
 import CompanyOrderActions from "../../components/orderActions/CompanyOrderActions";
 import OrderDetailsSkeleton from "../../components/skeletons/CompanyOrderDetailsSkeleton";
+import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 
 interface User {
     id: string;
@@ -67,6 +68,10 @@ const CompanyOrderDetailsPage = () => {
     const [mapModalOpen, setMapModalOpen] = useState(false);
 
     const [reload, setReload] = useState(false);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
 
     useEffect(() => {
         const loadOrderData = async () => {
@@ -131,10 +136,10 @@ const CompanyOrderDetailsPage = () => {
 
         let readableExpiration = "";
         if (days > 0) {
-            readableExpiration += `${days} ${days > 1 ? "days" : "day"}`;
+            readableExpiration += `${days} дн.`;
         }
         if (hours > 0) {
-            readableExpiration += `${days > 0 ? " and " : ""}${hours} ${hours > 1 ? "hours" : "hour"}`;
+            readableExpiration += readableExpiration === "" ? `${hours} ч.` : ` ${hours} ч.`;
         }
 
         return readableExpiration;
@@ -148,7 +153,7 @@ const CompanyOrderDetailsPage = () => {
             return;
         }
 
-        notifications.show("Request accepted", { severity: "success", autoHideDuration: 3000 });
+        notifications.show("Запрос принят", { severity: "success", autoHideDuration: 3000 });
         setReload((prev) => !prev);
     };
 
@@ -160,7 +165,7 @@ const CompanyOrderDetailsPage = () => {
             return;
         }
 
-        notifications.show("Request rejected", { severity: "success", autoHideDuration: 3000 });
+        notifications.show("Запрос отклонен", { severity: "success", autoHideDuration: 3000 });
         setReload((prev) => !prev);
     };
 
@@ -176,7 +181,7 @@ const CompanyOrderDetailsPage = () => {
             return;
         }
 
-        notifications.show("Order is marked as finished", { severity: "success", autoHideDuration: 3000 });
+        notifications.show("Заказ завершен", { severity: "success", autoHideDuration: 3000 });
         setOrderData({ ...orderData, isClosed: true });
     };
 
@@ -204,7 +209,7 @@ const CompanyOrderDetailsPage = () => {
                                 mt: isMediumScreen ? 0 : 2,
                             }}
                         >
-                            <NavigateBack to={-1} label="Back" />
+                            <NavigateBack to={-1} label="Назад" />
                         </Container>
                     )}
                     <Container
@@ -218,7 +223,7 @@ const CompanyOrderDetailsPage = () => {
                     >
                         {isMediumScreen && (
                             <Grid mt={3}>
-                                <NavigateBack to={-1} label="Back" />
+                                <NavigateBack to={-1} label="Назад" />
                             </Grid>
                         )}
                         <Grid
@@ -230,21 +235,47 @@ const CompanyOrderDetailsPage = () => {
                         >
                             {orderData ? (
                                 <>
-                                    <Grid
-                                        container
-                                        size={12}
-                                        spacing={1}
-                                        alignItems={"center"}
-                                        justifyContent={"space-between"}
-                                        wrap="nowrap"
-                                    >
+                                    <Grid container size={12} spacing={1} flexDirection={"column"} wrap="nowrap">
                                         <Typography variant="h5">{orderData.title}</Typography>
+                                        {!orderData.isClosed &&
+                                            (users.some((u) => u.notification) ||
+                                                orderData.users.some((u) => u.status === UserOrderStatus.Requested)) && (
+                                                <Grid container size={12} flexDirection={"column"}>
+                                                    {users.some((u) => u.notification) && (
+                                                        <Grid
+                                                            container
+                                                            size={12}
+                                                            spacing={1}
+                                                            alignItems={"center"}
+                                                            wrap="nowrap"
+                                                            key={1}
+                                                            ml={-1}
+                                                        >
+                                                            <PulseDot color="warning" sx={{ width: "20px", height: "20px" }} />
+                                                            <Typography variant="subtitle1">Новые отчеты</Typography>
+                                                        </Grid>
+                                                    )}
+                                                    {orderData.users.some((u) => u.status === UserOrderStatus.Requested) && (
+                                                        <Grid
+                                                            container
+                                                            size={12}
+                                                            spacing={1}
+                                                            alignItems={"center"}
+                                                            wrap="nowrap"
+                                                            key={2}
+                                                        >
+                                                            <PulseDot color="warning" sx={{ width: "20px", height: "20px" }} />
+                                                            <Typography variant="subtitle1">Новые заявки</Typography>
+                                                        </Grid>
+                                                    )}
+                                                </Grid>
+                                            )}
                                     </Grid>
 
                                     <Grid container size={12} spacing={2} justifyContent={"space-between"}>
                                         <Grid size={12}>
                                             <Typography variant="h6" gutterBottom>
-                                                Order Info
+                                                Информация о заказе
                                             </Typography>
                                             <Typography
                                                 variant="body1"
@@ -255,23 +286,22 @@ const CompanyOrderDetailsPage = () => {
                                                 }
                                                 onClick={() => setMapModalOpen(true)}
                                             >
-                                                <strong>Address:</strong> {orderData.place ? orderData.place : "No address"}
+                                                <strong>Адрес:</strong> {orderData.place ? orderData.place : "Нет адреса"}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Price:</strong> {orderData.price ? orderData.price + " BYN" : "No price"}
+                                                <strong>Цена:</strong> {orderData.price ? orderData.price + " BYN" : "Нет цены"}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Time to complete:</strong>{" "}
+                                                <strong>Время на выполнение:</strong>{" "}
                                                 {orderData.timeToComplete
                                                     ? getExpirationString(moment.duration(orderData.timeToComplete))
-                                                    : "Not limited"}
+                                                    : "Не ограничено"}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Status:</strong> {orderData.isClosed ? "Closed" : "Open"}
+                                                <strong>Статус:</strong> {orderData.isClosed ? "Закрыт" : "Активен"}
                                             </Typography>
                                             <Typography variant="body1">
-                                                <strong>Created:</strong>{" "}
-                                                {moment(orderData.createdAt).format("MMMM Do YYYY, HH:mm a")}
+                                                <strong>Создан:</strong> {moment(orderData.createdAt).format("LL, HH:mm")}
                                             </Typography>
                                         </Grid>
                                     </Grid>
@@ -279,7 +309,7 @@ const CompanyOrderDetailsPage = () => {
                                     {orderData.description && (
                                         <Grid container size={12} flexDirection={"column"}>
                                             <Typography variant="h6" gutterBottom>
-                                                Description
+                                                Описание
                                             </Typography>
                                             <Typography variant="subtitle1" gutterBottom sx={{ whiteSpace: "pre-wrap" }}>
                                                 {orderData.description.length > 300 && !showFullDescription
@@ -289,61 +319,22 @@ const CompanyOrderDetailsPage = () => {
                                             {orderData.description.length > 300 && (
                                                 <Grid>
                                                     <Button
-                                                        variant="contained"
+                                                        variant="text"
+                                                        sx={{ fontSize: "15px", color: (theme) => theme.palette.primary.dark }}
                                                         size="small"
+                                                        startIcon={showFullDescription ? <ArrowUpward /> : <ArrowDownward />}
                                                         onClick={() => setShowFullDescription((prev) => !prev)}
                                                     >
-                                                        {showFullDescription ? "Show less" : "Show more"}
+                                                        {showFullDescription ? "Скрыть" : "Показать"}
                                                     </Button>
                                                 </Grid>
                                             )}
                                         </Grid>
                                     )}
-                                    {!orderData.isClosed &&
-                                        (users.some((u) => u.notification) ||
-                                            orderData.users.some((u) => u.status === UserOrderStatus.Requested)) && (
-                                            <Grid container size={12} flexDirection={"column"}>
-                                                {users.some((u) => u.notification) && (
-                                                    <Grid
-                                                        container
-                                                        size={12}
-                                                        spacing={1}
-                                                        alignItems={"center"}
-                                                        wrap="nowrap"
-                                                        key={1}
-                                                    >
-                                                        <PulseDot color="warning" sx={{ width: "20px", height: "20px" }} />
-                                                        <Typography variant="subtitle1">
-                                                            {users.filter((u) => u.notification).length} new report(s)
-                                                        </Typography>
-                                                    </Grid>
-                                                )}
-                                                {orderData.users.some((u) => u.status === UserOrderStatus.Requested) && (
-                                                    <Grid
-                                                        container
-                                                        size={12}
-                                                        spacing={1}
-                                                        alignItems={"center"}
-                                                        wrap="nowrap"
-                                                        key={2}
-                                                    >
-                                                        <PulseDot color="warning" sx={{ width: "20px", height: "20px" }} />
-                                                        <Typography variant="subtitle1">
-                                                            {
-                                                                orderData.users.filter(
-                                                                    (u) => u.status === UserOrderStatus.Requested
-                                                                ).length
-                                                            }{" "}
-                                                            new request(s)
-                                                        </Typography>
-                                                    </Grid>
-                                                )}
-                                            </Grid>
-                                        )}
 
                                     {!orderData.isClosed && (
                                         <Grid container size={12} flexDirection={"column"} spacing={1}>
-                                            <Typography variant="h6">Active requests</Typography>
+                                            <Typography variant="h6">Заявки на выполнение</Typography>
                                             {orderData.users.filter((u) => u.status === UserOrderStatus.Requested).length > 0 ? (
                                                 orderData.users
                                                     .filter((u) => u.status === UserOrderStatus.Requested)
@@ -368,7 +359,7 @@ const CompanyOrderDetailsPage = () => {
                                                         </>
                                                     ))
                                             ) : (
-                                                <Typography variant="body1">No active requests</Typography>
+                                                <Typography variant="body1">Заявок пока нет</Typography>
                                             )}
                                             <Grid size={6} mt={1}>
                                                 <Button
@@ -378,13 +369,13 @@ const CompanyOrderDetailsPage = () => {
                                                     onClick={async () => {
                                                         const confirmed = await dialogs.confirm(
                                                             <Typography color="error" variant="subtitle2">
-                                                                This action can't be undone
+                                                                Это действие нельзя отменить
                                                             </Typography>,
                                                             {
-                                                                title: "Finish the order?",
+                                                                title: "Завершить заказ?",
 
-                                                                okText: <Typography>Yes</Typography>,
-                                                                cancelText: <Typography color="success">No</Typography>,
+                                                                okText: <Typography>Да</Typography>,
+                                                                cancelText: <Typography color="success">Нет</Typography>,
                                                                 severity: "error",
                                                             }
                                                         );
@@ -393,7 +384,7 @@ const CompanyOrderDetailsPage = () => {
                                                         }
                                                     }}
                                                 >
-                                                    Finish order
+                                                    Завершить заказ
                                                 </Button>
                                             </Grid>
                                         </Grid>
@@ -401,11 +392,11 @@ const CompanyOrderDetailsPage = () => {
 
                                     <Grid container size={{ xs: 12, sm: 8, md: 6 }} flexDirection={"column"} spacing={1}>
                                         <Typography variant="h6" gutterBottom>
-                                            Select user to see history
+                                            Выберите тайного покупателя
                                         </Typography>
                                         {users.length > 0 ? (
                                             <FormControl fullWidth>
-                                                <InputLabel id="user-select-label">Select User</InputLabel>
+                                                <InputLabel id="user-select-label">Тайный покупатель</InputLabel>
                                                 <Select
                                                     labelId="user-select-label"
                                                     value={selectedUserId}
@@ -458,7 +449,7 @@ const CompanyOrderDetailsPage = () => {
                                                 </Select>
                                             </FormControl>
                                         ) : (
-                                            <Typography variant="body1">No users to display</Typography>
+                                            <Typography variant="body1">Тайных покупателей пока нет</Typography>
                                         )}
                                     </Grid>
 

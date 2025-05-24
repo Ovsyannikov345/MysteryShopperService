@@ -3,29 +3,29 @@ import { Genders } from "../../../utils/enums/genders";
 
 const userEditValidationSchema = Yup.object({
     name: Yup.string()
-        .required("Name should not be empty")
-        .min(3, "Name should be from 3 to 50 symbols")
-        .max(50, "Name should be from 3 to 50 symbols"),
+        .required("Имя не должно быть пустым")
+        .min(3, "Имя должно содержать от 3 до 50 символов")
+        .max(50, "Имя должно содержать от 3 до 50 символов"),
     surname: Yup.string()
-        .required("Surname should not be empty")
-        .min(3, "Surname should be from 3 to 50 symbols")
-        .max(50, "Surname should be from 3 to 50 symbols"),
+        .required("Фамилия не должна быть пустой")
+        .min(3, "Фамилия должна содержать от 3 до 50 символов")
+        .max(50, "Фамилия должна содержать от 3 до 50 символов"),
     birthDate: Yup.date()
         .nullable()
-        .typeError("Invalid date")
-        .max(new Date(), "Birth date cannot be in the future")
-        .min(new Date(new Date().setFullYear(new Date().getFullYear() - 100)), "Birth date cannot be more than 100 years ago"),
-    city: Yup.string().nullable().min(3, "City should be from 3 to 50 symbols").max(100, "City should be from 3 to 50 symbols"),
+        .typeError("Неверный формат даты")
+        .max(new Date(), "Дата рождения не может быть в будущем")
+        .min(new Date(new Date().setFullYear(new Date().getFullYear() - 100)), "Дата рождения не может быть более 100 лет назад"),
+    city: Yup.string().nullable().min(3, "Город должен содержать от 3 до 50 символов").max(100, "Город должен содержать от 3 до 50 символов"),
     gender: Yup.mixed()
-        .oneOf([Genders.Male, Genders.Female], "Gender should be specified")
-        .required("Gender should be specified"),
+        .oneOf([Genders.Male, Genders.Female], "Пол должен быть указан")
+        .required("Пол должен быть указан"),
     phone: Yup.string()
-        .required("Phone should not be empty")
-        .matches(/^\+?375\([1-9]{2}\)[0-9-]{7,14}$/, "Invalid phone format"),
+        .required("Телефон не должен быть пустым")
+        .matches(/^\+?375\([1-9]{2}\)[0-9-]{7,14}$/, "Неверный формат телефона"),
     description: Yup.string()
         .nullable()
-        .min(3, "Description should be from 3 to 500 symbols")
-        .max(500, "Description should be from 3 to 500 symbols"),
+        .min(3, "Описание должно содержать от 3 до 500 символов")
+        .max(500, "Описание должно содержать от 3 до 500 символов"),
 });
 
 export default userEditValidationSchema;

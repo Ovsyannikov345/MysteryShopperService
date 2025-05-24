@@ -28,24 +28,24 @@ export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
                 </Typography>
                 <Grid container wrap="nowrap" spacing={1}>
                     <Map />
-                    <Typography variant="body1">{order.place ? order.place : "No address"}</Typography>
+                    <Typography variant="body1">{order.place ? order.place : "Нет адреса"}</Typography>
                 </Grid>
                 {!order.isClosed && (
                     <>
                         <Grid container wrap="nowrap" spacing={1}>
                             <Person />
-                            <Typography variant="body1">{activeUsersCount} active user(s)</Typography>
+                            <Typography variant="body1">{activeUsersCount} пользователь(ей)</Typography>
                         </Grid>
                         {isNewRequests && (
                             <Grid container wrap="nowrap" alignItems={"center"} spacing={0.5} mt={1} ml={"-3px"}>
                                 <PulseDot color="#e3bf00" style={{ fontSize: "15px" }} />
-                                <Typography variant="body1">New requests</Typography>
+                                <Typography variant="body1">Новые заявки</Typography>
                             </Grid>
                         )}
                         {isNewReports && (
                             <Grid container wrap="nowrap" alignItems={"center"} spacing={0.5} mt={1} ml={"-3px"}>
                                 <PulseDot color="#e3bf00" style={{ fontSize: "15px" }} />
-                                <Typography variant="body1">New reports</Typography>
+                                <Typography variant="body1">Новые отчеты</Typography>
                             </Grid>
                         )}
                     </>
@@ -57,7 +57,7 @@ export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
                     startIcon={<InfoOutlined />}
                     onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, order.id))}
                 >
-                    Details
+                    Подробнее
                 </Button>
             </CardActions>
         </Card>

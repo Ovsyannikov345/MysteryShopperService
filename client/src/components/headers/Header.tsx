@@ -11,7 +11,6 @@ import {
     Box,
     Tooltip,
     IconButton,
-    Avatar,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
@@ -23,7 +22,7 @@ import { OWN_PROFILE_ROUTE } from "../../router/consts";
 import useAuthApi from "../../hooks/useAuthApi";
 import SupportRequestModal from "../modals/SupportRequestModal";
 import NotificationList from "../lists/NotificationMenu";
-import { SupportAgentOutlined } from "@mui/icons-material";
+import { PersonOutline, SupportAgentOutlined } from "@mui/icons-material";
 
 const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClick: () => void }[] }) => {
     const theme = useTheme();
@@ -102,18 +101,19 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                         <Grid container>
                             <Grid container gap={isSmallScreen ? "0px" : "10px"} alignItems={"center"}>
                                 <NotificationList />
-                                <Tooltip title="Support">
+                                <Tooltip title="Поддержка">
                                     <IconButton color="secondary" onClick={() => setSupportRequestModalOpen(true)}>
                                         <SupportAgentOutlined fontSize={isSmallScreen ? "medium" : "large"} />
                                     </IconButton>
                                 </Tooltip>
-                                <Tooltip title="Account">
+                                <Tooltip title="Аккаунт">
                                     <IconButton
+                                        color="secondary"
                                         onClick={(event) => {
                                             setProfileMenuAnchorEl(event.currentTarget);
                                         }}
                                     >
-                                        <Avatar sx={{ width: { xs: 30, sm: 50 }, height: { xs: 30, sm: 50 } }} />
+                                        <PersonOutline fontSize={isSmallScreen ? "medium" : "large"} />
                                     </IconButton>
                                 </Tooltip>
                             </Grid>
@@ -133,13 +133,13 @@ const Header = ({ actions }: { actions: { icon: ReactNode; label: string; onClic
                     <ListItemIcon sx={{ mr: "5px" }}>
                         <ProfileIcon fontSize="small" />
                     </ListItemIcon>
-                    My profile
+                    Мой профиль
                 </MenuItem>
                 <MenuItem key={2} sx={{ mr: "5px" }} onClick={onLogout}>
                     <ListItemIcon>
                         <LogoutIcon fontSize="small" />
                     </ListItemIcon>
-                    Logout
+                    Выход
                 </MenuItem>
             </Menu>
             <Menu

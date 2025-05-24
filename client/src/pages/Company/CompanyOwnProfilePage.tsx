@@ -121,7 +121,7 @@ const CompanyOwnProfilePage = () => {
         }
 
         setCompanyData(response);
-        notifications.show("Changes saved", { severity: "success", autoHideDuration: 3000 });
+        notifications.show("Изменения сохранены", { severity: "success", autoHideDuration: 3000 });
     };
 
     const handleImageSave = async (file: File): Promise<boolean> => {
@@ -133,7 +133,7 @@ const CompanyOwnProfilePage = () => {
             return false;
         }
 
-        notifications.show("Image saved", { severity: "success", autoHideDuration: 3000 });
+        notifications.show("Изображение сохранено", { severity: "success", autoHideDuration: 3000 });
 
         const imageResponse = await getProfileImage(companyData!.id);
 
@@ -193,7 +193,7 @@ const CompanyOwnProfilePage = () => {
                                             startIcon={<CloudUploadIcon />}
                                             onClick={() => setIsChangingImage(true)}
                                         >
-                                            Choose image
+                                            Загрузить
                                         </Button>
                                     </Grid>
                                     <Grid>
@@ -201,14 +201,14 @@ const CompanyOwnProfilePage = () => {
                                             {companyData.name}
                                         </Typography>
                                         <Typography variant="subtitle1">
-                                            Contact Person: {companyData.contactPerson.name} {companyData.contactPerson.surname}
+                                            Контактное лицо: {companyData.contactPerson.name} {companyData.contactPerson.surname}
                                         </Typography>
-                                        <Typography variant="subtitle1">Phone: {companyData.contactPerson.phone}</Typography>
-                                        <Typography variant="subtitle1">Email: {companyData.contactPerson.email}</Typography>
+                                        <Typography variant="subtitle1">Телефон: {companyData.contactPerson.phone}</Typography>
+                                        <Typography variant="subtitle1">Эл. почта: {companyData.contactPerson.email}</Typography>
                                     </Grid>
                                 </Grid>
                                 <Typography variant="h5" ref={reviewHeaderRef}>
-                                    Rating
+                                    Рейтинг
                                 </Typography>
                                 <Rating value={rating} precision={0.5} size="large" readOnly sx={{ mt: 1 }} />
                                 <Grid container mt={1} mb={2}>
@@ -217,24 +217,32 @@ const CompanyOwnProfilePage = () => {
                                         startIcon={<Reviews />}
                                         onClick={() => setDisplayReviews(!displayReviews)}
                                     >
-                                        {displayReviews ? "Hide Reviews" : `Show Reviews (${companyData.companyReviews.length})`}
+                                        {displayReviews
+                                            ? "Скрыть отзывы"
+                                            : `Показать отзывы (${companyData.companyReviews.length})`}
                                     </Button>
                                 </Grid>
                                 <Collapse in={displayReviews}>
                                     <Grid container spacing={3} mt={1} mb={3}>
-                                        {paginatedReviews.map((review, index) => (
-                                            <ReviewCard
-                                                key={index}
-                                                sender={{
-                                                    id: review.user.id,
-                                                    name: review.user.name + " " + review.user.surname,
-                                                    role: Roles.User,
-                                                }}
-                                                grade={review.grade}
-                                                text={review.text}
-                                                createdAt={review.createdAt}
-                                            />
-                                        ))}
+                                        {paginatedReviews.length > 0 ? (
+                                            paginatedReviews.map((review, index) => (
+                                                <ReviewCard
+                                                    key={index}
+                                                    sender={{
+                                                        id: review.user.id,
+                                                        name: review.user.name + " " + review.user.surname,
+                                                        role: Roles.User,
+                                                    }}
+                                                    grade={review.grade}
+                                                    text={review.text}
+                                                    createdAt={review.createdAt}
+                                                />
+                                            ))
+                                        ) : (
+                                            <Typography variant="h6" ref={reviewHeaderRef}>
+                                                Отзывов пока нет
+                                            </Typography>
+                                        )}
                                     </Grid>
                                     <Grid container justifyContent="center" mb={3}>
                                         <Pagination
@@ -245,7 +253,7 @@ const CompanyOwnProfilePage = () => {
                                         />
                                     </Grid>
                                 </Collapse>
-                                <Typography variant="h5">Edit information</Typography>
+                                <Typography variant="h5">Изменить информацию</Typography>
                                 <CompanyEditForm initialValues={companyData} onSubmit={handleDataUpdate} />
                             </>
                         )}

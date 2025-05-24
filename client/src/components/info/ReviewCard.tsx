@@ -70,7 +70,7 @@ const ReviewCard = ({ sender, grade, text, createdAt }: ReviewCardProps) => {
                         </IconButton>
                         <Grid container direction={"column"} spacing={0} mt={"-5px"}>
                             <Typography variant="h6">{sender.name}</Typography>
-                            <Typography variant="subtitle1">{moment(createdAt).format("MMMM Do YYYY, HH:mm")}</Typography>
+                            <Typography variant="subtitle1">{moment(createdAt).format("LL, HH:mm")}</Typography>
                         </Grid>
                     </Grid>
                     <Grid mt={"-5px"}>

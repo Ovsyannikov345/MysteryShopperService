@@ -55,7 +55,7 @@ const UpdateProfileImageModal = ({ open, onClose, onSave }: UpdateProfileImageMo
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-            <DialogTitle>Upload Image</DialogTitle>
+            <DialogTitle>Загрузить изображение</DialogTitle>
             <DialogContent>
                 <Box
                     sx={{
@@ -71,7 +71,7 @@ const UpdateProfileImageModal = ({ open, onClose, onSave }: UpdateProfileImageMo
                     onClick={() => document.getElementById("file-input")?.click()}
                 >
                     <Typography variant="body1" sx={{ marginBottom: 2 }}>
-                        {selectedFile ? `${selectedFile.name}` : "Drag and drop a file here or click to select"}
+                        {selectedFile ? `${selectedFile.name}` : "Перетащите файл сюда или нажмите для выбора"}
                     </Typography>
                     <input id="file-input" type="file" accept="image/*" style={{ display: "none" }} onChange={handleFileChange} />
                 </Box>
@@ -83,10 +83,10 @@ const UpdateProfileImageModal = ({ open, onClose, onSave }: UpdateProfileImageMo
                     disabled={!selectedFile || isUploading}
                     startIcon={isUploading && <CircularProgress size={20} />}
                 >
-                    {isUploading ? "Saving..." : "Save"}
+                    {isUploading ? "Созраняем..." : "Сохранить"}
                 </Button>
                 <Button onClick={onClose} variant="outlined">
-                    Cancel
+                    Отмена
                 </Button>
             </DialogActions>
         </Dialog>

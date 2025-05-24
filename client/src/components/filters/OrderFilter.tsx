@@ -22,13 +22,13 @@ const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
 
     const handleApplyFilters = () => {
         onFilterChange(filters);
-        notifications.show("Filters applied", { severity: "info", autoHideDuration: 2000 });
+        notifications.show("Фильтры применены", { severity: "info", autoHideDuration: 2000 });
     };
 
     const handleClearFilters = () => {
         setFilters({});
         onFilterChange({});
-        notifications.show("Filters cleared", { severity: "info", autoHideDuration: 2000 });
+        notifications.show("Фильтры очищены", { severity: "info", autoHideDuration: 2000 });
     };
 
     const timeSpanToHours = (span: string) => {
@@ -50,8 +50,8 @@ const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
             {/* Text Filter */}
             <Grid size={12}>
                 <TextField
-                    label="Search Text"
-                    placeholder="Title or address"
+                    label="Текстовый поиск"
+                    placeholder="Название или адрес"
                     variant="outlined"
                     autoComplete="off"
                     fullWidth
@@ -62,11 +62,11 @@ const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
 
             {/* Time to Complete */}
             <Grid size={12}>
-                <Typography>Time to complete (hours)</Typography>
+                <Typography>Время на выполнение (ч)</Typography>
             </Grid>
             <Grid size={5.5}>
                 <TextField
-                    label="From"
+                    label="От"
                     variant="outlined"
                     fullWidth
                     autoComplete="off"
@@ -90,7 +90,7 @@ const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
             </Grid>
             <Grid size={5.5}>
                 <TextField
-                    label="To"
+                    label="До"
                     variant="outlined"
                     autoComplete="off"
                     fullWidth
@@ -112,11 +112,11 @@ const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
 
             {/* Price */}
             <Grid size={12}>
-                <Typography>Price</Typography>
+                <Typography>Цена</Typography>
             </Grid>
             <Grid size={5.5}>
                 <TextField
-                    label="From"
+                    label="От"
                     variant="outlined"
                     autoComplete="off"
                     fullWidth
@@ -138,7 +138,7 @@ const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
             </Grid>
             <Grid size={5.5}>
                 <TextField
-                    label="To"
+                    label="До"
                     variant="outlined"
                     autoComplete="off"
                     fullWidth
@@ -159,10 +159,10 @@ const OrderFilter = ({ filter, onFilterChange }: EstateFilterProps) => {
             {/* Action Buttons */}
             <Grid container spacing={2}>
                 <Button variant="contained" color="primary" onClick={handleApplyFilters}>
-                    Apply
+                    Применить
                 </Button>
                 <Button variant="outlined" onClick={handleClearFilters}>
-                    Clear
+                    Сбросить
                 </Button>
             </Grid>
         </Grid>

@@ -28,8 +28,8 @@ interface ReviewModalProps {
 }
 
 const validationSchema = Yup.object().shape({
-    text: Yup.string().required("Review text is required").max(500, "Maximum 500 characters allowed"),
-    grade: Yup.number().required().min(1, "Please give a rating"),
+    text: Yup.string().required("Текст обязателен.").max(500, "Не более 500 символов"),
+    grade: Yup.number().required().min(1, "Оценка обязательна."),
 });
 
 const ReviewModal = ({ open, onClose, onSubmit }: ReviewModalProps) => {
@@ -66,7 +66,7 @@ const ReviewModal = ({ open, onClose, onSubmit }: ReviewModalProps) => {
             fullWidth
         >
             <DialogTitle>
-                Leave a review{" "}
+                Отправить отзыв{" "}
                 <IconButton
                     aria-label="close"
                     onClick={() => {
@@ -89,7 +89,7 @@ const ReviewModal = ({ open, onClose, onSubmit }: ReviewModalProps) => {
                     <TextField
                         fullWidth
                         margin="normal"
-                        label="Review text"
+                        label="Текст отзыва"
                         name="text"
                         multiline
                         minRows={3}
@@ -103,7 +103,7 @@ const ReviewModal = ({ open, onClose, onSubmit }: ReviewModalProps) => {
 
                     <Box>
                         <Typography component="legend" variant="subtitle1" ml={0.5}>
-                            Grade
+                            Оценка
                         </Typography>
                         <Rating
                             size="large"
@@ -127,7 +127,7 @@ const ReviewModal = ({ open, onClose, onSubmit }: ReviewModalProps) => {
                     <LinearProgress sx={{ width: "100%" }} />
                 ) : (
                     <Button type="submit" form="review-form" variant="contained" sx={{ borderRadius: "7px", mb: 0.5 }}>
-                        Submit
+                        Отправить
                     </Button>
                 )}
             </DialogActions>

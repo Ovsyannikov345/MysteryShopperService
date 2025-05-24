@@ -70,7 +70,8 @@ const LoginPage = () => {
                     <TextField
                         fullWidth
                         variant="outlined"
-                        label="Email"
+                        label="Эл. почта"
+                        autoComplete="email"
                         type="email"
                         value={loginData.email}
                         onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
@@ -81,7 +82,8 @@ const LoginPage = () => {
                         fullWidth
                         variant="outlined"
                         type="password"
-                        label="Password"
+                        label="Пароль"
+                        autoComplete="off"
                         value={loginData.password}
                         onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                         sx={{ mb: 2 }}
@@ -98,7 +100,7 @@ const LoginPage = () => {
                                 onClick={submit}
                                 sx={{ height: 48, borderRadius: 2, mb: 1 }}
                             >
-                                Log in
+                                Войти
                             </Button>
                             <Divider
                                 sx={{
@@ -107,7 +109,7 @@ const LoginPage = () => {
                                     "&::before": { borderTop: "1px solid black" },
                                 }}
                             >
-                                <Typography variant="subtitle2">or</Typography>
+                                <Typography variant="subtitle2">или</Typography>
                             </Divider>
                             <Button
                                 variant="outlined"
@@ -116,7 +118,7 @@ const LoginPage = () => {
                                 onClick={() => navigate("/register")}
                                 sx={{ height: 48, borderRadius: 2, mt: 1 }}
                             >
-                                Sign up
+                                Зарегистрироваться
                             </Button>
                         </>
                     )}

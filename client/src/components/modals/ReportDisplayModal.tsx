@@ -68,7 +68,7 @@ const ReportDisplayModal = ({ open, onClose, report }: ReportDisplayModalProps) 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle sx={{ m: 0, p: 2 }}>
-                Report Details
+                Детали отчета
                 <IconButton
                     aria-label="close"
                     onClick={onClose}
@@ -86,27 +86,27 @@ const ReportDisplayModal = ({ open, onClose, report }: ReportDisplayModalProps) 
             <DialogContent dividers>
                 <Box display="flex" flexDirection="column" gap={2}>
                     <Box>
-                        <Typography variant="subtitle2">Title</Typography>
+                        <Typography variant="subtitle2">Заголовок</Typography>
                         <Typography variant="body1">{report.title}</Typography>
                     </Box>
 
                     <Box>
-                        <Typography variant="subtitle2">Description</Typography>
+                        <Typography variant="subtitle2">Описание</Typography>
                         <Typography variant="body1">{report.description}</Typography>
                     </Box>
 
                     <Box>
-                        <Typography variant="subtitle2">Grade</Typography>
+                        <Typography variant="subtitle2">Оценка</Typography>
                         <Rating value={report.grade} readOnly />
                     </Box>
 
                     <Box>
                         <Typography variant="subtitle2" gutterBottom>
-                            Uploaded Files
+                            Прикрепленные файлы
                         </Typography>
                         {files.length === 0 ? (
                             <Typography variant="body2" color="text.secondary">
-                                No files uploaded.
+                                Нет файлов.
                             </Typography>
                         ) : (
                             <Grid container spacing={2}>

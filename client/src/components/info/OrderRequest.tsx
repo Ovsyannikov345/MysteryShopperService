@@ -59,10 +59,10 @@ const OrderRequest = ({ id, user, onAccept, onReject }: OrderRequestProps) => {
             />
             <CardActions sx={{ justifyContent: "flex-end", gap: 1 }}>
                 <Button variant="text" color="success" onClick={() => onAccept(id)}>
-                    Accept
+                    Принять
                 </Button>
                 <Button variant="text" color="error" onClick={() => onReject(id)}>
-                    Reject
+                    Отклонить
                 </Button>
             </CardActions>
         </Card>

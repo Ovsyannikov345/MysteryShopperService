@@ -32,7 +32,7 @@ const SupportRequestModal = ({ open, onClose }: SupportRequestModalProps) => {
         e.preventDefault();
 
         if (message.length === 0) {
-            notifications.show("Provide the description", { severity: "error", autoHideDuration: 3000 });
+            notifications.show("Опишите вашу проблему.", { severity: "error", autoHideDuration: 3000 });
             return;
         }
 
@@ -47,7 +47,7 @@ const SupportRequestModal = ({ open, onClose }: SupportRequestModalProps) => {
             return;
         }
 
-        notifications.show("Request is sent", { severity: "success", autoHideDuration: 3000 });
+        notifications.show("Запрос отправлен.", { severity: "success", autoHideDuration: 3000 });
         setMessage("");
         onClose();
     };
@@ -55,7 +55,7 @@ const SupportRequestModal = ({ open, onClose }: SupportRequestModalProps) => {
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle>
-                Support Request
+                Обращение в поддержку
                 <IconButton
                     aria-label="close"
                     onClick={onClose}
@@ -77,7 +77,7 @@ const SupportRequestModal = ({ open, onClose }: SupportRequestModalProps) => {
                             minRows={4}
                             maxRows={10}
                             fullWidth
-                            label="Describe your issue"
+                            label="Опишите вашу проблему"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             variant="outlined"
@@ -89,7 +89,7 @@ const SupportRequestModal = ({ open, onClose }: SupportRequestModalProps) => {
                         <>
                             <Button onClick={onClose}>Cancel</Button>
                             <Button type="submit" variant="contained" color="primary">
-                                Send Request
+                                Отправить
                             </Button>
                         </>
                     ) : (

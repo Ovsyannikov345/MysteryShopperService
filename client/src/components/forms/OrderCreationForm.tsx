@@ -43,7 +43,7 @@ export default function OrderCreationForm({
     return (
         <Grid container flexDirection={"column"} p={2} pt={3}>
             <Typography variant="h4" gutterBottom textAlign={"center"}>
-                Create New Order
+                Создание заказа
             </Typography>
             <Formik
                 initialValues={initialValues}
@@ -56,12 +56,12 @@ export default function OrderCreationForm({
                     <Form>
                         <Grid container spacing={3}>
                             <Grid size={12}>
-                                <Typography variant="h6">General info</Typography>
+                                <Typography variant="h6">Обшая информация</Typography>
                             </Grid>
                             <Grid size={12}>
                                 <Field
                                     name="title"
-                                    label="Title"
+                                    label="Название"
                                     as={TextField}
                                     fullWidth
                                     error={touched.title && Boolean(errors.title)}
@@ -72,7 +72,7 @@ export default function OrderCreationForm({
                             <Grid size={12}>
                                 <Field
                                     name="description"
-                                    label="Description"
+                                    label="Описание"
                                     as={TextField}
                                     fullWidth
                                     multiline
@@ -86,7 +86,7 @@ export default function OrderCreationForm({
                                 <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                                     <Field
                                         name="price"
-                                        label="Price"
+                                        label="Цена"
                                         type="number"
                                         as={TextField}
                                         fullWidth
@@ -109,12 +109,12 @@ export default function OrderCreationForm({
 
                             <Grid container size={{ xs: 12, sm: 6 }}>
                                 <Grid size={12}>
-                                    <Typography variant="h6">Time to complete</Typography>
+                                    <Typography variant="h6">Время на выполнение</Typography>
                                 </Grid>
                                 <Grid size={6}>
                                     <Field
                                         name="daysToComplete"
-                                        label="Days"
+                                        label="Дни"
                                         type="number"
                                         as={TextField}
                                         fullWidth
@@ -133,7 +133,7 @@ export default function OrderCreationForm({
                                 <Grid size={6}>
                                     <Field
                                         name="hoursToComplete"
-                                        label="Hours"
+                                        label="Часы"
                                         type="number"
                                         as={TextField}
                                         fullWidth
@@ -156,12 +156,12 @@ export default function OrderCreationForm({
 
                             <Grid container size={12}>
                                 <Grid size={12}>
-                                    <Typography variant="h6">Location</Typography>
+                                    <Typography variant="h6">Локация</Typography>
                                 </Grid>
                                 <Grid size={12}>
                                     <Field
                                         name="place"
-                                        placeholder="Set a location on the map"
+                                        placeholder="Отметьте точку на карте..."
                                         as={TextField}
                                         fullWidth
                                         error={touched.place && Boolean(errors.place)}
@@ -186,7 +186,7 @@ export default function OrderCreationForm({
                                     size="large"
                                     loading={loading}
                                 >
-                                    Create Order
+                                    Создать
                                 </Button>
                             </Grid>
                         </Grid>

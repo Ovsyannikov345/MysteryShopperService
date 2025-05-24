@@ -58,7 +58,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
         const report = reports.find((r) => !r.reportCorrection);
 
         if (!report) {
-            notification.show("Failed to determine report to send correction for", { severity: "error", autoHideDuration: 3000 });
+            notification.show("Отчет на найден", { severity: "error", autoHideDuration: 3000 });
             return false;
         }
 
@@ -68,11 +68,11 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
         });
 
         if ("error" in response) {
-            notification.show("Error sending correction", { severity: "error", autoHideDuration: 3000 });
+            notification.show(response.error, { severity: "error", autoHideDuration: 3000 });
             return false;
         }
 
-        notification.show("Correction sent", { severity: "success", autoHideDuration: 3000 });
+        notification.show("Правки отправлены", { severity: "success", autoHideDuration: 3000 });
         onAction();
         return true;
     };
@@ -82,12 +82,12 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
         const response = await expireOrder(orderData.order.id, orderData.user.id);
 
         if (response && "error" in response) {
-            notification.show("Error marking order as expired", { severity: "error", autoHideDuration: 3000 });
+            notification.show(response.error, { severity: "error", autoHideDuration: 3000 });
             setIsLoading(false);
             return;
         }
 
-        notification.show("Order marked as expired", { severity: "success", autoHideDuration: 3000 });
+        notification.show("Заказ отмечен как истекший", { severity: "success", autoHideDuration: 3000 });
         onAction();
         setIsLoading(false);
     };
@@ -97,12 +97,12 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
         const response = await completeOrder(orderData.order.id, orderData.user.id);
 
         if (response && "error" in response) {
-            notification.show("Error marking order as completed", { severity: "error", autoHideDuration: 3000 });
+            notification.show(response.error, { severity: "error", autoHideDuration: 3000 });
             setIsLoading(false);
             return;
         }
 
-        notification.show("Order marked as completed", { severity: "success", autoHideDuration: 3000 });
+        notification.show("Заказ отмечен как завершенный", { severity: "success", autoHideDuration: 3000 });
         onAction();
         setIsLoading(false);
     };
@@ -111,11 +111,11 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
         const response = await createUserReview(orderData.user.id, { ...review, orderId: orderData.order.id });
 
         if (response && "error" in response) {
-            notification.show("Error sending review", { severity: "error", autoHideDuration: 3000 });
+            notification.show(response.error, { severity: "error", autoHideDuration: 3000 });
             return false;
         }
 
-        notification.show("Review is sent", { severity: "success", autoHideDuration: 3000 });
+        notification.show("Отзыв отправлен", { severity: "success", autoHideDuration: 3000 });
         onAction();
         return true;
     };
@@ -124,11 +124,11 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
         if (orderData.status === UserOrderStatus.Completed) {
             return !orderData.order.userReviews.some((r) => r.userId === orderData.user.id) ? (
                 <Button variant="contained" sx={{ mt: "-6px", width: "205px" }} onClick={() => setReviewModalOpen(true)}>
-                    Leave review
+                    Оставить отзыв
                 </Button>
             ) : (
                 <Button variant="contained" color="success" startIcon={<Done />} sx={{ mt: "-6px", width: "205px" }} disabled>
-                    Review is sent
+                    Отзыв отправлен
                 </Button>
             );
         }
@@ -151,9 +151,9 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                     sx={{ mt: "-6px" }}
                     onClick={async () => {
                         const confirmed = await dialogs.confirm(null, {
-                            title: "Mark order as expired?",
-                            okText: <Typography>Yes</Typography>,
-                            cancelText: <Typography color="success">No</Typography>,
+                            title: "Отметить заказ как истекший?",
+                            okText: <Typography>Да</Typography>,
+                            cancelText: <Typography color="success">Нет</Typography>,
                             severity: "error",
                         });
                         if (confirmed) {
@@ -161,7 +161,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                         }
                     }}
                 >
-                    Mark as expired
+                    Отметить как истекший
                 </Button>
             );
         }
@@ -178,9 +178,9 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                     sx={{ mt: "-6px", width: "205px" }}
                     onClick={async () => {
                         const confirmed = await dialogs.confirm(null, {
-                            title: "Mark order as completed?",
-                            okText: <Typography color="success">Yes</Typography>,
-                            cancelText: <Typography color="error">No</Typography>,
+                            title: "Принять заказ?",
+                            okText: <Typography color="success">Да</Typography>,
+                            cancelText: <Typography color="error">Нет</Typography>,
                             severity: "error",
                         });
                         if (confirmed) {
@@ -188,13 +188,13 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                         }
                     }}
                 >
-                    Complete order
+                    Принять заказ
                 </Button>
                 <Typography variant="subtitle1" sx={{ mx: 1 }}>
-                    or
+                    или
                 </Typography>
                 <Button variant="contained" sx={{ mt: "-6px", width: "205px" }} onClick={() => setCorrectionModalOpen(true)}>
-                    Request correction
+                    Запросить правки
                 </Button>
             </>
         );
@@ -212,7 +212,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <Typography>Request was received</Typography>
+                        <Typography>Запрос был получен</Typography>
                     </TimelineContent>
                 </TimelineItem>
                 {getRejectActionHistory() || getAcceptActionHistory()}
@@ -236,7 +236,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                     </TimelineDot>
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Typography mt={1}>Request was rejected</Typography>
+                    <Typography mt={1}>Запрос был отклонен</Typography>
                 </TimelineContent>
             </TimelineItem>
         );
@@ -260,7 +260,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <Typography mt={1}>Request was accepted</Typography>
+                        <Typography mt={1}>Запрос был принят</Typography>
                     </TimelineContent>
                 </TimelineItem>
                 {getExpiredActionHistory() || getReportActionHistory()}
@@ -284,7 +284,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                     </TimelineDot>
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Typography mt={1}>Order was marked as expired</Typography>
+                    <Typography mt={1}>Заказ был помечен как истекший</Typography>
                 </TimelineContent>
             </TimelineItem>
         );
@@ -307,15 +307,15 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                         </TimelineDot>
                     </TimelineSeparator>
                     <TimelineContent sx={{ pl: 0.5 }}>
-                        <Typography>Waiting for user report...</Typography>
+                        <Typography>Ожидаем отчет...</Typography>
                         {endTime && endTime.isAfter(moment.utc()) ? (
-                            <Typography>{moment.duration(moment.utc().diff(endTime)).humanize()} remaining</Typography>
+                            <Typography>{moment.duration(moment.utc().diff(endTime)).humanize()} до истечения</Typography>
                         ) : endTime ? (
                             <Typography color="error">
-                                Expired {moment.duration(endTime.diff(moment.utc())).humanize()} ago
+                                Срок выполнения истек {moment.duration(endTime.diff(moment.utc())).humanize()} назад
                             </Typography>
                         ) : (
-                            <Typography>No expiration</Typography>
+                            <Typography>Без срока выполнения</Typography>
                         )}
                     </TimelineContent>
                 </TimelineItem>
@@ -330,7 +330,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                     </TimelineDot>
                 </TimelineSeparator>
                 <TimelineContent sx={{ pl: 0.5 }}>
-                    <Typography>Waiting for your actions...</Typography>
+                    <Typography>Ждем ваших действий...</Typography>
                 </TimelineContent>
             </TimelineItem>
         );
@@ -347,7 +347,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                         </TimelineDot>
                     </TimelineSeparator>
                     <TimelineContent>
-                        <Typography sx={{ p: 0, mt: 1 }}>Order was marked as completed</Typography>
+                        <Typography sx={{ p: 0, mt: 1 }}>Заказ был принят</Typography>
                     </TimelineContent>
                 </TimelineItem>
             ) : null;
@@ -365,9 +365,9 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <Typography>Report was received</Typography>
+                        <Typography>Отчет получен</Typography>
                         <Button size="small" variant="contained" onClick={() => setDisplayedReport(report as Report)}>
-                            Details
+                            Подробнее
                         </Button>
                     </TimelineContent>
                 </TimelineItem>
@@ -383,13 +383,13 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                             <TimelineConnector />
                         </TimelineSeparator>
                         <TimelineContent>
-                            <Typography>Correction was requested</Typography>
+                            <Typography>Правки запрошены</Typography>
                             <Button
                                 size="small"
                                 variant="contained"
                                 onClick={() => setDisplayedCorrection(report.reportCorrection!)}
                             >
-                                Details
+                                Подробнее
                             </Button>
                         </TimelineContent>
                     </TimelineItem>
@@ -408,7 +408,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
     if (orderData.order.isClosed && status === UserOrderStatus.None) {
         return (
             <Grid container size={12} justifyContent={"center"}>
-                <Typography variant="h5">Order is closed</Typography>
+                <Typography variant="h5">Заказ закрыт</Typography>
             </Grid>
         );
     }
@@ -426,7 +426,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
                             <TimelineConnector />
                         </TimelineSeparator>
                         <TimelineContent>
-                            <Typography>This is the start of your interaction history</Typography>
+                            <Typography>Это начало истории выполнения</Typography>
                         </TimelineContent>
                     </TimelineItem>
                     {getRequestActionHistory()}

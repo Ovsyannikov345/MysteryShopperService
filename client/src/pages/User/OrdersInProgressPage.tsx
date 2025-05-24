@@ -22,6 +22,10 @@ const UserOrdersPage = () => {
     const [orders, setOrders] = useState<UserOrder[]>();
 
     useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+
+    useEffect(() => {
         const loadOrders = async () => {
             const response = await getUserOrders();
 
@@ -89,20 +93,20 @@ const UserOrdersPage = () => {
                     >
                         <Grid container justifyContent={"flex-start"} alignItems={"center"} size={12}>
                             <Typography ref={headerRef} variant="h4">
-                                Your orders
+                                Ваши заказы
                             </Typography>
                         </Grid>
                         {orders ? (
                             orders.length > 0 ? (
                                 <>
-                                    {pendingOrders && <OrderCardSection label="Pending" orders={pendingOrders} />}
-                                    {ordersInProgress && <OrderCardSection label="In Progress" orders={ordersInProgress} />}
-                                    {completedOrders && <OrderCardSection label="Completed" orders={completedOrders} />}
-                                    {rejectedOrders && <OrderCardSection label="Rejected" orders={rejectedOrders} />}
-                                    {expiredOrders && <OrderCardSection label="Expired" orders={expiredOrders} />}
+                                    {pendingOrders && <OrderCardSection label="Запрошены" orders={pendingOrders} />}
+                                    {ordersInProgress && <OrderCardSection label="В процессе" orders={ordersInProgress} />}
+                                    {completedOrders && <OrderCardSection label="Завершены" orders={completedOrders} />}
+                                    {rejectedOrders && <OrderCardSection label="Отклонены" orders={rejectedOrders} />}
+                                    {expiredOrders && <OrderCardSection label="Истекшие" orders={expiredOrders} />}
                                 </>
                             ) : (
-                                <Typography variant="h6">You have no orders</Typography>
+                                <Typography variant="h6">У вас пока нет заказов</Typography>
                             )
                         ) : (
                             <Grid container size={12} spacing={2} alignContent={"stretch"}>

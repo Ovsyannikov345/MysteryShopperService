@@ -23,6 +23,7 @@ import UpdateProfileImageModal from "../../components/modals/UpdateProfileImageM
 import moment from "moment";
 import { Roles } from "../../utils/enums/roles";
 import UserEditForm, { UserEditData } from "../../components/forms/UserEditForm";
+import { formatAge } from "../../utils/enums/functions";
 
 const UserOwnProfilePage = () => {
     const theme = useTheme();
@@ -54,8 +55,6 @@ const UserOwnProfilePage = () => {
     useEffect(() => {
         const loadProfile = async () => {
             const response = await getMyUserData();
-
-            console.log(response);
 
             if ("error" in response) {
                 notifications.show(response.message, { severity: "error", autoHideDuration: 3000 });
@@ -119,7 +118,7 @@ const UserOwnProfilePage = () => {
         }
 
         setUserData(response);
-        notifications.show("Changes saved", { severity: "success", autoHideDuration: 3000 });
+        notifications.show("Изменения сохранены", { severity: "success", autoHideDuration: 3000 });
     };
 
     const handleImageSave = async (file: File): Promise<boolean> => {
@@ -131,7 +130,7 @@ const UserOwnProfilePage = () => {
             return false;
         }
 
-        notifications.show("Image saved", { severity: "success", autoHideDuration: 3000 });
+        notifications.show("Изображение сохранено", { severity: "success", autoHideDuration: 3000 });
 
         const imageResponse = await getProfileImage(userData!.id);
 
@@ -191,7 +190,7 @@ const UserOwnProfilePage = () => {
                                             startIcon={<CloudUploadIcon />}
                                             onClick={() => setIsChangingImage(true)}
                                         >
-                                            Choose image
+                                            Загрузить
                                         </Button>
                                     </Grid>
                                     <Grid size={{ xs: 12, sm: "grow" }}>
@@ -200,7 +199,7 @@ const UserOwnProfilePage = () => {
                                         </Typography>
                                         <Typography variant="subtitle1">
                                             {userData.birthDate
-                                                ? moment.utc().diff(moment(userData.birthDate), "year") + "y.o."
+                                                ? formatAge(moment.utc().diff(moment(userData.birthDate), "year"))
                                                 : ""}
                                             {userData.birthDate && userData.city && ", "}
                                             {userData.city ? userData.city : ""}
@@ -218,17 +217,23 @@ const UserOwnProfilePage = () => {
                                     </Grid>
                                 </Grid>
                                 <Typography variant="h5" ref={reviewHeaderRef}>
-                                    Rating
+                                    Рейтинг
                                 </Typography>
                                 <Rating value={rating} precision={0.5} size="large" readOnly sx={{ mt: 1 }} />
                                 <Grid container mt={1} mb={2}>
-                                    <Button
-                                        variant="contained"
-                                        startIcon={<Reviews />}
-                                        onClick={() => setDisplayReviews(!displayReviews)}
-                                    >
-                                        {displayReviews ? "Hide Reviews" : `Show Reviews (${userData.userReviews.length})`}
-                                    </Button>
+                                    {userData.userReviews.length > 0 ? (
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<Reviews />}
+                                            onClick={() => setDisplayReviews(!displayReviews)}
+                                        >
+                                            {displayReviews
+                                                ? "Скрыть отзывы"
+                                                : `Показать отзывы (${userData.userReviews.length})`}
+                                        </Button>
+                                    ) : (
+                                        <Typography variant="h6">Отзывов пока нет</Typography>
+                                    )}
                                 </Grid>
                                 <Collapse in={displayReviews}>
                                     <Grid container spacing={3} mt={1} mb={3}>
@@ -255,7 +260,7 @@ const UserOwnProfilePage = () => {
                                         />
                                     </Grid>
                                 </Collapse>
-                                <Typography variant="h5">Edit information</Typography>
+                                <Typography variant="h5">Изменить информацию</Typography>
                                 <UserEditForm initialValues={userData} onSubmit={handleDataUpdate} />
                             </>
                         )}

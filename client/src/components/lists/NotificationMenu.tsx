@@ -93,7 +93,7 @@ const NotificationMenu = () => {
 
     return (
         <>
-            <Tooltip title="Notifications">
+            <Tooltip title="Уведомления">
                 <IconButton
                     color="secondary"
                     onClick={(event) => {
@@ -161,7 +161,7 @@ const NotificationMenu = () => {
                         height={"50px"}
                         width={"280px"}
                     >
-                        No notifications
+                        Нет уведомлений
                     </Typography>
                 )}
             </Menu>

@@ -13,7 +13,7 @@ import {
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import InputMask from "react-input-mask";
 import { useState } from "react";
-import { Genders } from "../../utils/enums/genders";
+import { genderLabels, Genders } from "../../utils/enums/genders";
 import userEditValidationSchema from "./validation/userEditValidationSchema";
 import moment, { Moment } from "moment";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -55,7 +55,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             <Field
                                 name="name"
                                 as={TextField}
-                                label="Name"
+                                label="Имя"
                                 fullWidth
                                 error={touched.name && Boolean(errors.name)}
                                 helperText={<ErrorMessage name="name" />}
@@ -67,7 +67,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             <Field
                                 name="surname"
                                 as={TextField}
-                                label="Surname"
+                                label="Фамиоия"
                                 fullWidth
                                 error={touched.surname && Boolean(errors.surname)}
                                 helperText={<ErrorMessage name="surname" />}
@@ -79,7 +79,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             <DatePicker
                                 sx={{ width: "100%" }}
                                 name="birthDate"
-                                label="Birth Date (Optional)"
+                                label="Дата рождения (необязательно)"
                                 value={values.birthDate ? moment(values.birthDate) : null}
                                 disableFuture
                                 minDate={moment().subtract(100, "years")}
@@ -98,7 +98,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                         {/* Gender Field */}
                         <Grid size={{ xs: 12, sm: 6 }}>
                             <FormControl fullWidth error={touched.gender && Boolean(errors.gender)}>
-                                <InputLabel id="gender-select-label">Gender</InputLabel>
+                                <InputLabel id="gender-select-label">Пол</InputLabel>
                                 <Field
                                     as={Select}
                                     labelId="gender-select-label"
@@ -107,16 +107,19 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                                     value={values.gender}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
-                                    label="Gender"
+                                    label="Пол"
                                     error={touched.gender && Boolean(errors.gender)}
                                 >
                                     {Object.keys(Genders)
                                         .filter((key) => isNaN(Number(key)))
-                                        .map((key) => (
-                                            <MenuItem key={key} value={Genders[key as keyof typeof Genders]}>
-                                                {key}
-                                            </MenuItem>
-                                        ))}
+                                        .map((key) => {
+                                            const value = Genders[key as keyof typeof Genders];
+                                            return (
+                                                <MenuItem key={key} value={value}>
+                                                    {genderLabels[value]}
+                                                </MenuItem>
+                                            );
+                                        })}
                                 </Field>
                             </FormControl>
                         </Grid>
@@ -126,7 +129,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             <Field
                                 name="city"
                                 as={TextField}
-                                label="City (Optional)"
+                                label="Город (необязательно)"
                                 fullWidth
                                 error={touched.city && Boolean(errors.city)}
                                 helperText={<ErrorMessage name="city" />}
@@ -138,7 +141,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             <InputMask mask="+375(99)999-99-99" value={values.phone} disabled={false} onChange={handleChange}>
                                 {() => (
                                     <TextField
-                                        label="Phone"
+                                        label="Телефон"
                                         name="phone"
                                         fullWidth
                                         error={touched.phone && Boolean(errors.phone)}
@@ -153,7 +156,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             <Field
                                 name="workingExperience"
                                 as={TextField}
-                                label="Working Experience (Optional)"
+                                label="Опыт работы (необязательно)"
                                 fullWidth
                                 error={touched.workingExperience && Boolean(errors.workingExperience)}
                                 helperText={<ErrorMessage name="workingExperience" />}
@@ -165,7 +168,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                             <Field
                                 name="description"
                                 as={TextField}
-                                label="Description (Optional)"
+                                label="Описание (необязательно)"
                                 multiline
                                 minRows={3}
                                 fullWidth
@@ -194,7 +197,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                         )}
                         <Grid container>
                             <Button variant="contained" type="submit" disabled={loading}>
-                                Save
+                                Сохранить
                             </Button>
                             <Button
                                 type="reset"
@@ -202,7 +205,7 @@ const UserEditForm = ({ initialValues, onSubmit }: UserEditFormProps) => {
                                 disabled={loading}
                                 onClick={() => setFieldValue("initialValues", initialValues)}
                             >
-                                Cancel
+                                Отмена
                             </Button>
                         </Grid>
                     </Grid>

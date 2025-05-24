@@ -4,6 +4,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { NotificationsProvider } from "@toolpad/core/useNotifications";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import "moment/locale/en-gb";
+import "moment/locale/ru";
 import AppRouter from "./router/AppRouter";
 import { DialogsProvider } from "@toolpad/core";
 

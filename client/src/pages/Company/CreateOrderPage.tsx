@@ -47,7 +47,7 @@ const CreateOrderPage = () => {
             return;
         }
 
-        notifications.show("Order created", { severity: "success", autoHideDuration: 3000 });
+        notifications.show("Заказ создан", { severity: "success", autoHideDuration: 3000 });
         navigate(ORDER_DETAILS_ROUTE.replace(":id", response.id));
     };
 

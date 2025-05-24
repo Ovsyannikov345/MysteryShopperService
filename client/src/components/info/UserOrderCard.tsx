@@ -36,7 +36,7 @@ const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
             return (
                 <Grid container wrap="nowrap" alignItems={"center"} spacing={0.5} mt={1} ml={"-3px"}>
                     <PulseDot color="#e3bf00" style={{ fontSize: "15px" }} />
-                    <Typography variant="body1">Requested {moment(orderData.createdAt).fromNow()}</Typography>
+                    <Typography variant="body1">Заявка отправлена {moment(orderData.createdAt).fromNow()}</Typography>
                 </Grid>
             );
         }
@@ -45,7 +45,7 @@ const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
             return (
                 <Grid container wrap="nowrap" spacing={1} mt={1}>
                     <Cancel color="error" />
-                    <Typography variant="body1">Rejected {moment(orderData.updatedAt).format("MMMM Do YYYY, HH:mm")}</Typography>
+                    <Typography variant="body1">{moment(orderData.updatedAt).format("LL, HH:mm")}</Typography>
                 </Grid>
             );
         }
@@ -56,8 +56,8 @@ const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
                     <PulseDot color="#e3bf00" style={{ fontSize: "15px" }} />
                     <Typography variant="body1">
                         {orderData.order.reports.length === 0 || orderData.order.reports.every((rep) => rep.reportCorrection)
-                            ? "Waiting for your report..."
-                            : "Waiting for the company..."}
+                            ? "Ожидаем ваш отчет..."
+                            : "Ожидаем ответ от компании..."}
                     </Typography>
                 </Grid>
             );
@@ -68,12 +68,12 @@ const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
                 <>
                     <Grid container wrap="nowrap" spacing={1} mt={1}>
                         <CheckCircle color="success" />
-                        <Typography variant="body1">{moment(orderData.updatedAt).format("MMMM Do YYYY, HH:mm")}</Typography>
+                        <Typography variant="body1">{moment(orderData.updatedAt).format("LL, HH:mm")}</Typography>
                     </Grid>
                     {orderData.order.userReviews.length === 0 && (
                         <Grid container wrap="nowrap" alignItems={"center"} spacing={0.5} mt={1} ml={"-3px"}>
                             <PulseDot color="#e3bf00" style={{ fontSize: "15px" }} />
-                            <Typography variant="body1">Rate the company</Typography>
+                            <Typography variant="body1">Оцените компанию</Typography>
                         </Grid>
                     )}
                 </>
@@ -84,7 +84,7 @@ const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
             return (
                 <Grid container wrap="nowrap" spacing={1} mt={1}>
                     <TimerOffOutlined color="error" />
-                    <Typography variant="body1">{moment(orderData.updatedAt).format("MMMM Do YYYY, HH:mm")}</Typography>
+                    <Typography variant="body1">{moment(orderData.updatedAt).format("LL, HH:mm")}</Typography>
                 </Grid>
             );
         }
@@ -110,7 +110,7 @@ const UserOrderCard = ({ orderData }: { orderData: UserOrder }) => {
                     startIcon={<InfoOutlined />}
                     onClick={() => navigate(ORDER_DETAILS_ROUTE.replace(/:.*/, orderData.order.id))}
                 >
-                    Details
+                    Подробнее
                 </Button>
             </CardActions>
         </Card>

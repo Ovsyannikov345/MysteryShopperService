@@ -56,9 +56,9 @@ const useCompanyApi = () => {
         } catch (error: any) {
             if (error.response) {
                 const { status, data } = error.response;
-                return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                return { error: true, statusCode: status, message: data.message ?? "Произошла ошибка. Попробуйте позже" };
             } else {
-                return { error: true, message: "An unexpected error occurred." };
+                return { error: true, message: "Произошла ошибка. Попробуйте позже" };
             }
         }
     }, [baseURL]);
@@ -74,9 +74,9 @@ const useCompanyApi = () => {
             } catch (error: any) {
                 if (error.response) {
                     const { status, data } = error.response;
-                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                    return { error: true, statusCode: status, message: data.message ?? "Произошла ошибка. Попробуйте позже" };
                 } else {
-                    return { error: true, message: "An unexpected error occurred." };
+                    return { error: true, message: "Произошла ошибка. Попробуйте позже" };
                 }
             }
         },
@@ -94,9 +94,9 @@ const useCompanyApi = () => {
             } catch (error: any) {
                 if (error.response) {
                     const { status, data } = error.response;
-                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                    return { error: true, statusCode: status, message: data.message ?? "Произошла ошибка. Попробуйте позже" };
                 } else {
-                    return { error: true, message: "An unexpected error occurred." };
+                    return { error: true, message: "Произошла ошибка. Попробуйте позже" };
                 }
             }
         },
@@ -122,9 +122,9 @@ const useCompanyApi = () => {
             } catch (error: any) {
                 if (error.response) {
                     const { status, data } = error.response;
-                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                    return { error: true, statusCode: status, message: data.message ?? "Произошла ошибка. Попробуйте позже" };
                 } else {
-                    return { error: true, message: "An unexpected error occurred." };
+                    return { error: true, message: "Произошла ошибка. Попробуйте позже" };
                 }
             }
         },
@@ -148,9 +148,9 @@ const useCompanyApi = () => {
             } catch (error: any) {
                 if (error.response) {
                     const { status, data } = error.response;
-                    return { error: true, statusCode: status, message: data.message ?? "Unknown error" };
+                    return { error: true, statusCode: status, message: data.message ?? "Произошла ошибка. Попробуйте позже" };
                 } else {
-                    return { error: true, message: "An unexpected error occurred." };
+                    return { error: true, message: "Произошла ошибка. Попробуйте позже" };
                 }
             }
         },

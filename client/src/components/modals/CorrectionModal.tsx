@@ -15,7 +15,7 @@ export interface CorrectionFormValues {
 }
 
 const validationSchema = Yup.object({
-    description: Yup.string().required("Description is required."),
+    description: Yup.string().required("Описание обязательно."),
 });
 
 const CorrectionModal = ({ open, onClose, onSubmit }: CorrectionModalProps) => {
@@ -53,7 +53,7 @@ const CorrectionModal = ({ open, onClose, onSubmit }: CorrectionModalProps) => {
             sx={{ "& .MuiDialog-paper": { borderRadius: "16px" } }}
         >
             <DialogTitle>
-                Create Report Correction{" "}
+                Запросить правки{" "}
                 <IconButton
                     aria-label="close"
                     onClick={() => {
@@ -76,7 +76,7 @@ const CorrectionModal = ({ open, onClose, onSubmit }: CorrectionModalProps) => {
                     <TextField
                         fullWidth
                         margin="normal"
-                        label="Description"
+                        label="Описание"
                         name="description"
                         multiline
                         minRows={3}
@@ -94,7 +94,7 @@ const CorrectionModal = ({ open, onClose, onSubmit }: CorrectionModalProps) => {
                     <LinearProgress sx={{ width: "100%" }} />
                 ) : (
                     <Button type="submit" form="correction-form" variant="contained" sx={{ borderRadius: "7px", mb: 0.5 }}>
-                        Submit
+                        Отправить
                     </Button>
                 )}
             </DialogActions>

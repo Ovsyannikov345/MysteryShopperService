@@ -55,11 +55,11 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         setIsLoading(false);
 
         if (response && "error" in response) {
-            notification.show("Error sending request", { severity: "error", autoHideDuration: 3000 });
+            notification.show(response.error, { severity: "error", autoHideDuration: 3000 });
             return;
         }
 
-        notification.show("Request sent", { severity: "success", autoHideDuration: 3000 });
+        notification.show("Запрос отправлен", { severity: "success", autoHideDuration: 3000 });
         onAction();
     };
 
@@ -70,7 +70,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         });
 
         if ("error" in response) {
-            notification.show("Error sending report", { severity: "error", autoHideDuration: 3000 });
+            notification.show(response.error, { severity: "error", autoHideDuration: 3000 });
             return false;
         }
 
@@ -78,7 +78,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
 
         const failedUploads = uploadResults.filter((res) => res && "error" in res).length;
 
-        notification.show(`Report sent. ${failedUploads > 0 ? `${failedUploads} uploads failed` : ""}`, {
+        notification.show(`Отчет отправлен. ${failedUploads > 0 ? `${failedUploads} файл(ов) не были загружены` : ""}`, {
             severity: "success",
             autoHideDuration: 3000,
         });
@@ -90,11 +90,11 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         const response = await createCompanyReview(orderData.order.company.id, { ...review, orderId: orderData.order.id });
 
         if (response && "error" in response) {
-            notification.show("Error sending review", { severity: "error", autoHideDuration: 3000 });
+            notification.show(response.error, { severity: "error", autoHideDuration: 3000 });
             return false;
         }
 
-        notification.show("Review is sent", { severity: "success", autoHideDuration: 3000 });
+        notification.show("Отзыв отправлен", { severity: "success", autoHideDuration: 3000 });
         onAction();
         return true;
     };
@@ -103,11 +103,11 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         if (orderData.status === UserOrderStatus.Completed) {
             return !orderData.order.companyReviews.some((r) => r.userId === orderData.user.id) ? (
                 <Button variant="contained" sx={{ mt: "-6px", width: "205px" }} onClick={() => setReviewModalOpen(true)}>
-                    Leave review
+                    Оставить отзыв
                 </Button>
             ) : (
                 <Button variant="contained" color="success" startIcon={<Done />} sx={{ mt: "-6px", width: "205px" }} disabled>
-                    Review is sent
+                    Отзыв отправлен
                 </Button>
             );
         }
@@ -115,7 +115,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         if (orderData.status === UserOrderStatus.None) {
             return (
                 <Button variant="contained" sx={{ mt: "-6px" }} onClick={sendRequest}>
-                    Send request
+                    Отправить запрос
                 </Button>
             );
         }
@@ -126,7 +126,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
         ) {
             return (
                 <Button variant="contained" sx={{ mt: "-6px" }} onClick={() => setReportModalOpen(true)}>
-                    Send report
+                    Отправить отчет
                 </Button>
             );
         }
@@ -148,7 +148,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <Typography>Request was sent</Typography>
+                        <Typography>Запрос был отправлен</Typography>
                     </TimelineContent>
                 </TimelineItem>
                 {getRejectActionHistory() || getAcceptActionHistory() || (
@@ -160,7 +160,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                             </TimelineDot>
                         </TimelineSeparator>
                         <TimelineContent sx={{ pl: 0.5 }}>
-                            <Typography>Waiting for response...</Typography>
+                            <Typography>Ждем ответа от компании...</Typography>
                         </TimelineContent>
                     </TimelineItem>
                 )}
@@ -184,7 +184,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineDot>
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Typography mt={1}>Request was rejected</Typography>
+                    <Typography mt={1}>Запрос был отклонен</Typography>
                 </TimelineContent>
             </TimelineItem>
         );
@@ -208,7 +208,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <Typography mt={1}>Request was accepted</Typography>
+                        <Typography mt={1}>Запрос был принят</Typography>
                     </TimelineContent>
                 </TimelineItem>
                 {getExpiredActionHistory() || getReportActionHistory()}
@@ -232,7 +232,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineDot>
                 </TimelineSeparator>
                 <TimelineContent>
-                    <Typography mt={1}>Order was marked as expired</Typography>
+                    <Typography mt={1}>Заказ был отмечен как истекший</Typography>
                 </TimelineContent>
             </TimelineItem>
         );
@@ -256,15 +256,15 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                         </TimelineDot>
                     </TimelineSeparator>
                     <TimelineContent sx={{ pl: 0.5 }}>
-                        <Typography>Waiting for your report...</Typography>
+                        <Typography>Ждем вашего отчета...</Typography>
                         {endTime && endTime.isAfter(moment.utc()) ? (
-                            <Typography>{moment.duration(moment.utc().diff(endTime)).humanize()} remaining</Typography>
+                            <Typography>осталось {moment.duration(moment.utc().diff(endTime)).humanize()}</Typography>
                         ) : endTime ? (
                             <Typography color="error">
-                                Expired {moment.duration(endTime.diff(moment.utc())).humanize()} ago
+                                Срок выполнения истек {moment.duration(endTime.diff(moment.utc())).humanize()} назад
                             </Typography>
                         ) : (
-                            <Typography>No expiration</Typography>
+                            <Typography>Без срока выполнения</Typography>
                         )}
                     </TimelineContent>
                 </TimelineItem>
@@ -279,7 +279,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                     </TimelineDot>
                 </TimelineSeparator>
                 <TimelineContent sx={{ pl: 0.5 }}>
-                    <Typography>Waiting for company actions...</Typography>
+                    <Typography>Ждем ответа от компании...</Typography>
                 </TimelineContent>
             </TimelineItem>
         );
@@ -296,7 +296,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                         </TimelineDot>
                     </TimelineSeparator>
                     <TimelineContent>
-                        <Typography sx={{ p: 0, mt: 1 }}>Order was marked as completed</Typography>
+                        <Typography sx={{ p: 0, mt: 1 }}>Заказ был принят</Typography>
                     </TimelineContent>
                 </TimelineItem>
             ) : null;
@@ -314,9 +314,9 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                         <TimelineConnector />
                     </TimelineSeparator>
                     <TimelineContent>
-                        <Typography>Report was sent</Typography>
+                        <Typography>Отчет отправлен</Typography>
                         <Button size="small" variant="contained" onClick={() => setDisplayedReport(report as Report)}>
-                            Details
+                            Подробнее
                         </Button>
                     </TimelineContent>
                 </TimelineItem>
@@ -332,13 +332,13 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                             <TimelineConnector />
                         </TimelineSeparator>
                         <TimelineContent>
-                            <Typography>Correction was requested</Typography>
+                            <Typography>Правки запрошены</Typography>
                             <Button
                                 size="small"
                                 variant="contained"
                                 onClick={() => setDisplayedCorrection(report.reportCorrection!)}
                             >
-                                Details
+                                Подробнее
                             </Button>
                         </TimelineContent>
                     </TimelineItem>
@@ -357,7 +357,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
     if (orderData.order.isClosed && status === UserOrderStatus.None) {
         return (
             <Grid container size={12} justifyContent={"center"}>
-                <Typography variant="h5">Order is closed</Typography>
+                <Typography variant="h5">Заказ закрыт</Typography>
             </Grid>
         );
     }
@@ -375,7 +375,7 @@ const UserOrderActions = ({ orderData, onAction }: UserOrderActionsProps) => {
                             <TimelineConnector />
                         </TimelineSeparator>
                         <TimelineContent>
-                            <Typography>This is the start of your interaction history</Typography>
+                            <Typography>Это начало истории выполнения</Typography>
                         </TimelineContent>
                     </TimelineItem>
                     {getRequestActionHistory()}
