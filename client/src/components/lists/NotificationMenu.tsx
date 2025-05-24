@@ -73,24 +73,6 @@ const NotificationMenu = () => {
         setNotificationList(updatedNotifications);
     };
 
-    if (isLoading) {
-        return (
-            <>
-                {[1, 2, 3].map((index) => (
-                    <MenuItem key={index} sx={{ paddingTop: 0, width: "280px" }}>
-                        <Skeleton
-                            width="100%"
-                            height={"60px"}
-                            variant="rectangular"
-                            animation="wave"
-                            sx={{ borderRadius: 2 }}
-                        ></Skeleton>
-                    </MenuItem>
-                ))}
-            </>
-        );
-    }
-
     return (
         <>
             <Tooltip title="Уведомления">
@@ -131,7 +113,19 @@ const NotificationMenu = () => {
                     },
                 }}
             >
-                {notificationList.length > 0 ? (
+                {isLoading ? (
+                    [1, 2, 3].map((index) => (
+                        <MenuItem key={index} sx={{ paddingTop: 0, width: "280px" }}>
+                            <Skeleton
+                                width="100%"
+                                height={"60px"}
+                                variant="rectangular"
+                                animation="wave"
+                                sx={{ borderRadius: 2 }}
+                            ></Skeleton>
+                        </MenuItem>
+                    ))
+                ) : notificationList.length > 0 ? (
                     <>
                         {notificationList.map((notification) => (
                             <MenuItem
