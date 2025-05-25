@@ -28,7 +28,7 @@ public class AutoDomainDataAttribute : AutoDataAttribute
             fixture.Behaviors.Remove(behavior);
         }
 
-        fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+        fixture.Behaviors.Add(new OmitOnRecursionBehavior(1));
 
         return fixture;
     }
