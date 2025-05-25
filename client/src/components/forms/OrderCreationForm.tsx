@@ -56,7 +56,7 @@ export default function OrderCreationForm({
                     <Form>
                         <Grid container spacing={3}>
                             <Grid size={12}>
-                                <Typography variant="h6">Обшая информация</Typography>
+                                <Typography variant="h6">Общая информация</Typography>
                             </Grid>
                             <Grid size={12}>
                                 <Field

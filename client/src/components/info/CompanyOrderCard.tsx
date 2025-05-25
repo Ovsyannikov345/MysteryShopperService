@@ -17,7 +17,7 @@ export default function CompanyOrderCard({ order }: { order: CompanyOrder }) {
     const isNewRequests = order.users.some((u) => u.status === UserOrderStatus.Requested);
 
     const isNewReports = order.reports.some(
-        (r) => !r.reportCorrection && !order.users.some((u) => u.id === r.userId && u.status === UserOrderStatus.Completed)
+        (r) => !r.reportCorrection && !order.users.some((u) => u.user.id === r.userId && u.status === UserOrderStatus.Completed)
     );
 
     return (

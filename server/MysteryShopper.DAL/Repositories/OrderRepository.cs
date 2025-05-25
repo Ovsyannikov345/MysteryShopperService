@@ -75,6 +75,7 @@ public class OrderRepository(MysteryShopperDbContext context, ILogger logger) : 
         return await _context.Orders.AsNoTracking()
             .Where(o => o.CompanyId == companyId)
             .Include(o => o.Users)
+                .ThenInclude(xref => xref.User)
             .Include(o => o.Reports)
                 .ThenInclude(o => o.ReportCorrection)
             .ToListAsync(cancellationToken);
