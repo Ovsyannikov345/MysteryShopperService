@@ -143,7 +143,7 @@ const CompanyOrderActions = ({ orderData, onAction }: CompanyOrderActionsProps) 
             ? moment.utc(startTime).add(moment.duration(orderData.order.timeToComplete))
             : null;
 
-        if (endTime && moment.utc().isAfter(endTime)) {
+        if (endTime && moment.utc().isAfter(endTime) && reports.every((report) => report.reportCorrection)) {
             return (
                 <Button
                     variant="contained"

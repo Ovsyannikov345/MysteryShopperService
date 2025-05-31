@@ -135,7 +135,7 @@ const UserOrderDetailsPage = () => {
                                 mt: isMediumScreen ? 0 : 2,
                             }}
                         >
-                            <NavigateBack to={-1} label="Back" />
+                            <NavigateBack to={-1} label="Назад" />
                         </Container>
                     )}
                     <Container
@@ -149,7 +149,7 @@ const UserOrderDetailsPage = () => {
                     >
                         {isMediumScreen && (
                             <Grid mt={3}>
-                                <NavigateBack to={-1} label="Back" />
+                                <NavigateBack to={-1} label="Назад" />
                             </Grid>
                         )}
                         <Grid
